@@ -1,0 +1,13 @@
+If the 'Output Material Library File' option is enabled then a material definition file (.mtl) will be output along with the geometry file. This file lists attributes of various materials. The mapping from the converter's internal parameters to the .mtl parameters are described as follows:
+
+    Ns = Phong specular component. Ranges from 0 to 200.
+    Kd = Diffuse color weighted by the diffuse coefficient.
+    Ka = Ambient color weighted by the ambient coefficient.
+    Ks = Specular color weighted by the specular coefficient.
+    d = Dissolve factor (pseudo-transparency). This is set to the internal face transparency value.
+    illum 2 = Diffuse and specular shading model.
+    map_Kd = Diffuse color texture map.
+    map_Ks = Specular color texture map.
+    map_Ka = Ambient color texture map.
+    map_Bump = Bump texture map.
+    map_d = Opacity texture map. 
