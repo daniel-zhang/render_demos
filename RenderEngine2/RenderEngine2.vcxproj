@@ -88,6 +88,7 @@
     <ClCompile Include="..\Common\Timer.cpp" />
     <ClCompile Include="..\Common\Waves.cpp" />
     <ClCompile Include="..\Common\WavesSimple.cpp" />
+    <ClCompile Include="BaseWindow.cpp" />
     <ClCompile Include="BillboardDemo.cpp" />
     <ClCompile Include="BoxDemo.cpp" />
     <ClCompile Include="DemoBasic.cpp" />
@@ -102,6 +103,8 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="ObjLoaderDemo.cpp" />
+    <ClCompile Include="OverlayGraphics.cpp" />
+    <ClCompile Include="OverlayMgr.cpp" />
     <ClCompile Include="RenderStateMgr.cpp" />
     <ClCompile Include="SceneDemo.cpp" />
     <ClCompile Include="InputLayoutMgr.cpp" />
@@ -122,6 +125,7 @@
     <ClInclude Include="..\Common\Waves.h" />
     <ClInclude Include="..\Common\WavesSimple.h" />
     <ClInclude Include="..\Common\WindowBase.h" />
+    <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="BillboardDemo.h" />
     <ClInclude Include="BoxDemo.h" />
     <ClInclude Include="DemoBasic.h" />
@@ -129,12 +133,15 @@
     <ClInclude Include="EmptyDemo.h" />
     <ClInclude Include="FontEngine.h" />
     <ClInclude Include="GridDemo.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="LightingDemo.h" />
     <ClInclude Include="LightingDemo2.h" />
     <ClInclude Include="MeshLoaderDemo.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="ObjLoaderDemo.h" />
+    <ClInclude Include="OverlayMgr.h" />
+    <ClInclude Include="OverlayGraphics.h" />
     <ClInclude Include="RenderStateMgr.h" />
     <ClInclude Include="SceneDemo.h" />
     <ClInclude Include="InputLayoutMgr.h" />
@@ -193,6 +200,15 @@
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(FileName).fxo" "%(FullPath)"</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)\%(FileName).fxo</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxc /T fx_5_0 /Fo "%(RelativeDir)\%(FileName).fxo" "%(FullPath)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RelativeDir)\%(FileName).fxo</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="FX\Overlay.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(FileName).fxo" "%(FullPath)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)\%(FileName).fxo</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RelativeDir)\%(FileName).fxo</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxc /T fx_5_0 /Fo "%(RelativeDir)\%(FileName).fxo" "%(FullPath)"</Command>
     </CustomBuild>
     <None Include="Models\skull.txt" />
   </ItemGroup>

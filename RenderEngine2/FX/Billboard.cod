@@ -75,7 +75,7 @@ fxgroup
                 dcl_output o1.xy
                 dcl_temps 2
                 
-                #line 63 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 63 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r1.xy, v1.xyxx  // vout<3,4>
                 mov o0.xyz, r0.xyzx  // VS<0,1,2>
@@ -188,7 +188,7 @@ fxgroup
                 dcl_output_sgv o4.x, primitive_id
                 dcl_maxout 4
                 
-                #line 74 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 74 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r0.xy, -v[0][0].xzxx
                 add r0.xz, r0.xxyx, cb0[12].xxzx  // look<0:Inf,2:Inf>
                 mov r0.y, l(0)  // look<1: 0f>
@@ -367,7 +367,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 115 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 115 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -420,7 +420,7 @@ fxgroup
                 movc r6.xyzw, r1.wwww, r6.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r7.xyzw, r1.wwww, r7.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r5.xyzw, r5.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r6.xyzw, r6.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r7.xyzw, r7.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -468,7 +468,7 @@ fxgroup
                 movc r9.xyzw, r1.wwww, r9.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r10.xyzw, r1.wwww, r10.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r8.xyzw, r8.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r9.xyzw, r9.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r10.xyzw, r10.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -516,7 +516,7 @@ fxgroup
                 movc r3.xyzw, r1.wwww, r3.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r0.xyzw, r1.wwww, r0.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r2.xyzw, r2.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r3.xyzw, r3.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r0.xyzw, r0.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -574,7 +574,7 @@ fxgroup
                 dcl_output o1.xy
                 dcl_temps 2
                 
-                #line 63 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 63 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r1.xy, v1.xyxx  // vout<3,4>
                 mov o0.xyz, r0.xyzx  // VS<0,1,2>
@@ -687,7 +687,7 @@ fxgroup
                 dcl_output_sgv o4.x, primitive_id
                 dcl_maxout 4
                 
-                #line 74 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 74 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r0.xy, -v[0][0].xzxx
                 add r0.xz, r0.xxyx, cb0[12].xxzx  // look<0:Inf,2:Inf>
                 mov r0.y, l(0)  // look<1: 0f>
@@ -872,7 +872,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 115 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 115 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -937,7 +937,7 @@ fxgroup
                 movc r7.xyzw, r1.wwww, r7.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r8.xyzw, r1.wwww, r8.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r6.xyzw, r6.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r7.xyzw, r7.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r8.xyzw, r8.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -985,7 +985,7 @@ fxgroup
                 movc r10.xyzw, r1.wwww, r10.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r11.xyzw, r1.wwww, r11.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r9.xyzw, r9.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r10.xyzw, r10.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r11.xyzw, r11.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -1033,7 +1033,7 @@ fxgroup
                 movc r4.xyzw, r1.wwww, r4.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r0.xyzw, r1.wwww, r0.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r3.xyzw, r3.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r4.xyzw, r4.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r0.xyzw, r0.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -1091,7 +1091,7 @@ fxgroup
                 dcl_output o1.xy
                 dcl_temps 2
                 
-                #line 63 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 63 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r1.xy, v1.xyxx  // vout<3,4>
                 mov o0.xyz, r0.xyzx  // VS<0,1,2>
@@ -1204,7 +1204,7 @@ fxgroup
                 dcl_output_sgv o4.x, primitive_id
                 dcl_maxout 4
                 
-                #line 74 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 74 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r0.xy, -v[0][0].xzxx
                 add r0.xz, r0.xxyx, cb0[12].xxzx  // look<0:Inf,2:Inf>
                 mov r0.y, l(0)  // look<1: 0f>
@@ -1389,7 +1389,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 115 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 115 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -1454,7 +1454,7 @@ fxgroup
                 movc r7.xyzw, r9.wwww, r7.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r8.xyzw, r9.wwww, r8.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r6.xyzw, r6.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r7.xyzw, r7.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r8.xyzw, r8.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -1502,7 +1502,7 @@ fxgroup
                 movc r10.xyzw, r12.wwww, r10.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r11.xyzw, r12.wwww, r11.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r9.xyzw, r9.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r10.xyzw, r10.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r11.xyzw, r11.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -1550,7 +1550,7 @@ fxgroup
                 movc r1.xyzw, r9.xxxx, r1.xyzw, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 movc r4.xyzw, r9.xxxx, r4.xyzw, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 153 "C:\workspace\render_demos\RenderEngine2\FX\Billboard.fx"
+                #line 153 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Billboard.fx"
                 mov r3.xyzw, r3.xyzw  // A<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r1.xyzw, r1.xyzw  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov r4.xyzw, r4.xyzw  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>

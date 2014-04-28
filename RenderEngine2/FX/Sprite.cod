@@ -46,7 +46,7 @@ fxgroup
                 dcl_output o1.xy
                 dcl_temps 2
                 
-                #line 21 "C:\workspace\render_demos\RenderEngine2\FX\Sprite.fx"
+                #line 21 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Sprite.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r0.w, l(1.000000)  // vout<3: 1f>
                 mov r1.xy, v1.xyxx  // vout<4,5>
@@ -83,7 +83,7 @@ fxgroup
                 dcl_globalFlags refactoringAllowed
                 dcl_output o0.xyzw
                 
-                #line 29 "C:\workspace\render_demos\RenderEngine2\FX\Sprite.fx"
+                #line 29 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Sprite.fx"
                 mov o0.xyzw, l(0.900000,0.900000,0.900000,0.800000)  // PS<0: 0.9f,1: 0.9f,2: 0.9f,3: 0.8f>
                 ret 
                 // Approximately 2 instruction slots used

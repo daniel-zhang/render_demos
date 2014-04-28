@@ -45,6 +45,19 @@ bool SpriteDemo::init()
     mSpriteGen->buildVBFromQuads(qs); 
 
     mFont.init();
+
+    mOverlayGraphics.init(md3dDevice, md3dImmediateContext);
+    mOverlayGraphics.beginBatch();
+    for (UINT i = 0; i < 4; ++i)
+    {
+        float d = 0.35f*i;
+        OverlayUI::Quad* p = mOverlayGraphics.createQuad(XMFLOAT2(-0.8f + d, 0.8f), XMFLOAT2(0.1f, 0.1f));
+        mQuads.push_back(p);
+    }
+    mOverlayGraphics.endBatch();
+
+    mAnim.start();
+
     return true;
 }
 
@@ -80,6 +93,13 @@ void SpriteDemo::drawScene()
     //
     // Input layout is changed
     mSpriteGen->drawSprite();
+
+    XMFLOAT2 deltaPos = mAnim.loop();
+    for (UINT i = 0;i < mQuads.size(); ++i)
+    {
+        mQuads[i]->updateNdcPos(deltaPos);
+    }
+    mOverlayGraphics.drawOverlay();
 
     HR(mSwapChain->Present(0, 0));
 }

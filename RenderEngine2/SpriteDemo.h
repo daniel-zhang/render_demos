@@ -5,6 +5,8 @@
 #include "Sprite.h"
 #include "FontEngine.h"
 
+#include "OverlayGraphics.h"
+
 class SpriteDemo : public DemoBasic
 {
 public:
@@ -19,7 +21,10 @@ private:
     ID3D11Buffer* mSpriteIB;
     SpriteGenertaor* mSpriteGen;
     FontEngine mFont;
-};
+    OverlayUI::OverlayGraphics mOverlayGraphics;
+    Animation2D mAnim;
+    std::vector<OverlayUI::Quad*> mQuads;
 
+};
 
 #endif

@@ -100,26 +100,49 @@ TreeSpriteEffect::TreeSpriteEffect( ID3D11Device* device, const std::wstring& fi
     TreeTextureMapArray = mFX->GetVariableByName("gTreeMapArray")->AsShaderResource();
 }
 
+//
 // Static member variables need to be explicitly initialized
+//
 BasicEffect* EffectMgr::BasicFX = 0;
 TreeSpriteEffect* EffectMgr::TreeSpriteFX = 0;
 SpriteEffect* EffectMgr::SpriteFX= 0;
+OverlayEffect* EffectMgr::OverlayFX = 0;
 
 void EffectMgr::initAll( ID3D11Device* device )
 {
     BasicFX = new BasicEffect(device, L"../FX/Basic.fxo");
     TreeSpriteFX = new TreeSpriteEffect(device, L"../FX/Billboard.fxo");
     SpriteFX = new SpriteEffect(device, L"../FX/Sprite.fxo");
+    OverlayFX = new OverlayEffect(device, L"../FX/Overlay.fxo");
 }
 
 void EffectMgr::destroyAll()
 {
     // Safe delete
-    delete BasicFX; BasicFX = 0;
-    delete TreeSpriteFX; TreeSpriteFX = 0;
-    delete SpriteFX; SpriteFX = 0;
+    if(BasicFX) 
+    {
+        delete BasicFX; 
+        BasicFX = 0;
+    }
+    if(TreeSpriteFX) 
+    {
+        delete TreeSpriteFX; 
+        TreeSpriteFX= 0;
+    }
+    if(SpriteFX) 
+    {
+        delete SpriteFX; 
+        SpriteFX = 0;
+    }
+    if(OverlayFX) 
+    {
+        delete OverlayFX; 
+        OverlayFX = 0;
+    }
 }
-
+//
+//
+//
 SpriteEffect::SpriteEffect( ID3D11Device* device, const std::wstring& filename ):
     Effect(device, filename)
 {
@@ -127,3 +150,12 @@ SpriteEffect::SpriteEffect( ID3D11Device* device, const std::wstring& filename )
     DefaultTech = mFX->GetTechniqueByName("DefaultTech");
 }
 
+
+//
+// Overlay Effect
+//
+OverlayEffect::OverlayEffect( ID3D11Device* device, const std::wstring& filename ):
+    Effect(device, filename)
+{
+    OverlayTech = mFX->GetTechniqueByName("OverlayTech");
+}

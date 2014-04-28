@@ -162,6 +162,14 @@ public:
     ID3DX11EffectShaderResourceVariable* mData;
 };
 
+class OverlayEffect : public Effect
+{
+public:
+    OverlayEffect(ID3D11Device* device, const std::wstring& filename);
+    ~OverlayEffect(){}
+
+    ID3DX11EffectTechnique* OverlayTech;
+};
 
 // A simple effect manager that expose global access to various effects
 class EffectMgr
@@ -173,5 +181,6 @@ public:
     static BasicEffect* BasicFX;
     static TreeSpriteEffect* TreeSpriteFX; 
     static SpriteEffect* SpriteFX;
+    static OverlayEffect* OverlayFX;
 };
 #endif

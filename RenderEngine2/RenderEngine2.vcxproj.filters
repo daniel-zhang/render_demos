@@ -20,6 +20,9 @@
     <Filter Include="Main">
       <UniqueIdentifier>{0115928e-8774-41a6-89b2-d3aedf4f6e89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OverlayUI">
+      <UniqueIdentifier>{279076a9-69bb-42fe-8b97-900159e409f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxDemo.cpp">
@@ -105,6 +108,15 @@
     </ClCompile>
     <ClCompile Include="FontEngine.cpp">
       <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseWindow.cpp">
+      <Filter>OverlayUI</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlayMgr.cpp">
+      <Filter>OverlayUI</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlayGraphics.cpp">
+      <Filter>OverlayUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +213,18 @@
     <ClInclude Include="FontEngine.h">
       <Filter>Infrastructure</Filter>
     </ClInclude>
+    <ClInclude Include="BaseWindow.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlayMgr.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlayGraphics.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="FX\color.fx">
@@ -216,6 +240,9 @@
       <Filter>FX</Filter>
     </CustomBuild>
     <CustomBuild Include="FX\Sprite.fx">
+      <Filter>FX</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FX\Overlay.fx">
       <Filter>FX</Filter>
     </CustomBuild>
   </ItemGroup>
