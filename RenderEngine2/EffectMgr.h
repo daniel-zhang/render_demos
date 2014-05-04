@@ -121,6 +121,7 @@ public:
     ID3DX11EffectScalarVariable* mfxFogStart;
     ID3DX11EffectScalarVariable* mfxFogRange;
 };
+
 class TreeSpriteEffect : public Effect
 {
 public:
@@ -168,7 +169,12 @@ public:
     OverlayEffect(ID3D11Device* device, const std::wstring& filename);
     ~OverlayEffect(){}
 
+    void setDiffuseMap(ID3D11ShaderResourceView* tex)   
+    { mfxDiffuseMap->SetResource(tex); }
+
     ID3DX11EffectTechnique* OverlayTech;
+    ID3DX11EffectTechnique* OverlayTexTech;
+    ID3DX11EffectShaderResourceVariable* mfxDiffuseMap;
 };
 
 // A simple effect manager that expose global access to various effects

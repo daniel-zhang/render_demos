@@ -26,6 +26,7 @@ int WINAPI wWinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance,
 #endif
 
 	SpriteDemo demo;
+	//LightingDemo2 demo;
 	if(!demo.init()) return 0;
 
 	return demo.run();

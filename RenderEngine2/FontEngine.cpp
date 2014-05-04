@@ -1,5 +1,4 @@
 #include "FontEngine.h"
-#include <Gdiplus.h>
 #include <cassert>
 
 /*
@@ -9,10 +8,6 @@
 3. Create a texture from the fontsheet bitmaps
 */
 
-// ASCII characters from 33='!' to 127.  
-static const WCHAR StartChar = 33;
-static const WCHAR EndChar = 126;
-static const UINT NumChars = EndChar - StartChar + 1;
 
 int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 {
@@ -47,9 +42,6 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 
 FontEngine::FontEngine()
 {
-    mTextureWidth = 1024;
-    //mFontName = L"Consolas";
-    mFontName = L"Times New Roman";
 }
 
 FontEngine::~FontEngine()
@@ -57,73 +49,59 @@ FontEngine::~FontEngine()
 
 }
 
-void FontEngine::init()
+void FontEngine::createFontSheet( FontSheet& fs, std::wstring debugFilename )
 {
-    // temp parameters
-    float fontSizeInPixel = 96.f;
-    Gdiplus::FontStyle fontStyle = Gdiplus::FontStyleRegular;
-    Gdiplus::TextRenderingHint hint = Gdiplus::TextRenderingHintAntiAlias;
-
     ULONG_PTR token;
     Gdiplus::GdiplusStartupInput startupInput(NULL, TRUE, TRUE);
     Gdiplus::GdiplusStartupOutput startupOutput;
     Gdiplus::GdiplusStartup(&token, &startupInput, &startupOutput);
+    {// Scope begins
 
-    {
-        // Create a bitmap for each char
-        // Bitmap(int width, int height, Gdiplus::PixelFormat)
-        int charSize = static_cast<int>(2*fontSizeInPixel);
+        int charSize = static_cast<int>(2 * fs.mFontSizeInPixel); // Why mult by 2?
         Gdiplus::Bitmap charBitmap(charSize, charSize, PixelFormat32bppARGB);
 
-        //
         Gdiplus::Graphics charGraphics(&charBitmap);
         charGraphics.SetPageUnit(Gdiplus::UnitPixel);
-        charGraphics.SetTextRenderingHint(hint);
+        charGraphics.SetTextRenderingHint(fs.mHint);
 
-        //
-        // name, style, unit(pixel) and size(in pixel)
-        //
-        Gdiplus::Font font(mFontName.c_str(), fontSizeInPixel, fontStyle, Gdiplus::UnitPixel);
-
-        // Construct the charset
-        WCHAR charset[NumChars + 1];
-        for (UINT i = 0; i < NumChars; ++i)
-        {
-            charset[i] = StartChar + i;
-        }
-        // Append the trailing zero
-        charset[NumChars] = 0;
+        Gdiplus::Font font(fs.mFontName.c_str(), fs.mFontSizeInPixel, fs.mFontStyle, Gdiplus::UnitPixel);
 
         Gdiplus::RectF boundingBox;
-
-        // Find out charHeight -- the tallest char of the char set 
-        charGraphics.MeasureString(charset, NumChars, &font, Gdiplus::PointF(0.f, 0.f), &boundingBox);
-        mCharHeight = static_cast<int>(boundingBox.Height+.5f);
+        charGraphics.MeasureString(fs.mCharSet, fs.mCharSetNum, &font, Gdiplus::PointF(0.f, 0.f), &boundingBox);
+        fs.mCharHeight = static_cast<int>(boundingBox.Height+.5f);
           
-        // Find out textureHeight -- rows * charHeight
-        int rows = static_cast<int>(boundingBox.Width / mTextureWidth) + 1;
-        mTextureHeight = rows * mCharHeight + 1;
+        //
+        // Given texture width, font, and char set, find out texture height
+        //
+        int rows = static_cast<int>(boundingBox.Width / fs.mTextureWidth) + 1;
+        fs.mTextureHeight= rows * fs.mCharHeight + 1;
 
         // Find out spaceWidth
         WCHAR space[2] = {' ', 0}; 
         charGraphics.MeasureString(space, 1, &font, Gdiplus::PointF(0.f, 0.f), &boundingBox);
-        // Round width to int
-        mSpaceWidth = static_cast<int>(boundingBox.Width + .5f);
+        fs.mSpaceWidth = static_cast<int>(boundingBox.Width + .5f);
 
-        // build Font sheet bitmap
-        Gdiplus::Bitmap fontSheetBmp(mTextureWidth, mTextureHeight, PixelFormat32bppARGB);
-        Gdiplus::Graphics fontSheetGraphics(&fontSheetBmp);
-        fontSheetGraphics.SetCompositingMode(Gdiplus::CompositingModeSourceCopy);
-        fontSheetGraphics.Clear(Gdiplus::Color(0, 0, 0, 0));
+        //
+        // GDI+ does not print space, this is a workaround:
+        // Insert space at the beginning
+        //
+        int sheetPosX = 0;
+        int sheetPosY = 0;
+        fs.mCharRects.push_back(CD3D11_RECT( sheetPosX, sheetPosY, sheetPosX + fs.mSpaceWidth, sheetPosY + fs.mCharHeight));
+        sheetPosX += fs.mSpaceWidth;
 
-        Gdiplus::SolidBrush whiteBrush(Gdiplus::Color(255, 255, 255, 255));
-        UINT sheetPosX = 0;
-        UINT sheetPosY = 0;
+        fs.mFontSheetBmp = new Gdiplus::Bitmap(fs.mTextureWidth, fs.mTextureHeight, PixelFormat32bppARGB);
+
+        Gdiplus::Graphics fontSheetGraphics(fs.mFontSheetBmp);
+        fontSheetGraphics.SetCompositingMode(fs.mCompositeMode);
+        fontSheetGraphics.Clear(fs.mBackgroundColor);
+        Gdiplus::SolidBrush whiteBrush(fs.mForegroundColor);
+
         WCHAR str[2] = {' ', 0};
-        for (UINT i = 0; i < NumChars; ++i)
+        for (UINT i = 1; i < fs.mCharSetNum; ++i)
         {
-            str[0] = charset[i];
-            charGraphics.Clear(Gdiplus::Color(0, 0, 0, 0));
+            str[0] = fs.mCharSet[i];
+            charGraphics.Clear(fs.mBackgroundColor);
             // draw str onto charBitmap
             charGraphics.DrawString(str, 1, &font, Gdiplus::PointF(0.f, 0.f), &whiteBrush);
             int minX = getMinX(charBitmap);
@@ -131,28 +109,38 @@ void FontEngine::init()
             int charWidth = maxX - minX;
 
             // new line in font sheet
-            if (sheetPosX + charWidth > mTextureWidth)
+            if (sheetPosX + charWidth > fs.mTextureWidth)
             {
                 sheetPosX = 0;
-                sheetPosY += mCharHeight;
+                sheetPosY += fs.mCharHeight;
             }
 
-            mCharRects.push_back(CD3D11_RECT(
-                sheetPosX, sheetPosY, 
-                sheetPosX + charWidth, sheetPosY + mCharHeight));
+            fs.mCharRects.push_back(CD3D11_RECT( sheetPosX, sheetPosY, sheetPosX + charWidth, sheetPosY + fs.mCharHeight));
 
             fontSheetGraphics.DrawImage(&charBitmap, sheetPosX, sheetPosY,
-                minX, 0, charWidth, mCharHeight, Gdiplus::UnitPixel);
+                minX, 0, charWidth, fs.mCharHeight, Gdiplus::UnitPixel);
 
             sheetPosX += charWidth + 1;
         }
+
         CLSID clsid;
         GetEncoderClsid(L"image/bmp", &clsid);
-        std::wstring fname = L"../Textures/" + mFontName + L".bmp"; 
-        fontSheetBmp.Save(fname.c_str(), &clsid, NULL);
+        fs.mFontSheetBmpFileName = fs.mFontName + L"_" + debugFilename +  L".bmp"; 
+        fs.mFontSheetBmp->Save((fs.mFontSheetBmpFilePath + fs.mFontSheetBmpFileName).c_str(), &clsid, NULL);
 
-    }// end of scope
+        // Font sheet bmp must be freed here... 
+        // Basically it does not make sense to let FontSheet hold a pointer to the Bitmap object...
+        // Let me fix it later.
+        if (fs.mFontSheetBmp)
+        {
+            delete fs.mFontSheetBmp;
+            fs.mFontSheetBmp = 0;
+        }
+
+    }// Scope ends
+
     Gdiplus::GdiplusShutdown(token);
+
 }
 
 int FontEngine::getMaxX( Gdiplus::Bitmap& bitmap )
@@ -194,3 +182,59 @@ int FontEngine::getMinX( Gdiplus::Bitmap& bitmap )
     }
     return 0;
 }
+
+FontSheet::FontSheet( std::wstring fontName /*= L"Consolas"*/, float fontSizeInPixel /*= 96.f*/, int textureWidth /*= 1024*/, WCHAR startChar /*= 33*/, WCHAR endChar /*= 126*/, Gdiplus::FontStyle fontStyle /*= Gdiplus::FontStyleRegular*/, Gdiplus::TextRenderingHint hint /*= Gdiplus::TextRenderingHintAntiAlias*/, Gdiplus::CompositingMode compositeMode /*= Gdiplus::CompositingModeSourceCopy*/, Gdiplus::Color bgc /*= Gdiplus::Color(0, 0, 0, 0)*/, Gdiplus::Color fgc /*= Gdiplus::Color(255, 255, 255, 255) */ )
+    :
+    mFontName(fontName),
+    mFontSizeInPixel(fontSizeInPixel),
+    mTextureWidth(textureWidth),
+    mStartChar(startChar),
+    mEndChar(endChar),
+    mFontStyle(fontStyle),
+    mHint(hint),
+    mCompositeMode(compositeMode),
+    mBackgroundColor(bgc),
+    mForegroundColor(fgc),
+    mCharSet(0),
+    mCharSetNum(0),
+    mFontSheetBmp(0),
+    mFontSheetBmpFilePath(L"../Textures/")
+{
+        // Construct the charset
+        mCharSetNum = mEndChar - mStartChar + 1;
+        mCharSet = new WCHAR[mCharSetNum + 1];
+
+        for(UINT i = 0; i < mCharSetNum; ++i)
+        {
+            mCharSet[i] = mStartChar + i;
+        }
+
+        // Append the trailing zero
+        mCharSet[mCharSetNum] = 0;
+}
+
+FontSheet::~FontSheet()
+{
+    if(mCharSet)
+    {
+        delete[] mCharSet;
+        mCharSet = 0;
+    }
+
+    if (mFontSheetBmp)
+    {
+        delete mFontSheetBmp;
+        mFontSheetBmp = 0;
+    }
+}
+
+CD3D11_RECT* FontSheet::getSrcRect( WCHAR c )
+{
+    if (c < mStartChar || c > mEndChar)
+    {
+        return 0;
+    }
+    return &(mCharRects[c - mStartChar]);
+}
+
+

@@ -10,18 +10,10 @@ Notes
 
 SpriteDemo::SpriteDemo()
 {
-    mSpriteVB = 0;
-    mSpriteGen = 0;
 }
 
 SpriteDemo::~SpriteDemo()
 {
-    safe_release(&mSpriteVB);
-    if (mSpriteGen != 0)
-    {
-        delete mSpriteGen;
-        mSpriteGen = 0;
-    }
 }
 
 bool SpriteDemo::init()
@@ -31,32 +23,25 @@ bool SpriteDemo::init()
         return false;
     }
 
-    mSpriteGen = new SpriteGenertaor(md3dDevice, md3dImmediateContext);
-    // Z: [0, 1)
-    Quad q1, q2;
-    q1.mCenter = XMFLOAT3(400.f, 550.f, 0.1f);
-    q1.mSize = XMFLOAT2(600.f, 60.f);
-    q2.mCenter = XMFLOAT3(750.f, 300.f, 0.1f);
-    q2.mSize = XMFLOAT2(60.f, 400.f);
-    std::vector<Quad> qs;
-    qs.push_back(q1);
-    qs.push_back(q2);
+    //mFont.init();
 
-    mSpriteGen->buildVBFromQuads(qs); 
-
-    mFont.init();
-
-    mOverlayGraphics.init(md3dDevice, md3dImmediateContext);
-    mOverlayGraphics.beginBatch();
-    for (UINT i = 0; i < 4; ++i)
+    mWidgetMgr.init(md3dDevice, md3dImmediateContext, &mMouse);
+    mWidgetMgr.batchBegin();
+    /*
+    float x_step = 0.4f;
+    float y_step = 0.3f;
+    for (int i = 0; i < 6; ++i)
     {
-        float d = 0.35f*i;
-        OverlayUI::Quad* p = mOverlayGraphics.createQuad(XMFLOAT2(-0.8f + d, 0.8f), XMFLOAT2(0.1f, 0.1f));
-        mQuads.push_back(p);
+        for (int j = 0; j < 6; ++j)
+        {
+            WidgetBase* p = mWidgetMgr.createWidget(-0.9f + i*x_step, 0.9f - j*y_step, 100, 60, std::wstring(L"HelloGameUI"));
+            p->setText(std::wstring(L"Hello-World"));
+        }
     }
-    mOverlayGraphics.endBatch();
-
-    mAnim.start();
+    */
+    WidgetBase* p = mWidgetMgr.createWidget(-0.9f, 0.9f, 400, 300, std::wstring(L"HelloGameUI"));
+    p->setText(std::wstring(L"The Lord Of The Ring The Fellowship Of The Ring"));
+    mWidgetMgr.batchEnd();
 
     return true;
 }
@@ -89,18 +74,27 @@ void SpriteDemo::drawScene()
     md3dImmediateContext->RSSetState(0);
 
     //
-    // Draw sprites
+    // Draw UI
     //
-    // Input layout is changed
-    mSpriteGen->drawSprite();
-
-    XMFLOAT2 deltaPos = mAnim.loop();
-    for (UINT i = 0;i < mQuads.size(); ++i)
-    {
-        mQuads[i]->updateNdcPos(deltaPos);
-    }
-    mOverlayGraphics.drawOverlay();
+    mWidgetMgr.drawUI();
 
     HR(mSwapChain->Present(0, 0));
+}
+
+void SpriteDemo::onResize()
+{
+    DemoBasic::onResize();
+    
+    UINT vpNum = 1;
+    D3D11_VIEWPORT vp;
+    md3dImmediateContext->RSGetViewports(&vpNum, &vp);
+    mWidgetMgr.onViewportResize(static_cast<int>(vp.Width), static_cast<int>(vp.Height));
+}
+
+void SpriteDemo::onMouseMove( WPARAM btnState, int x, int y )
+{
+    DemoBasic::onMouseMove(btnState, x, y);
+
+    mMouse.EventMove.fire(x, y);
 }
 
