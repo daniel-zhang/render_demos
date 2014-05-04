@@ -2,18 +2,12 @@
 
 OverlayMgr::OverlayMgr()
 {
-    mMouse = 0;
     mDevice = 0;
     mCtx = 0;
 }
 
 OverlayMgr::~OverlayMgr()
 {
-    if (mMouse)
-    {
-        delete mMouse;
-        mMouse = 0;
-    }
 
     for (UINT i = 0; i < mWindows.size(); ++i)
     {
@@ -27,8 +21,6 @@ OverlayMgr::~OverlayMgr()
 
 bool OverlayMgr::init(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-    mMouse = new Mouse();
-    
     mDevice = device;
     mCtx = context;
 
@@ -40,21 +32,8 @@ bool OverlayMgr::init(ID3D11Device* device, ID3D11DeviceContext* context)
 void OverlayMgr::step( float dt )
 {
     mVp.updateViewport(mCtx);
-
-    for (UINT i = 0; i < mWindows.size(); ++i)
-    {
-        // dispatch onHover event
-        if (isPointInWindow(mMouse->mPosX, mMouse->mPosY, mWindows[i]))
-        {
-            mWindows[i]->onHover();
-        }
-    }
 }
 
-Mouse* OverlayMgr::getMouse()
-{
-    return mMouse;
-}
 
 void OverlayMgr::draw()
 {
@@ -63,12 +42,12 @@ void OverlayMgr::draw()
 
 }
 
-BaseWindow* OverlayMgr::createWindow( std::string winName, int width, int height, XMFLOAT2 position, std::string winClass /*= "Window/DefaultWindow"*/ )
+BaseWidget* OverlayMgr::createWindow( std::string winName, int width, int height, XMFLOAT2 position, std::string winClass /*= "Window/DefaultWindow"*/ )
 {
-    BaseWindow* pWindow = 0;
+    BaseWidget* pWindow = 0;
     if (winClass.compare("Window/DefaultWindow") == 0)
     {
-        pWindow = new BaseWindow(width, height, position, winName);
+        pWindow = new BaseWidget(width, height, position, winName);
     }
     else if (winClass.compare("Window/FrameWindow") == 0)
     {
@@ -86,7 +65,7 @@ BaseWindow* OverlayMgr::createWindow( std::string winName, int width, int height
     return pWindow;
 }
 
-bool OverlayMgr::isPointInWindow( int x, int y, BaseWindow* pWindow )
+bool OverlayMgr::isPointInWindow( int x, int y, BaseWidget* pWindow )
 {
     // Transform window position to screen space according to the current viewport
     XMFLOAT2 screenPos = ndc2screen(pWindow->getPos());

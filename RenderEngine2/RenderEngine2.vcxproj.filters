@@ -23,6 +23,9 @@
     <Filter Include="OverlayUI">
       <UniqueIdentifier>{279076a9-69bb-42fe-8b97-900159e409f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{19273f8a-1387-4d0f-bf46-9f8c6d8c86c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxDemo.cpp">
@@ -117,6 +120,18 @@
     </ClCompile>
     <ClCompile Include="OverlayGraphics.cpp">
       <Filter>OverlayUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseEvent.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Widget.cpp">
+      <Filter>OverlayUI</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetMgr.cpp">
+      <Filter>OverlayUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,13 +231,22 @@
     <ClInclude Include="BaseWindow.h">
       <Filter>OverlayUI</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>OverlayUI</Filter>
-    </ClInclude>
     <ClInclude Include="OverlayMgr.h">
       <Filter>OverlayUI</Filter>
     </ClInclude>
     <ClInclude Include="OverlayGraphics.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseEvent.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetMgr.h">
       <Filter>OverlayUI</Filter>
     </ClInclude>
   </ItemGroup>
