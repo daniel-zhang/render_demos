@@ -158,7 +158,4 @@ OverlayEffect::OverlayEffect( ID3D11Device* device, const std::wstring& filename
     Effect(device, filename)
 {
     OverlayTech = mFX->GetTechniqueByName("OverlayTech");
-    OverlayTexTech = mFX->GetTechniqueByName("OverlayTexTech");
-
-    mfxDiffuseMap = mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
 }

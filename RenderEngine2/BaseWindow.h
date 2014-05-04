@@ -8,20 +8,18 @@
 // As we do not want button size to be fixed and independent of VP size changes.
 //
 // Window does not have to know any details about rendering
-class BaseWidget
+class BaseWindow
 {
 public:
-    BaseWidget(int width, int height, XMFLOAT2 position, std::string winName);
-    ~BaseWidget();
-
-    void onHover(int x, int y);
-    void onClick(int x, int y);
+    BaseWindow(int width, int height, XMFLOAT2 position, std::string winName);
+    ~BaseWindow();
+    void onHover();
 
     XMFLOAT2 getPos(){return mPos;}
     XMFLOAT2 getSize(){return mSize;}
 
 private:
-    std::string mWidgetName;
+    std::string mWinName;
     XMFLOAT2 mSize;
     XMFLOAT2 mPos;
 };

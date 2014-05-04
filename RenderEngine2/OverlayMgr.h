@@ -2,6 +2,7 @@
 #define OVERLAY_MGR_H
 
 #include "Util.h"
+#include "Input.h"
 #include "BaseWindow.h"
 
 struct Viewport
@@ -32,21 +33,23 @@ public:
     bool init(ID3D11Device* device, ID3D11DeviceContext* context);
     void step(float dt);
     void draw();
+    Mouse* getMouse();
 
-    BaseWidget* createWindow(std::string winName, int width, int height, XMFLOAT2 position, std::string winClass = "Window/DefaultWindow");
+    BaseWindow* createWindow(std::string winName, int width, int height, XMFLOAT2 position, std::string winClass = "Window/DefaultWindow");
 
 protected:
     void updateViewport();
-    bool isPointInWindow(int x, int y, BaseWidget* pWindow);
+    bool isPointInWindow(int x, int y, BaseWindow* pWindow);
     XMFLOAT2 ndc2screen(XMFLOAT2 ndcPos);
 
 protected:
     
     Viewport mVp;
+    Mouse* mMouse;
     ID3D11Device* mDevice;
     ID3D11DeviceContext* mCtx;
 
-    std::vector<BaseWidget*> mWindows;
+    std::vector<BaseWindow*> mWindows;
 };
 
 

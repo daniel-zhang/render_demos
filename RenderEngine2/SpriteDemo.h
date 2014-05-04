@@ -2,10 +2,10 @@
 #define SPRITE_DEMO_H
 
 #include "DemoBasic.h"
+#include "Sprite.h"
 #include "FontEngine.h"
 
-//#include "OverlayGraphics.h"
-#include "WidgetMgr.h"
+#include "OverlayGraphics.h"
 
 class SpriteDemo : public DemoBasic
 {
@@ -15,18 +15,16 @@ public:
 
     virtual bool init();
     virtual void drawScene();
-    virtual void onResize();
-    virtual void onMouseMove(WPARAM btnState, int x, int y);
 
 private:
+    ID3D11Buffer* mSpriteVB;
+    ID3D11Buffer* mSpriteIB;
+    SpriteGenertaor* mSpriteGen;
     FontEngine mFont;
-    FontSheet mFontSheet;
-//    OverlayUI::OverlayGraphics mOverlayGraphics;
-//   Animation2D mAnim;
-//    std::vector<OverlayUI::Quad*> mQuads;
+    OverlayUI::OverlayGraphics mOverlayGraphics;
+    Animation2D mAnim;
+    std::vector<OverlayUI::Quad*> mQuads;
 
-    Mouse mMouse;
-    WidgetMgr mWidgetMgr;
 };
 
 #endif

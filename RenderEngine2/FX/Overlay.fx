@@ -1,24 +1,6 @@
 #include "LightHelper.fx"
 
-// Nonnumeric values cannot be added to a cbuffer.
-Texture2D gDiffuseMap;
-
-SamplerState samLinear
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
-
-SamplerState samAnisotropic
-{
-    Filter = ANISOTROPIC;
-    MaxAnisotropy = 4;
-
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
+Texture1DArray gTransforms;
 
 struct VertexIn
 {
@@ -45,18 +27,9 @@ VertexOut VS(VertexIn vin)
     return vout;
 }
 
-float4 PS(VertexOut pin, uniform bool useTex) : SV_Target
+float4 PS(VertexOut pin) : SV_Target
 {
-    if(useTex)
-    {
-        float4 texColor = float4(1.f, 1.f, 1.f, 1.f);
-        texColor = gDiffuseMap.Sample( samLinear, pin.Tex );
-        clip(texColor.z - 0.1f);
-
-        return texColor;
-    }
-    else
-        return pin.Color;
+    return pin.Color;
 }
 
 technique11 OverlayTech
@@ -67,18 +40,6 @@ technique11 OverlayTech
         SetHullShader( NULL );
         SetDomainShader( NULL );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_5_0, PS(false) ) );
-    }
-}
-
-technique11 OverlayTexTech
-{
-    pass p0
-    {
-        SetVertexShader( CompileShader( vs_5_0, VS() ) );
-        SetHullShader( NULL );
-        SetDomainShader( NULL );
-        SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_5_0, PS(true) ) );
+        SetPixelShader( CompileShader( ps_5_0, PS() ) );
     }
 }
