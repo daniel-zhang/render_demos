@@ -122,12 +122,16 @@ void WidgetMgr::onMouseMove( int x, int y )
         if (mWidgets[i]->isPointInside(mpMouse->mLastPosX, mpMouse->mLastPosY) == false &&
             mWidgets[i]->isPointInside(x, y) == true)
         {
-            mWidgets[i]->onMouseEnter();
+            mWidgets[i]->onMouseEnter(x, y);
         }
         else if (mWidgets[i]->isPointInside(mpMouse->mLastPosX, mpMouse->mLastPosY) == true&&
             mWidgets[i]->isPointInside(x, y) == false)
         {
-            mWidgets[i]->onMouseLeave();
+            mWidgets[i]->onMouseLeave(x, y);
+        }
+        else if(mWidgets[i]->isPointInside(x, y) == true)
+        {
+            mWidgets[i]->onMouseMove(x, y, mpMouse->mLastPosX, mpMouse->mLastPosY);
         }
         else
         {
@@ -137,6 +141,76 @@ void WidgetMgr::onMouseMove( int x, int y )
 
     mpMouse->mLastPosX = x;
     mpMouse->mLastPosY = y;
+}
+
+void WidgetMgr::onMouseLBtnDown( int x, int y )
+{
+    for (UINT i = 0; i < mWidgets.size(); ++i)
+    {
+        // Only the widget that gets the mouse click receives this click
+        if (mWidgets[i]->isPointInside(x, y) == true)
+        {
+            mWidgets[i]->onLBtnDown(x, y);
+        }
+    }
+}
+
+void WidgetMgr::onMouseLBtnUp( int x, int y )
+{
+    for (UINT i = 0; i < mWidgets.size(); ++i)
+    {
+        // Only the widget that has focus receives this event
+        if (mWidgets[i]->hasFocus() == true)
+        {
+            mWidgets[i]->onLBtnUp(x, y);
+        }
+    }
+}
+
+void WidgetMgr::onMouseRBtnDown( int x, int y )
+{
+    for (UINT i = 0; i < mWidgets.size(); ++i)
+    {
+        // Only the widget that gets the mouse click receives this event
+        if (mWidgets[i]->isPointInside(x, y) == true)
+        {
+            mWidgets[i]->onRBtnDown(x, y);
+        }
+    }
+}
+
+void WidgetMgr::onMouseRBtnUp( int x, int y )
+{
+    for (UINT i = 0; i < mWidgets.size(); ++i)
+    {
+        // Only the widget that gets the mouse click receives this event
+        if (mWidgets[i]->isPointInside(x, y) == true)
+        {
+            mWidgets[i]->onRBtnUp(x, y);
+        }
+    }
+}
+
+void WidgetMgr::onMouseWheelUp( int x, int y )
+{
+    for (UINT i = 0; i < mWidgets.size(); ++i)
+    {
+        if (mWidgets[i]->hasFocus())
+        {
+            mWidgets[i]->onWheelUp(x, y);
+        }
+    }
+}
+
+void WidgetMgr::onMouseWheelDown( int x, int y )
+{
+    for (UINT i = 0; i < mWidgets.size(); ++i)
+    {
+        if (mWidgets[i]->hasFocus())
+        {
+            mWidgets[i]->onWheelDown(x, y);
+        }
+    }
 }
 
 void WidgetMgr::onViewportResize( int width, int height )
@@ -293,6 +367,13 @@ void WidgetMgr::updateTextBuffers()
         {
             WCHAR c = textToDraw[j];
 
+            // start a new line if \n
+            if (c == 10)
+            {
+                insertPos.x = 0;
+                insertPos.y -= 2.f * (mFontSheet.mCharHeight) * resizeRatio / vpHeight;
+            }
+
             // Get src rect
             CD3D11_RECT srcRect = *(mFontSheet.getSrcRect(c));
 
@@ -365,3 +446,7 @@ void WidgetMgr::drawText()
     mCtx->DrawIndexed(mTextQuadNum*6, 0, 0);
 
 }
+
+
+
+

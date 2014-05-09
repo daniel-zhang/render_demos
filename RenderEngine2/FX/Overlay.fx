@@ -51,12 +51,15 @@ float4 PS(VertexOut pin, uniform bool useTex) : SV_Target
     {
         float4 texColor = float4(1.f, 1.f, 1.f, 1.f);
         texColor = gDiffuseMap.Sample( samLinear, pin.Tex );
-        clip(texColor.z - 0.1f);
+        clip( texColor.x - 0.3f );
 
         return texColor;
     }
     else
+    {
+        clip(pin.Color.a - 0.1f);
         return pin.Color;
+    }
 }
 
 technique11 OverlayTech

@@ -26,6 +26,9 @@
     <Filter Include="Input">
       <UniqueIdentifier>{19273f8a-1387-4d0f-bf46-9f8c6d8c86c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Deprecated">
+      <UniqueIdentifier>{12b6244d-86d7-459c-9428-a22765521fca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxDemo.cpp">
@@ -112,26 +115,35 @@
     <ClCompile Include="FontEngine.cpp">
       <Filter>Infrastructure</Filter>
     </ClCompile>
-    <ClCompile Include="BaseWindow.cpp">
+    <ClCompile Include="WidgetMgr.cpp">
       <Filter>OverlayUI</Filter>
     </ClCompile>
-    <ClCompile Include="OverlayMgr.cpp">
-      <Filter>OverlayUI</Filter>
+    <ClCompile Include="BaseWindow.cpp">
+      <Filter>Deprecated</Filter>
     </ClCompile>
     <ClCompile Include="OverlayGraphics.cpp">
+      <Filter>Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlayMgr.cpp">
+      <Filter>Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="Math2D.cpp">
       <Filter>OverlayUI</Filter>
     </ClCompile>
-    <ClCompile Include="MouseEvent.cpp">
-      <Filter>Input</Filter>
+    <ClCompile Include="WidgetBase.cpp">
+      <Filter>OverlayUI</Filter>
     </ClCompile>
     <ClCompile Include="Widget.cpp">
       <Filter>OverlayUI</Filter>
     </ClCompile>
-    <ClCompile Include="WidgetMgr.cpp">
+    <ClCompile Include="GUIRenderer.cpp">
       <Filter>OverlayUI</Filter>
     </ClCompile>
-    <ClCompile Include="Mouse.cpp">
-      <Filter>Input</Filter>
+    <ClCompile Include="WidgetMgr2.cpp">
+      <Filter>OverlayUI</Filter>
+    </ClCompile>
+    <ClCompile Include="LayoutSolver.cpp">
+      <Filter>OverlayUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -228,25 +240,52 @@
     <ClInclude Include="FontEngine.h">
       <Filter>Infrastructure</Filter>
     </ClInclude>
-    <ClInclude Include="BaseWindow.h">
-      <Filter>OverlayUI</Filter>
-    </ClInclude>
-    <ClInclude Include="OverlayMgr.h">
-      <Filter>OverlayUI</Filter>
-    </ClInclude>
-    <ClInclude Include="OverlayGraphics.h">
-      <Filter>OverlayUI</Filter>
-    </ClInclude>
-    <ClInclude Include="MouseEvent.h">
-      <Filter>Input</Filter>
-    </ClInclude>
     <ClInclude Include="Mouse.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetMgr.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetMgr2.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadBuffer.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseWindow.h">
+      <Filter>Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlayGraphics.h">
+      <Filter>Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlayMgr.h">
+      <Filter>Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetBase.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Math2D.h">
+      <Filter>OverlayUI</Filter>
     </ClInclude>
     <ClInclude Include="Widget.h">
       <Filter>OverlayUI</Filter>
     </ClInclude>
-    <ClInclude Include="WidgetMgr.h">
+    <ClInclude Include="GUIRenderer.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LayoutSolver.h">
+      <Filter>OverlayUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderable2D.h">
       <Filter>OverlayUI</Filter>
     </ClInclude>
   </ItemGroup>

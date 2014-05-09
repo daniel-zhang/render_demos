@@ -2,7 +2,7 @@
 #define WIDGET_MGR_H
 
 #include <vector>
-#include "Widget.h"
+#include "WidgetBase.h"
 #include "Util.h"
 #include "Mouse.h"
 
@@ -37,6 +37,10 @@ public:
     void onMouseMove(int x, int y);
     void onMouseLBtnDown(int x, int y);
     void onMouseLBtnUp(int x, int y);
+    void onMouseRBtnDown(int x, int y);
+    void onMouseRBtnUp(int x, int y);
+    void onMouseWheelUp(int x, int y);
+    void onMouseWheelDown(int x, int y);
     void onViewportResize(int width, int height);
 
     //
@@ -52,6 +56,7 @@ protected:
 protected:
     void createGraphicsBuffers();
     void clearGraphicsBuffers();
+    // TODO: reconstruct the widget's vertices according to its pos and size
     void updateGraphicsBuffers();
 
     void createTextBuffers();

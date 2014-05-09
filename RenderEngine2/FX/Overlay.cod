@@ -63,7 +63,7 @@ fxgroup
                 dcl_output o2.xyzw
                 dcl_temps 3
                 
-                #line 41 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Overlay.fx"
+                #line 41 "C:\workspace\render_demos\RenderEngine2\FX\Overlay.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r0.w, l(1.000000)  // vout<3: 1f>
                 mov r1.xy, v1.xyxx  // vout<4,5>
@@ -103,11 +103,16 @@ fxgroup
                 dcl_globalFlags refactoringAllowed
                 dcl_input_ps linear v2.xyzw
                 dcl_output o0.xyzw
+                dcl_temps 1
                 
-                #line 59 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Overlay.fx"
+                #line 60 "C:\workspace\render_demos\RenderEngine2\FX\Overlay.fx"
+                add r0.x, v2.w, l(-0.100000)
+                lt r0.x, r0.x, l(0.000000)
+                and r0.x, r0.x, l(-1)
+                discard r0.x
                 mov o0.xyzw, v2.xyzw  // PS<0,1,2,3>
                 ret 
-                // Approximately 2 instruction slots used
+                // Approximately 6 instruction slots used
                             
             };
         }
@@ -151,7 +156,7 @@ fxgroup
                 dcl_output o2.xyzw
                 dcl_temps 3
                 
-                #line 41 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Overlay.fx"
+                #line 41 "C:\workspace\render_demos\RenderEngine2\FX\Overlay.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r0.w, l(1.000000)  // vout<3: 1f>
                 mov r1.xy, v1.xyxx  // vout<4,5>
@@ -203,9 +208,9 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 53 "C:\Workspace\GitHub\render_demos\RenderEngine2\FX\Overlay.fx"
+                #line 53 "C:\workspace\render_demos\RenderEngine2\FX\Overlay.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v1.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
-                add r1.x, r0.z, l(-0.100000)
+                add r1.x, r0.x, l(-0.300000)
                 lt r1.x, r1.x, l(0.000000)
                 and r1.x, r1.x, l(-1)
                 discard r1.x

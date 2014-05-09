@@ -1,0 +1,105 @@
+widget size compute
+----------------------------------------------------------------------
+1. widgets forms a tree
+2. only leaf widgets have concrete size
+3. non-leaf widget's size is computed from the sizes of its children
+
+Pseudo
+----------------------------------------------------------------------
+PixelPoint:
+    int x, y
+
+Box:
+    int width, height
+
+PixelQuad:
+    PixelQuad(left, top, right, bottom): ...
+    PixelQuad(pos, width, height): ...
+    int left, top, right, bottom
+    int getWidth(): return right - left
+    int getHeight(): return bottom - top
+    PixelVector getPos(): return PixelPoint(left, top)
+
+Font:
+    int get_char_width(char): ...
+    int get_height(): ...
+
+Text:
+    string = "some string"
+    font = create_font("some font")
+
+    get_text_area(text_area):
+        insert_pos = PixelPoint(0, 0)
+        for each char in string:
+            if char is newline || insert_pos.x > text_area.width:
+                insert_pos.x = 0
+                insert_pos.y += font.get_height 
+            else
+                insert_pos.x += font.get_char_width(char)
+
+        text_area.height = insert_pos.y + font.get_height
+    
+Widget:
+    children = array()
+    is_leaf(): return true if children.size() == 0
+    PixelQuad quad
+    Text text
+    Margin margin
+    int width // given by user
+    int height
+    PixelPoint pos
+
+
+get_leaf_height(widget):
+    Box text_area
+    text_area.width = widget.width
+    widget.text.get_text_area(text_area)
+    widget.height = text_area.height
+
+    return widget.height
+
+get_height_from_children(widget):
+    insert_pos = PixelPoint(0, 0)
+    line_heights = array()
+    for each child in widget.children:
+        // start a new line and center the child, then start a new line
+        if child.margin.left == auto && child.margin.right == auto
+            insert_pos.x = 0
+            insert_pos.y += line_heights.max()
+            line_heights.clear()
+
+            child.pos.x = (widget.width - child.width) / 2
+            child.pos.y = insert_pos.y + child.margin.top
+
+            insert_pos.x = 0
+            insert_pos.y += child.height + child.margin.top_and_bottom
+
+        // stream the widget and start a new line if required
+        else 
+            child.pos.x = insert_pos.x + child.margin.left
+            child.pos.y = insert_pos.y + child.margin.top
+            line_heights.add(child.height + child.margin.top_and_bottom)
+
+            insert_pos.x += child.width + child.margin.left_and_right
+            if insert_pos.x > widget.width :
+                insert_pos.x = 0
+                insert_pos.y += line_heights.max()
+                line_heights.clear()
+
+    widget.height = insert_pos.y + line_heights.max()
+    return widget.height
+
+get_height(widget):
+    if widget.is_leaf():
+        widget.height = get_leaf_height(widget.content)
+        return widget.height
+
+    for each child in widget.children:
+        child.height = get_height(child)
+
+    return get_height_from_cildren(widget)
+   
+
+
+
+    

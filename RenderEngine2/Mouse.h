@@ -1,11 +1,15 @@
 #ifndef MOUSE_H
 #define MOUSE_H
 
-#include "MouseEvent.h"
+#include "Event.h"
 
 struct Mouse
 {
-    Mouse();
+    Mouse()
+    {
+        mLastPosX = 0;
+        mLastPosY = 0;
+    }
 
     int mLastPosX, mLastPosY;
 
@@ -16,6 +20,10 @@ struct Mouse
 
     MouseEvent EventRBtnDown;
     MouseEvent EventRBtnUp;
+
+    // TODO: this does not make many sense
+    // Need an abstract event type: IO_EVENT
+    MouseEvent EventViewportResize;
 };
 
 
