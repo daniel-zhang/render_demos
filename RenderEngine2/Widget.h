@@ -2,104 +2,139 @@
 #define WIDGET_H
 
 #include <string>
-#include "Util.h"
-#include "InputLayoutMgr.h"
+#include <vector>
+#include "IRenderable2D.h"
+#include "LayoutSolver.h"
 
-const float gDefaultWidgetDepth = 0.002f;
-const float gDefaultWidgetDepth2 = 0.001f;
+struct GUIEvent;
 
-struct RectFloat
-{
-    RectFloat()
-    {
-        ZeroMemory(this, sizeof(RectFloat));
-    }
-    RectFloat(float l, float t, float r, float b)
-    {
-        left = l;
-        top = t;
-        right = r;
-        bottom = b;
-    }
-    float left, top, right, bottom;
-};
-
-struct Viewport
-{
-    Viewport() {ZeroMemory(this, sizeof(Viewport));}
-    Viewport(int w, int h):width(w), height(h){}
-    Viewport(float w, float h):width(static_cast<int>(w)), height(static_cast<int>(h)){}
-
-    int width;
-    int height;
-};
-
-class WidgetBase
+class Widget : public IRenderable2D
 {
 public:
-    // Pos refers to the upper-left vertex in NDC space.
-    // Size is given in screen pixel, then turned into NDC space internally.
-    WidgetBase(float posX, float posY, int width, int height, Viewport& vp);
-    virtual ~WidgetBase();
-    virtual void setLabel(std::wstring& labelText);
+    friend LayoutSolver;
+
+    // Ctor for root widget
+    Widget(std::string name, Area2D& size, RGBA& color, LayoutSolver* solver);
+
+    // Ctor for non-root widget
+    Widget(std::string name,  Widget* parent, Area2D& size, PixelPadding& padding, RGBA& color,
+        LayoutSolver* solver, LayoutType layoutType = WIDGET_LAYOUT_STREAM);
+
+    ~Widget();
+
+    // UI logic
+    void dispatch(GUIEvent& evt);
+    virtual void onLBtnDown(Point2D& clickPos);
+    virtual void onLBtnUp(Point2D& clickPos);
+    // TODO: we will need the mouse pos info too
+    // like this: 
+    // onMouseMove(Point2D& mousePos, Vector2D& movement);
+    virtual void onMouseMove(Vector2D& movement);
+    virtual void onResize(Area2D& newArea);
+
+    void addChild(Widget* child){mChildren.push_back(child);}
 
     //
-    // UI logic
-    //
+<<<<<<< HEAD
     virtual void onMouseEnter();
     virtual void onMouseLeave();
-    virtual void onLBtnDown();
-    virtual void onLBtnUp();
+    virtual void onLBtnDown(){}
+    virtual void onLBtnUp(){}
     virtual void onResize(Viewport& vp);
+=======
+    // getters
+    //
+    std::vector<Widget*>& getChildren(){return this->mChildren;}
+    virtual Box2D getClientArea();
+
+    // TODO: by making render data public, these getters are to be removed.
+    virtual void getRenderInfo(Box2D& box, int& layoutDepth, RGBA& color);
+    UINT getLayerDepth(){return mLayerDepth;}
+>>>>>>> a8815b47191ea80dce029895a4617a5fbd1ce1fe
 
     //
-    // UI graphics
+    // Graphics
     //
-    virtual bool isPointInside(int x, int y);
-    virtual Vertex::OverlayVertex* getVerticesInNDC();
-    virtual void setColor(XMFLOAT4 color);
-    virtual void setTextures();
+    virtual bool isPointInside(Point2D& point);
 
-    // Text
-    void setText(std::wstring& text);
-    const std::wstring& getText();
-    void getTextArea(RectFloat& rect);
-    float getFontSize();
-    const Viewport& getViewPort();
+protected:
+    // Actions
+    void resize(Area2D& newArea);
+    void move(Vector2D& movement);
 
 protected:
     enum WidgetState
     {
         NORMAL = 0,
-        HAS_FOCUSE,
         ON_HOVER,
+        PRESSED_DOWN,
         DISABLED,
         STATE_NUMBER
     };
 
-    //
-    // UI logic
-    //
-    WidgetState mCurrState;
-    WidgetState mPrevState;
-
-    //
-    // UI graphics
-    //
-    void widgetResizeInNDC();
-    XMFLOAT2 screenToNDC(int x, int y);
-    void updateVertices();
-
-    Viewport mViewport;
-    int mWidth, mHeight;
-    int mPaddingX, mPaddingY;
-    float mFontSizePixel;
+protected:
+    WidgetState mState;
+    LayoutType mLayoutType;
+    LayoutSolver* mSolver;
+    // Widget position relative to its parent
+    Point2D mPos;
+    PixelPadding mPadding;
     
-    XMFLOAT2 mSizeNDC;
-    XMFLOAT2 mPosNDC;
-    XMFLOAT4 mDefaultColor;
-    Vertex::OverlayVertex mVertices[4];
-    std::wstring mText;
+    std::string mName;
+    Widget* mParent;
+    std::vector<Widget*> mChildren;
+};
+
+
+struct GUIEvent
+{
+    enum EventType 
+    {
+        MouseMove = 0,
+        MouseLBtnDown,
+        MouseLBtnUp
+    };
+    EventType mEventId;
+    UINT mKeyId;
+    Point2D mClickPos;
+    Point2D mLastClickPos;
+    Vector2D mMouseMovement;
+};
+
+class Dispatcher
+{
+public:
+    void init(Widget* widget);
+    void dispatch(GUIEvent& evt)
+    {
+        switch(evt.mEventId)
+        {
+        case GUIEvent::MouseLBtnDown:
+            bool captureFlag = true;
+            for (UINT i = 0; i < mWidget->getChildren().size(); ++i)
+            {
+                Widget*  child = mWidget->getChildren()[i];
+                if (child->isPointInside(evt.mClickPos))
+                {
+                    child->dispatch(evt);
+                    captureFlag = false;
+                }
+            }
+            if (captureFlag)
+            {
+                mWidget->onLBtnDown(evt.mClickPos);
+            }
+            break;
+
+        default:
+            break;
+        }
+
+    }
+
+private:
+    Widget* mWidget;
 
 };
+
 #endif

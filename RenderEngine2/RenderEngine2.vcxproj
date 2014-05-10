@@ -54,7 +54,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Workspace\boost_1_55_0\boost_1_55_0;$(SolutionDir)/Common;$(DXSDK_DIR)/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\workspace\boost_1_55_0\boost_1_55_0;$(SolutionDir)/Common;$(DXSDK_DIR)/include/</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -97,13 +97,13 @@
     <ClCompile Include="EmptyDemo.cpp" />
     <ClCompile Include="FontEngine.cpp" />
     <ClCompile Include="GridDemo.cpp" />
+    <ClCompile Include="GUIRenderer.cpp" />
+    <ClCompile Include="LayoutSolver.cpp" />
     <ClCompile Include="LightingDemo.cpp" />
     <ClCompile Include="LightingDemo2.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshLoaderDemo.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Mouse.cpp" />
-    <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="ObjLoaderDemo.cpp" />
     <ClCompile Include="OverlayGraphics.cpp" />
@@ -115,8 +115,11 @@
     <ClCompile Include="SpriteDemo.cpp" />
     <ClCompile Include="TextureMgr.cpp" />
     <ClCompile Include="WaveDemo.cpp" />
+    <ClCompile Include="WidgetBase.cpp" />
     <ClCompile Include="Widget.cpp" />
+    <ClCompile Include="Math2D.cpp" />
     <ClCompile Include="WidgetMgr.cpp" />
+    <ClCompile Include="WidgetMgr2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Camera.h" />
@@ -133,17 +136,22 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="BillboardDemo.h" />
     <ClInclude Include="BoxDemo.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="DemoBasic.h" />
     <ClInclude Include="EffectMgr.h" />
     <ClInclude Include="EmptyDemo.h" />
     <ClInclude Include="FontEngine.h" />
     <ClInclude Include="GridDemo.h" />
+    <ClInclude Include="GUIRenderer.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="IRenderable2D.h" />
+    <ClInclude Include="LayoutSolver.h" />
     <ClInclude Include="LightingDemo.h" />
     <ClInclude Include="LightingDemo2.h" />
     <ClInclude Include="MeshLoaderDemo.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h" />
-    <ClInclude Include="MouseEvent.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="ObjLoaderDemo.h" />
     <ClInclude Include="OverlayMgr.h" />
@@ -155,8 +163,12 @@
     <ClInclude Include="SpriteDemo.h" />
     <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="WaveDemo.h" />
+    <ClInclude Include="WidgetBase.h" />
     <ClInclude Include="Widget.h" />
+    <ClInclude Include="Math2D.h" />
     <ClInclude Include="WidgetMgr.h" />
+    <ClInclude Include="WidgetMgr2.h" />
+    <ClInclude Include="QuadBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="FX\color.fx">

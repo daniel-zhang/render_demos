@@ -23,25 +23,36 @@ bool SpriteDemo::init()
         return false;
     }
 
-    //mFont.init();
-
+    /*
     mWidgetMgr.init(md3dDevice, md3dImmediateContext, &mMouse);
     mWidgetMgr.batchBegin();
-    /*
-    float x_step = 0.4f;
-    float y_step = 0.3f;
-    for (int i = 0; i < 6; ++i)
-    {
-        for (int j = 0; j < 6; ++j)
-        {
-            WidgetBase* p = mWidgetMgr.createWidget(-0.9f + i*x_step, 0.9f - j*y_step, 100, 60, std::wstring(L"HelloGameUI"));
-            p->setText(std::wstring(L"Hello-World"));
-        }
-    }
-    */
     WidgetBase* p = mWidgetMgr.createWidget(-0.9f, 0.9f, 400, 300, std::wstring(L"HelloGameUI"));
-    p->setText(std::wstring(L"The Lord Of The Ring The Fellowship Of The Ring"));
+    p->setText(std::wstring(L"The Lord Of The Ring\nThe Fellowship Of The Ring"));
     mWidgetMgr.batchEnd();
+    */
+
+    // version 2
+    mRenderer.init(md3dDevice, md3dImmediateContext);
+    mWidgetMgr2.init(&mInput, &mRenderer);
+
+    UINT vpNum = 1;
+    D3D11_VIEWPORT vp;
+    md3dImmediateContext->RSGetViewports(&vpNum, &vp);
+
+    RGBA transparent(0, 0, 0, 0);
+    RGBA Background(55, 56, 49);
+    RGBA green(100, 248, 100, 255);
+    RGBA red(255, 100, 100, 255);
+    RGBA blue(100, 100, 255, 255);
+
+    mWidgetMgr2.createBegin();
+    Widget* root = mWidgetMgr2.createRootWidget("root",Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), transparent);
+    for (UINT i = 0; i < 500; ++i)
+    {
+        mWidgetMgr2.createChildWidget("", root, Area2D(20, 20), PixelPadding(), green);
+    }
+
+    mWidgetMgr2.createEnd();
 
     return true;
 }
@@ -76,8 +87,11 @@ void SpriteDemo::drawScene()
     //
     // Draw UI
     //
+    /*
     mWidgetMgr.drawUI();
+    */
 
+    mRenderer.draw(mWidgetMgr2.getWidgets());
     HR(mSwapChain->Present(0, 0));
 }
 
@@ -89,12 +103,68 @@ void SpriteDemo::onResize()
     D3D11_VIEWPORT vp;
     md3dImmediateContext->RSGetViewports(&vpNum, &vp);
     mWidgetMgr.onViewportResize(static_cast<int>(vp.Width), static_cast<int>(vp.Height));
+
+    mInput.EventViewportResize.fire(static_cast<int>(vp.Width), static_cast<int>(vp.Height));
 }
 
 void SpriteDemo::onMouseMove( WPARAM btnState, int x, int y )
 {
     DemoBasic::onMouseMove(btnState, x, y);
 
-    mMouse.EventMove.fire(x, y);
+//    mMouse.EventMove.fire(x, y);
+
+    mInput.EventMove.fire(x, y);
+}
+
+void SpriteDemo::onMouseDown( WPARAM btnState, int x, int y )
+{
+    DemoBasic::onMouseDown(btnState, x, y);
+
+    if( (btnState & MK_LBUTTON) != 0 )
+    {
+        mWidgetMgr.onMouseLBtnDown(x, y);
+
+        mInput.EventLBtnDown.fire(x, y);
+    }
+    else if ( (btnState & MK_RBUTTON) != 0)
+    {
+        mWidgetMgr.onMouseRBtnDown(x, y);
+    }
+    else
+    {
+    }
+}
+
+void SpriteDemo::onMouseUp( WPARAM btnState, int x, int y )
+{
+    DemoBasic::onMouseUp(btnState, x, y);
+
+    mWidgetMgr.onMouseLBtnUp(x, y);
+
+    mInput.EventLBtnUp.fire(x, y);
+
+    if( (btnState & MK_LBUTTON) != 0 )
+    {
+    }
+    else if ( (btnState & MK_RBUTTON) != 0)
+    {
+        mWidgetMgr.onMouseRBtnUp(x, y);
+    }
+    else
+    {
+    }
+}
+
+void SpriteDemo::onMouseWheel( WPARAM btnState, int x, int y )
+{
+    int zDelta = GET_WHEEL_DELTA_WPARAM(btnState);
+    if (zDelta > 0)
+    {
+        mWidgetMgr.onMouseWheelUp(x, y);
+    }
+    else
+    {
+        mWidgetMgr.onMouseWheelDown(x, y);
+    }
 }
 

@@ -183,13 +183,11 @@ int FontEngine::getMinX( Gdiplus::Bitmap& bitmap )
     return 0;
 }
 
-FontSheet::FontSheet( std::wstring fontName /*= L"Consolas"*/, float fontSizeInPixel /*= 96.f*/, int textureWidth /*= 1024*/, WCHAR startChar /*= 33*/, WCHAR endChar /*= 126*/, Gdiplus::FontStyle fontStyle /*= Gdiplus::FontStyleRegular*/, Gdiplus::TextRenderingHint hint /*= Gdiplus::TextRenderingHintAntiAlias*/, Gdiplus::CompositingMode compositeMode /*= Gdiplus::CompositingModeSourceCopy*/, Gdiplus::Color bgc /*= Gdiplus::Color(0, 0, 0, 0)*/, Gdiplus::Color fgc /*= Gdiplus::Color(255, 255, 255, 255) */ )
+FontSheet::FontSheet( std::wstring fontName /*= L"Consolas"*/, float fontSizeInPixel /*= 96.f*/, int textureWidth /*= 1024*/,  Gdiplus::FontStyle fontStyle /*= Gdiplus::FontStyleRegular*/, Gdiplus::TextRenderingHint hint /*= Gdiplus::TextRenderingHintAntiAlias*/, Gdiplus::CompositingMode compositeMode /*= Gdiplus::CompositingModeSourceCopy*/, Gdiplus::Color bgc /*= Gdiplus::Color(0, 0, 0, 0)*/, Gdiplus::Color fgc /*= Gdiplus::Color(255, 255, 255, 255) */ )
     :
     mFontName(fontName),
     mFontSizeInPixel(fontSizeInPixel),
     mTextureWidth(textureWidth),
-    mStartChar(startChar),
-    mEndChar(endChar),
     mFontStyle(fontStyle),
     mHint(hint),
     mCompositeMode(compositeMode),
@@ -200,17 +198,27 @@ FontSheet::FontSheet( std::wstring fontName /*= L"Consolas"*/, float fontSizeInP
     mFontSheetBmp(0),
     mFontSheetBmpFilePath(L"../Textures/")
 {
-        // Construct the charset
-        mCharSetNum = mEndChar - mStartChar + 1;
-        mCharSet = new WCHAR[mCharSetNum + 1];
+    // ASCII
+    mStartChar = 32;
+    mEndChar = 126;
+    WCHAR newline = 10;
+        
+    // num: [32, 126] + 10
+    mCharSetNum = mEndChar - mStartChar + 1 + 1;
+    // +1 for to prepare space for the trailing zero
+    mCharSet = new WCHAR[mCharSetNum + 1];
 
-        for(UINT i = 0; i < mCharSetNum; ++i)
-        {
-            mCharSet[i] = mStartChar + i;
-        }
+    //
+    for(UINT i = 0; i < mCharSetNum - 1; ++i)
+    {
+        mCharSet[i] = mStartChar + i;
+    }
 
-        // Append the trailing zero
-        mCharSet[mCharSetNum] = 0;
+    // Append newline(\n)
+    mCharSet[mCharSetNum - 1] = newline;
+
+    // Append the trailing zero
+    mCharSet[mCharSetNum] = 0;
 }
 
 FontSheet::~FontSheet()
@@ -230,11 +238,16 @@ FontSheet::~FontSheet()
 
 CD3D11_RECT* FontSheet::getSrcRect( WCHAR c )
 {
-    if (c < mStartChar || c > mEndChar)
+    if (c >= mStartChar && c <= mEndChar)
     {
-        return 0;
+        return &(mCharRects[c - mStartChar]);
     }
-    return &(mCharRects[c - mStartChar]);
+    else if (c == 10)
+    {
+        return &(mCharRects[mCharSetNum-1]);
+    }
+    else
+        return 0;
 }
 
 

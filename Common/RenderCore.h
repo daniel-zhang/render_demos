@@ -26,6 +26,7 @@ public:
 	virtual void onMouseDown(WPARAM btnState, int x, int y){}
 	virtual void onMouseUp(WPARAM btnState, int x, int y){}
 	virtual void onMouseMove(WPARAM btnState, int x, int y){}
+	virtual void onMouseWheel(WPARAM btnState, int x, int y){}
 
 protected:
 	bool initRenderWindow();

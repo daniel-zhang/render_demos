@@ -11,8 +11,6 @@ public:
         std::wstring fontName = L"Consolas", 
         float fontSizeInPixel = 128.f, 
         int textureWidth = 1024,
-        WCHAR startChar = 32,
-        WCHAR endChar = 126,
 
         Gdiplus::FontStyle fontStyle = Gdiplus::FontStyleRegular, 
         Gdiplus::TextRenderingHint hint = Gdiplus::TextRenderingHintAntiAlias,

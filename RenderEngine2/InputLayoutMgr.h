@@ -52,6 +52,22 @@ public:
     static ID3D11InputLayout* PosNormalTex;
     static ID3D11InputLayout* TreePointSprite;
     static ID3D11InputLayout* OverlayVertex;
+
+    // Overload method to get input layout by vertex type
+    static ID3D11InputLayout* get(Vertex::OverlayVertex* p)
+    {
+        return OverlayVertex;
+    }
+    static ID3D11InputLayout* get(Vertex::PosNormalTex* p)
+    {
+        return PosNormalTex;
+    }
+    static ID3D11InputLayout* get(Vertex::TreePointSprite* p)
+    {
+        return TreePointSprite;
+    }
+
 };
+
 
 #endif
