@@ -36,12 +36,15 @@ public:
 
     //
 <<<<<<< HEAD
+<<<<<<< HEAD
     virtual void onMouseEnter();
     virtual void onMouseLeave();
     virtual void onLBtnDown(){}
     virtual void onLBtnUp(){}
     virtual void onResize(Viewport& vp);
 =======
+=======
+>>>>>>> a8815b47191ea80dce029895a4617a5fbd1ce1fe
     // getters
     //
     std::vector<Widget*>& getChildren(){return this->mChildren;}
@@ -50,6 +53,9 @@ public:
     // TODO: by making render data public, these getters are to be removed.
     virtual void getRenderInfo(Box2D& box, int& layoutDepth, RGBA& color);
     UINT getLayerDepth(){return mLayerDepth;}
+<<<<<<< HEAD
+>>>>>>> a8815b47191ea80dce029895a4617a5fbd1ce1fe
+=======
 >>>>>>> a8815b47191ea80dce029895a4617a5fbd1ce1fe
 
     //
@@ -137,4 +143,8 @@ private:
 
 };
 
+<<<<<<< HEAD
 #endif
+=======
+#endif
+>>>>>>> a8815b47191ea80dce029895a4617a5fbd1ce1fe

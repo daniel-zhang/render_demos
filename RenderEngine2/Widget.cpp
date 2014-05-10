@@ -1,195 +1,131 @@
 #include "Widget.h"
+#include "LayoutSolver.h"
 
-namespace ColorSet
+Widget::Widget( std::string name, Area2D& size, RGBA& color, LayoutSolver* solver)
 {
-    struct RGBA
-    {
-        RGBA(int r, int g, int b, float a = 1.f):
-            red(r), green(g), blue(b), alpha(a) {}
+    mSize = size;
+    mColor = color;
+    mLayerDepth = 0;
 
-        XMFLOAT4 normalize()
+    mState = NORMAL;
+    mName = name;
+
+    mParent = NULL;
+    mLayoutType = WIDGET_LAYOUT_NOT_SPECIFIED;
+    mSolver = solver;
+}
+
+Widget::Widget( std::string name, Widget* parent, Area2D& size, PixelPadding& padding, RGBA& color, LayoutSolver* solver, LayoutType layoutType /*= WIDGET_LAYOUT_STREAM*/ )
+{
+    mSize = size;
+    mPadding = padding;
+    mLayerDepth = 0;
+    mColor = color;
+
+    mState = NORMAL;
+    mName = name;
+
+    mParent = parent;
+    mParent->addChild(this);
+    mLayoutType = layoutType;
+    mSolver = solver;
+}
+
+Widget::~Widget() {}
+
+void Widget::onLBtnDown( Point2D& clickPos)
+{
+    bool isMyJob = true;
+    for(UINT i = 0; i < mChildren.size(); ++i)
+    {
+        if (mChildren[i]->isPointInside(clickPos))
         {
-            XMFLOAT4 normalized;
-            normalized.x = static_cast<float>(red)/255;
-            normalized.y = static_cast<float>(green)/255;
-            normalized.z = static_cast<float>(blue)/255;
-            normalized.w = alpha;
-
-            return normalized;
+            isMyJob = false;
+            mChildren[i]->onLBtnDown(clickPos);
         }
+    }
 
-        int red, green, blue;
-        float alpha;
-    };
-
-    RGBA Background(55, 56, 49);
-    RGBA Foreground(248, 248, 242);
-}
-
-WidgetBase::WidgetBase( float posX, float posY, int width, int height, Viewport& vp )
-{
-    mCurrState = NORMAL;
-    mPrevState = NORMAL;
-
-    mDefaultColor = ColorSet::Background.normalize();
-
-    mViewport.width = vp.width;
-    mViewport.height = vp.height;
-
-    mPosNDC.x = posX;
-    mPosNDC.y = posY;
-
-    mWidth = width;
-    mHeight = height;
-
-    mSizeNDC.x = 2.f * static_cast<float>(mWidth)/mViewport.width; 
-    mSizeNDC.y = 2.f * static_cast<float>(mHeight)/mViewport.height;
-    
-    // Text
-    mText = L"";
-    mPaddingX = 5;
-    mPaddingY = 3;
-    mFontSizePixel = 48.f;
-
-    updateVertices();
-    setColor(mDefaultColor);
-}
-
-WidgetBase::~WidgetBase()
-{
-
-}
-
-void WidgetBase::setLabel( std::wstring& labelText )
-{
-
-}
-
-
-void WidgetBase::onMouseEnter()
-{
-    setColor(ColorSet::Foreground.normalize());
-    // shift a little bit
-    for (UINT i = 0; i < 4; ++i)
+    if (isMyJob && isPointInside(clickPos))
     {
-        mVertices[i].Pos.x += 0.01f;
-        mVertices[i].Pos.y += 0.02f;
+        mState = PRESSED_DOWN;
     }
 }
 
-void WidgetBase::onMouseLeave()
+void Widget::onLBtnUp( Point2D& clickPos)
 {
-    setColor(mDefaultColor);
-    // unshift
-    for (UINT i = 0; i < 4; ++i)
+    switch(mState)
     {
-        mVertices[i].Pos.x -= 0.01f;
-        mVertices[i].Pos.y -= 0.02f;
+    case PRESSED_DOWN:
+        mState = NORMAL;
+        break;
+        
+    default:
+        for (UINT i = 0; i < mChildren.size(); ++i)
+        {
+            mChildren[i]->onLBtnUp(clickPos);
+        }
+        break;
     }
 }
 
-void WidgetBase::onMouseLBtnClick()
+void Widget::onMouseMove( Vector2D& movement )
 {
-
-}
-
-void WidgetBase::onResize(Viewport& vp)
-{
-    mViewport.width = vp.width;
-    mViewport.height = vp.height;
-
-    widgetResizeInNDC();
-}
-
-bool WidgetBase::isPointInside( int x, int y )
-{
-    XMFLOAT2 pointNDC = screenToNDC(x, y);
-    if (pointNDC.x >= mPosNDC.x && pointNDC.x <= mPosNDC.x + mSizeNDC.x && 
-        pointNDC.y >= mPosNDC.y - mSizeNDC.y && pointNDC.y <= mPosNDC.y)
+    if(mState == PRESSED_DOWN)
     {
-        return true;
+        move(movement);
     }
     else
-        return false;
-}
-
-Vertex::OverlayVertex* WidgetBase::getVerticesInNDC()
-{
-    return &mVertices[0];
-}
-
-void WidgetBase::setColor( XMFLOAT4 color )
-{
-    for (UINT i = 0; i < 4; ++i)
     {
-        mVertices[i].Color = color;
+        for (UINT i = 0; i < mChildren.size(); ++i)
+        {
+            mChildren[i]->onMouseMove(movement);
+        }
     }
 }
 
-void WidgetBase::setTextures()
+void Widget::onResize( Area2D& newArea )
 {
-    // TODO
+    resize(newArea);
 }
 
-void WidgetBase::setText( std::wstring& text )
+void Widget::getRenderInfo( Box2D& box, int& layoutDepth, RGBA& color )
 {
-    mText = text;
-}
-const std::wstring& WidgetBase::getText()
-{
-    return mText;
+    box = Box2D(mAbsolutePos, mSize);
+    layoutDepth = mLayerDepth;
+    color = mColor;
 }
 
-void WidgetBase::getTextArea(RectFloat& rect)
+bool Widget::isPointInside( Point2D& point )
 {
-    // Add padding in NDC
-    float paddingNdcX= 2.f * static_cast<float>(mPaddingX)/mViewport.width;
-    float paddingNdcY = 2.f * static_cast<float>(mPaddingY)/mViewport.height;
-
-    rect.left = mVertices[0].Pos.x + paddingNdcX; // left
-    rect.top = mVertices[0].Pos.y - paddingNdcY; // top
-    rect.right = mVertices[2].Pos.x - paddingNdcX; // right
-    rect.bottom = mVertices[2].Pos.y + paddingNdcY; // bottom
+    return (Box2D(mAbsolutePos, mSize).isPointInside(point));
 }
 
-float WidgetBase::getFontSize()
+void Widget::resize( Area2D& newArea )
 {
-    return mFontSizePixel;
+    mSize = newArea;
+
+    mSolver->solve(this);
 }
 
-const Viewport& WidgetBase::getViewPort()
+void Widget::move( Vector2D& movement )
 {
-    return mViewport;
+    mPos += movement;
+    mAbsolutePos += movement;
+
+    mSolver->solve(this);
 }
 
-void WidgetBase::widgetResizeInNDC()
+// Compute client area based on widget size and padding
+// Note: the returned box is relative to widget/local space.
+Box2D Widget::getClientArea()
 {
-    mSizeNDC.x = 2.f * static_cast<float>(mWidth)/mViewport.width; 
-    mSizeNDC.y = 2.f * static_cast<float>(mHeight)/mViewport.height;
+    Point2D clientPos = Vector2D(mPadding.left, mPadding.top);
 
-    updateVertices();
+    Area2D clientSize;
+    clientSize.width = mSize.width - (mPadding.left+ mPadding.right);
+    clientSize.height = mSize.height - (mPadding.top + mPadding.bottom);
+
+    return Box2D(clientPos, clientSize);
 }
 
-XMFLOAT2 WidgetBase::screenToNDC( int x, int y )
-{
-    XMFLOAT2 ndcPoint(0.f, 0.f);
-    ndcPoint.x = 2.f * (static_cast<float>(x)/mViewport.width) - 1.f;
-    ndcPoint.y = 1.f - 2.f * (static_cast<float>(y)/mViewport.height);
 
-    return ndcPoint;
-}
-
-void WidgetBase::updateVertices()
-{
-/*
-NDC:
-  v0--------v1
-  |         |
-  |         |
-  v3--------v2
-*/
-    mVertices[0].Pos = XMFLOAT3(mPosNDC.x,              mPosNDC.y,              gDefaultWidgetDepth);
-    mVertices[1].Pos = XMFLOAT3(mPosNDC.x + mSizeNDC.x, mPosNDC.y,              gDefaultWidgetDepth);
-    mVertices[2].Pos = XMFLOAT3(mPosNDC.x + mSizeNDC.x, mPosNDC.y - mSizeNDC.y, gDefaultWidgetDepth);
-    mVertices[3].Pos = XMFLOAT3(mPosNDC.x,              mPosNDC.y - mSizeNDC.y, gDefaultWidgetDepth);
-}
