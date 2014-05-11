@@ -39,17 +39,12 @@ bool SpriteDemo::init()
     D3D11_VIEWPORT vp;
     md3dImmediateContext->RSGetViewports(&vpNum, &vp);
 
-    RGBA transparent(0, 0, 0, 0);
-    RGBA Background(55, 56, 49);
-    RGBA green(100, 248, 100, 255);
-    RGBA red(255, 100, 100, 255);
-    RGBA blue(100, 100, 255, 255);
-
     mWidgetMgr2.createBegin();
-    Widget* root = mWidgetMgr2.createRootWidget("root",Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), transparent);
+    Widget* root = mWidgetMgr2.createRootWidget("root",Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), RGBAColor::Transparent);
+    Widget* w1 = mWidgetMgr2.createChildWidget("", root, Area2D(700, 500), PixelPadding(), RGBAColor::Red);
     for (UINT i = 0; i < 500; ++i)
     {
-        mWidgetMgr2.createChildWidget("", root, Area2D(20, 20), PixelPadding(), green);
+        mWidgetMgr2.createChildWidget("", w1, Area2D(20, 20), PixelPadding(), RGBAColor::Green);
     }
 
     mWidgetMgr2.createEnd();
@@ -158,13 +153,15 @@ void SpriteDemo::onMouseUp( WPARAM btnState, int x, int y )
 void SpriteDemo::onMouseWheel( WPARAM btnState, int x, int y )
 {
     int zDelta = GET_WHEEL_DELTA_WPARAM(btnState);
-    if (zDelta > 0)
+    if (zDelta < 0)
     {
         mWidgetMgr.onMouseWheelUp(x, y);
+        mInput.EventMouseWheelUp.fire(x, y);
     }
     else
     {
         mWidgetMgr.onMouseWheelDown(x, y);
+        mInput.EventMouseWheelDown.fire(x, y);
     }
 }
 

@@ -8,6 +8,7 @@
 #include "LayoutSolver.h"
 #include "Widget.h"
 #include "GUIRenderer.h"
+
 class WidgetMgr2
 {
 public:
@@ -18,11 +19,11 @@ public:
     ~WidgetMgr2();
 
     bool init(Input* input, GUIRenderer* renderer);
-    Widget* createRootWidget(std::string name, Area2D& viewportSize, RGBA& color);
+    Widget* createRootWidget(std::string name, Area2D& viewportSize, const RGBA& color);
     Widget* createChildWidget(
         std::string name, 
         Widget* parent, 
-        Area2D& size, PixelPadding& padding, RGBA& color,
+        Area2D& size, PixelPadding& padding, const RGBA& color,
         LayoutType layoutType = WIDGET_LAYOUT_NOT_SPECIFIED);
 
     void createBegin(){}
@@ -42,19 +43,18 @@ private:
     //
     bool hookEventHandlers();
 
-    // WidgetMgr just wraps the incoming event and forwards it to the root widget
-    // The specific event dispatch is implemented in Widget
+    // WidgetMgr translates from the incoming boost::signals2 into the root widget's dispatcher
+    // The specific event dispatch is implemented in each widget
     void onViewportResize(int width, int height);
-    
     void onMouseMove(int x, int y);
     void onMouseLBtnDown(int x, int y);
     void onMouseLBtnUp(int x, int y);
+    void onMouseWheelUp(int x, int y);
+    void onMouseWheelDown(int x, int y);
     /*
     TODO:
     void onMouseRBtnDown(int x, int y);
     void onMouseRBtnUp(int x, int y);
-    void onMouseWheelUp(int x, int y);
-    void onMouseWheelDown(int x, int y);
     */
 
 private:

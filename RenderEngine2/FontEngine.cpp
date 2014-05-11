@@ -102,7 +102,7 @@ void FontEngine::createFontSheet( FontSheet& fs, std::wstring debugFilename )
         {
             str[0] = fs.mCharSet[i];
             charGraphics.Clear(fs.mBackgroundColor);
-            // draw str onto charBitmap
+            // draw st..r onto charBitmap
             charGraphics.DrawString(str, 1, &font, Gdiplus::PointF(0.f, 0.f), &whiteBrush);
             int minX = getMinX(charBitmap);
             int maxX = getMaxX(charBitmap);

@@ -3,6 +3,7 @@
 
 #include "Math2D.h"
 #include "Color.h"
+#include <string>
 
 class IRenderable2D
 {
@@ -12,14 +13,12 @@ public:
         mVisible = true;
     }
 
-    void setColor(RGBA& color)
-    {
-        mColor = color;
-    }
-
     Point2D mAbsolutePos;
     Area2D mSize;
     RGBA mColor;
+
+    std::string mTextureName;
+    Box2D mTextureQuad;
 
     bool mVisible;
 

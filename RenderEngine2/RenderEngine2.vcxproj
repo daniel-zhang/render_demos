@@ -142,6 +142,7 @@
     <ClInclude Include="EmptyDemo.h" />
     <ClInclude Include="FontEngine.h" />
     <ClInclude Include="GridDemo.h" />
+    <ClInclude Include="GUIEvent.h" />
     <ClInclude Include="GUIRenderer.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="IRenderable2D.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="InputLayoutMgr.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteDemo.h" />
+    <ClInclude Include="TextLabel.h" />
     <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="WaveDemo.h" />
     <ClInclude Include="WidgetBase.h" />

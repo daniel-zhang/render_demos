@@ -29,24 +29,25 @@ void GUIRenderer::draw( std::vector<Widget*>& widgets)
     {
         mUpdateBuffer = false;
         std::vector<Vertex::OverlayVertex> vertices;
-        Box2D widgetQuad;
-        int widgetDepth = 0;
-        RGBA color;
 
         UINT maxLayerNum = findMaxLayerNum(widgets); 
 
         for (UINT i = 0; i < widgets.size(); ++i)
         {
-            widgets[i]->getRenderInfo(widgetQuad, widgetDepth, color);
-
-            NdcBox2D ndcBox(widgetQuad, mViewport);
+            Box2D widgetScreenQuad(widgets[i]->mAbsolutePos, widgets[i]->mSize);
+            
+            // Transform quad form screen space to NDC space
+            NdcBox2D widgetNdcQuad(widgetScreenQuad, mViewport);
+        
             for (UINT j = 0; j < 4; ++j)
             {
                 Vertex::OverlayVertex v;
-                v.Pos.x = ndcBox.point[j].x;
-                v.Pos.y = ndcBox.point[j].y;
-                v.Pos.z = getDepth(widgetDepth, maxLayerNum, mZBoundary);
-                v.Color = color.normalize();
+                v.Pos.x = widgetNdcQuad.point[j].x;
+                v.Pos.y = widgetNdcQuad.point[j].y;
+                v.Pos.z = getDepth(widgets[i]->mLayerDepth, maxLayerNum, mZBoundary);
+
+                v.Color = widgets[i]->mColor.normalize();
+
                 vertices.push_back(v);
             }
         }

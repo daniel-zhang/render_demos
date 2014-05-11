@@ -10,6 +10,9 @@ struct Input
     MouseEvent EventLBtnUp;
     MouseEvent EventRBtnDown;
     MouseEvent EventRBtnUp;
+    MouseEvent EventMouseWheelUp; 
+    MouseEvent EventMouseWheelDown; 
+
 
     MouseEvent EventViewportResize;
 };

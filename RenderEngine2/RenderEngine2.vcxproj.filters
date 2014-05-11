@@ -20,14 +20,14 @@
     <Filter Include="Main">
       <UniqueIdentifier>{0115928e-8774-41a6-89b2-d3aedf4f6e89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OverlayUI">
-      <UniqueIdentifier>{279076a9-69bb-42fe-8b97-900159e409f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{19273f8a-1387-4d0f-bf46-9f8c6d8c86c9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Deprecated">
       <UniqueIdentifier>{12b6244d-86d7-459c-9428-a22765521fca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{279076a9-69bb-42fe-8b97-900159e409f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -116,7 +116,7 @@
       <Filter>Infrastructure</Filter>
     </ClCompile>
     <ClCompile Include="WidgetMgr.cpp">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="BaseWindow.cpp">
       <Filter>Deprecated</Filter>
@@ -128,22 +128,22 @@
       <Filter>Deprecated</Filter>
     </ClCompile>
     <ClCompile Include="Math2D.cpp">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="WidgetBase.cpp">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="Widget.cpp">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUIRenderer.cpp">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="WidgetMgr2.cpp">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="LayoutSolver.cpp">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,13 +244,13 @@
       <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="WidgetMgr.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="WidgetMgr2.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="QuadBuffer.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="BaseWindow.h">
       <Filter>Deprecated</Filter>
@@ -262,16 +262,16 @@
       <Filter>Deprecated</Filter>
     </ClInclude>
     <ClInclude Include="WidgetBase.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Math2D.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Widget.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUIRenderer.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Input</Filter>
@@ -280,13 +280,19 @@
       <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="Color.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="LayoutSolver.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="IRenderable2D.h">
-      <Filter>OverlayUI</Filter>
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIEvent.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextLabel.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

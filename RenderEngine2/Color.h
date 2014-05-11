@@ -1,6 +1,8 @@
 #ifndef COLOR_H
 #define COLOR_H
+
 #include "Util.h"
+
 struct RGBA
 {
     RGBA(){red = 0; green = 0; blue = 0; alpha = 255;}
@@ -20,4 +22,16 @@ struct RGBA
     int red, green, blue;
     int alpha;
 };
+
+#define _GLOABAL_CONST extern CONST __declspec(selectany)
+
+namespace RGBAColor
+{
+    _GLOABAL_CONST RGBA Transparent(0, 0, 0, 0);
+    _GLOABAL_CONST RGBA Background(55, 56, 49);
+    _GLOABAL_CONST RGBA Green(100, 248, 100, 255);
+    _GLOABAL_CONST RGBA Red(255, 100, 100, 255);
+    _GLOABAL_CONST RGBA Blue(100, 100, 255, 255);
+}
+
 #endif
