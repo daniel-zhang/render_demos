@@ -5,12 +5,17 @@
 void LayoutSolver::solve( Widget* widget)
 {
     solveImpl(widget);
-    mRenderer->setUpdate();
+    mIsLayoutUpdated = true;
 }
 
 void LayoutSolver::solveImpl( Widget* widget )
 {
     Box2D clientBox = widget->getClientArea();
+
+    if (widget->mTextBlock.hasText())
+    {
+        widget->mTextBlock.solveLayout(clientBox, widget->mLayerDepth + 1);
+    }
 
     Point2D insertPos = clientBox.point[0];
     std::vector<int> lineHeights;

@@ -3,6 +3,8 @@
 std::vector<std::wstring> TextureMgr::mPath;
 std::map<std::wstring, ID3D11ShaderResourceView*> TextureMgr::mSRV;
 ID3D11Device* TextureMgr::mDevice = 0;
+int TextureMgr::mIdCounter = 0;
+std::vector<std::wstring> TextureMgr::mIdMap;
 
 void TextureMgr::initAll( ID3D11Device* device )
 {
@@ -34,11 +36,22 @@ ID3D11ShaderResourceView* TextureMgr::getTexture( std::wstring& texName )
                 continue;
 
             mSRV.insert(std::pair<std::wstring, ID3D11ShaderResourceView*>(texName, srv));
+            mIdMap.push_back(texName);
             return srv;
         }
     }
     // Texture not found
     return 0;
+}
+
+ID3D11ShaderResourceView* TextureMgr::getTexture( UINT texID )
+{
+    if ( texID >= mIdMap.size())
+    {
+        return 0;
+    }
+
+    return getTexture(mIdMap[texID]);
 }
 
 void TextureMgr::destroyAll()
@@ -47,4 +60,18 @@ void TextureMgr::destroyAll()
     mSRV.clear();
     mDevice = 0;
 }
+
+int TextureMgr::getTextureID( std::wstring& texName )
+{
+    for (UINT i = 0; i < mIdMap.size(); ++i)
+    {
+        if (mIdMap[i].compare(texName) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
 

@@ -199,13 +199,6 @@ void Widget::onMouseWheelDown( GUIEvent& e )
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
-void Widget::getRenderInfo( Box2D& box, int& layoutDepth, RGBA& color )
-{
-    box = Box2D(mAbsolutePos, mSize);
-    layoutDepth = mLayerDepth;
-    color = mColor;
-}
-
 bool Widget::isPointInside( Point2D& point )
 {
     return (Box2D(mAbsolutePos, mSize).isPointInside(point));

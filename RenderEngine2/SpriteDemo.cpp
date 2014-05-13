@@ -79,14 +79,8 @@ void SpriteDemo::drawScene()
     mpModel->draw(tech, vp);
     md3dImmediateContext->RSSetState(0);
 
-    //
-    // Draw UI
-    //
-    /*
-    mWidgetMgr.drawUI();
-    */
+    mWidgetMgr2.draw();
 
-    mRenderer.draw(mWidgetMgr2.getWidgets());
     HR(mSwapChain->Present(0, 0));
 }
 

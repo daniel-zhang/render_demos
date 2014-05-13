@@ -62,6 +62,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)/Common;$(DXSDK_DIR)/lib/x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>Effects11d.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;dxgi.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,7 +163,7 @@
     <ClInclude Include="InputLayoutMgr.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteDemo.h" />
-    <ClInclude Include="TextLabel.h" />
+    <ClInclude Include="TextBlock.h" />
     <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="WaveDemo.h" />
     <ClInclude Include="WidgetBase.h" />

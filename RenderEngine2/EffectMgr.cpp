@@ -162,3 +162,9 @@ OverlayEffect::OverlayEffect( ID3D11Device* device, const std::wstring& filename
 
     mfxDiffuseMap = mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
 }
+
+void OverlayEffect::setDiffuseMap( ID3D11ShaderResourceView* tex )
+{
+    assert(tex);
+    mfxDiffuseMap->SetResource(tex);
+}

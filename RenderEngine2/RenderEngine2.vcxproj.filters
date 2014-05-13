@@ -291,7 +291,7 @@
     <ClInclude Include="GUIEvent.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="TextLabel.h">
+    <ClInclude Include="TextBlock.h">
       <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>

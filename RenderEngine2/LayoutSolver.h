@@ -18,15 +18,22 @@ enum LayoutType
 class LayoutSolver
 {
 public:
-    LayoutSolver(): mRenderer(0){}
-    void init(GUIRenderer* renderer){mRenderer = renderer;}
-    virtual void solve(Widget* widget);
+    // Solver holds a ref to renderer to inform it when layout is re-solved
+    void solve(Widget* widget);
+
+    bool updated()
+    {
+        return mIsLayoutUpdated;
+    }
+    void resetUpdated()
+    {
+        mIsLayoutUpdated = false;
+    }
 
 private:
     void solveImpl(Widget* widget);
     int getMax(std::vector<int>& v, int defaultMax);
-
-    GUIRenderer* mRenderer;
+    bool mIsLayoutUpdated;
 };
 
 #endif

@@ -99,6 +99,7 @@ public:
     float height;
 };
 
+// Transforms a screen box into a NDC box using the viewport size
 struct NdcBox2D 
 {
     NdcBox2D() {}
@@ -108,6 +109,43 @@ struct NdcBox2D
     
     FPoint2D point[4];
 
+};
+
+struct FBox2D
+{
+    FBox2D(){}
+    FBox2D(float left, float top, float right, float bottom)
+    {
+        point[0].x = left; point[0].y = top;
+        point[1].x = right; point[1].y = top;
+        point[2].x = right; point[2].y = bottom;
+        point[3].x = left; point[3].y = bottom;
+    }
+    FBox2D(const FBox2D& box)
+    {
+        if (this != &box)
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                point[i] = box.point[i];
+            }
+        }
+    }
+
+    FBox2D& operator=(const FBox2D& box)
+    {
+        if (this == &box)
+            return *this;
+
+        for (int i = 0; i < 4; ++i)
+        {
+            point[i] = box.point[i];
+        }
+
+        return *this;
+    }
+
+    FPoint2D point[4];
 };
 
 #endif

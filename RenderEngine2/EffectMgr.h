@@ -169,8 +169,7 @@ public:
     OverlayEffect(ID3D11Device* device, const std::wstring& filename);
     ~OverlayEffect(){}
 
-    void setDiffuseMap(ID3D11ShaderResourceView* tex)   
-    { mfxDiffuseMap->SetResource(tex); }
+    void setDiffuseMap(ID3D11ShaderResourceView* tex);
 
     ID3DX11EffectTechnique* OverlayTech;
     ID3DX11EffectTechnique* OverlayTexTech;

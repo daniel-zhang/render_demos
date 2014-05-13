@@ -12,7 +12,6 @@
 class WidgetMgr2
 {
 public:
-    friend GUIRenderer;
     typedef std::vector<Widget*> WidgetArray;
 
     WidgetMgr2();
@@ -32,10 +31,34 @@ public:
         mSolver.solve(mRoot);
     }
 
+    void draw()
+    {
+        if (mSolver.updated())
+        {
+            mSolver.resetUpdated();
+            mRenderer->beginBatch();
+            for (UINT i = 0; i < mWidgets.size(); ++i)
+            {
+                mRenderer->batch(static_cast<IRenderable2D*>(mWidgets[i]));
+            }
+            mRenderer->endBatch();
+        }
+        mRenderer->draw();
+    }
+
     //
     // Getters
     //
-    WidgetArray& getWidgets(){return mWidgets;}
+    //WidgetArray& getWidgets(){return mWidgets;}
+    std::vector<IRenderable2D*> getRenderables()
+    {
+        std::vector<IRenderable2D*> ret;
+        for (UINT i = 0; i < mWidgets.size(); ++i)
+        {
+            ret.push_back(static_cast<IRenderable2D*>(mWidgets[i]));
+        }
+        return ret;
+    }
 
 private:
     //

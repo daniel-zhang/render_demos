@@ -17,7 +17,6 @@ bool WidgetMgr2::init( Input* input, GUIRenderer* renderer)
 {
     mInput = input;
     mRenderer = renderer;
-    mSolver.init(renderer);
 
     hookEventHandlers();
 

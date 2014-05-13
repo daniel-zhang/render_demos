@@ -11,18 +11,20 @@ public:
     IRenderable2D()
     {
         mVisible = true;
+        mHasTexture = false;
+        mSortKey = 0;
     }
+    bool mVisible;
+    bool mHasTexture;
+    UINT mLayerDepth;
 
     Point2D mAbsolutePos;
     Area2D mSize;
     RGBA mColor;
 
-    std::string mTextureName;
-    Box2D mTextureQuad;
-
-    bool mVisible;
-
-    UINT mLayerDepth;
+    FBox2D mTextureRect;
+    std::wstring mTextureName;
+    int mSortKey;
 };
 
 #endif

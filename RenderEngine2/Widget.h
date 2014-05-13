@@ -7,6 +7,8 @@
 #include "LayoutSolver.h"
 #include "GUIEvent.h"
 
+#include "TextBlock.h"
+
 class Widget : public IRenderable2D
 {
 public:
@@ -41,6 +43,10 @@ public:
     void setColor(RGBA& color) { mColor = color; }
     void setVisibility(bool isVisible){mVisible = isVisible;}
     void setMoveable(bool isMoveable){mMoveable = isMoveable;}
+    void setText(std::wstring& text, const UINT fontSize = 20)
+    {
+        mTextBlock.setText(text, fontSize);
+    }
 
     //
     // getters
@@ -85,6 +91,8 @@ protected:
     std::string mName;
     Widget* mParent;
     std::vector<Widget*> mChildren;
+
+    TextBlock mTextBlock;
 };
 
 
