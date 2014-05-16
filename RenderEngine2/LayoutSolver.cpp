@@ -14,7 +14,7 @@ void LayoutSolver::solveImpl( Widget* widget )
 
     if (widget->mTextBlock.hasText())
     {
-        widget->mTextBlock.solveLayout(clientBox, widget->mLayerDepth + 1);
+        widget->mTextBlock.solveLayout( Box2D(widget->mAbsolutePos, widget->mSize), widget->mLayerDepth + 1);
     }
 
     Point2D insertPos = clientBox.point[0];

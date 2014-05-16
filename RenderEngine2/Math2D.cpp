@@ -155,7 +155,28 @@ bool Box2D::isPointInside( Point2D& pos )
         return false;
 }
 
-//////////////////////////////////////////////////////////////////
+// resize() does not change point[0](top-left) position
+void Box2D::resize( Area2D& size )
+{
+    point[1] = point[0] + Vector2D(size.width, 0);
+    point[2] = point[0] + Vector2D(size.width, size.height);
+    point[3] = point[0] + Vector2D(0, size.height);
+}
+
+void Box2D::move( Vector2D& vctr )
+{
+    for (UINT i = 0; i < 4; ++i)
+    {
+        point[i] += vctr;
+    }
+}
+
+void Box2D::moveTo( Point2D& pos )
+{
+    Vector2D delta = pos - point[0];
+    move(delta);
+}
+
 //////////////////////////////////////////////////////////////////
 FPoint2D::FPoint2D()
 {

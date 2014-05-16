@@ -29,6 +29,9 @@
     <Filter Include="GUI">
       <UniqueIdentifier>{279076a9-69bb-42fe-8b97-900159e409f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\Widgets">
+      <UniqueIdentifier>{25026604-c524-4cb7-b678-13c6ca008610}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxDemo.cpp">
@@ -115,9 +118,6 @@
     <ClCompile Include="FontEngine.cpp">
       <Filter>Infrastructure</Filter>
     </ClCompile>
-    <ClCompile Include="WidgetMgr.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="BaseWindow.cpp">
       <Filter>Deprecated</Filter>
     </ClCompile>
@@ -130,20 +130,29 @@
     <ClCompile Include="Math2D.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="WidgetBase.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Widget.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="GUIRenderer.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="WidgetMgr2.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="LayoutSolver.cpp">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetBase.cpp">
+      <Filter>Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetMgr_dep.cpp">
+      <Filter>Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetMgr.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Widget.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Container.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Root.cpp">
+      <Filter>GUI\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -243,12 +252,6 @@
     <ClInclude Include="Mouse.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="WidgetMgr.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetMgr2.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="QuadBuffer.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -261,13 +264,7 @@
     <ClInclude Include="OverlayMgr.h">
       <Filter>Deprecated</Filter>
     </ClInclude>
-    <ClInclude Include="WidgetBase.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Math2D.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Widget.h">
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUIRenderer.h">
@@ -293,6 +290,24 @@
     </ClInclude>
     <ClInclude Include="TextBlock.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetBase.h">
+      <Filter>Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetMgr_dep.h">
+      <Filter>Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetMgr.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.h">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Container.h">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Root.h">
+      <Filter>GUI\Widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

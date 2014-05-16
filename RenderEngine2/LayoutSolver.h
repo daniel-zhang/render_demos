@@ -4,7 +4,7 @@
 
 class Widget;
 class GUIRenderer;
-
+/*
 enum LayoutType
 {
     WIDGET_LAYOUT_CENTER = 0,
@@ -14,6 +14,7 @@ enum LayoutType
     WIDGET_LAYOUT_DOCK_LEFT_AUTO_HEIGHT,
     WIDGET_LAYOUT_NOT_SPECIFIED
 };
+*/
 
 class LayoutSolver
 {

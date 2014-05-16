@@ -4,10 +4,7 @@
 #include "DemoBasic.h"
 #include "FontEngine.h"
 
-//#include "OverlayGraphics.h"
 #include "WidgetMgr.h"
-
-#include "WidgetMgr2.h"
 #include "GUIRenderer.h"
 #include "Input.h"
 
@@ -27,7 +24,7 @@ public:
 
 private:
     GUIRenderer mRenderer;
-    WidgetMgr2 mWidgetMgr2;
+    WidgetMgr mWidgetMgr;
 
 private:
     FontSheet mFontSheet;
@@ -35,9 +32,6 @@ private:
 //   Animation2D mAnim;
 //    std::vector<OverlayUI::Quad*> mQuads;
     Input mInput;
-    Mouse mMouse;
-    
-    WidgetMgr mWidgetMgr;
 };
 
 #endif

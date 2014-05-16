@@ -4,70 +4,49 @@
 #include <string>
 #include <vector>
 #include "IRenderable2D.h"
-#include "LayoutSolver.h"
 #include "GUIEvent.h"
 
-#include "TextBlock.h"
+enum LayoutType
+{
+    WIDGET_LAYOUT_CENTER = 0,
+    WIDGET_LAYOUT_STATIC,
+    WIDGET_LAYOUT_STREAM,
+    WIDGET_LAYOUT_VERTICAL,
+    WIDGET_LAYOUT_HORIZENAL,
+    WIDGET_LAYOUT_DOCK_LEFT,
+    WIDGET_LAYOUT_NOT_SPECIFIED
+};
 
 class Widget : public IRenderable2D
 {
 public:
-    friend LayoutSolver;
-
-    // Ctor for root widget
-    Widget(std::string name, Area2D& size, const RGBA& color, LayoutSolver* solver);
-
-    // Ctor for non-root widget
-    Widget(std::string name,  Widget* parent, Area2D& size, PixelPadding& padding, const RGBA& color,
-        LayoutSolver* solver, LayoutType layoutType = WIDGET_LAYOUT_STREAM);
-
-    ~Widget();
+    Widget(Widget* parent, Area2D& size, PixelPadding& padding, PixelMargin& margin, const RGBA& color, LayoutType layoutType); 
+    virtual ~Widget();
 
     // UI logic
-    virtual void dispatch(GUIEvent& evt);
+    void dispatch(GUIEvent& evt);
+    void addChild(Widget* child);
 
-    virtual void onResize(GUIEvent& e);
-    virtual void onLBtnDown(GUIEvent& e);
-    virtual void onLBtnUp(GUIEvent& e);
-    virtual void onMouseMove(GUIEvent& e);
-    virtual void onMouseWheelUp(GUIEvent& e);
-    virtual void onMouseWheelDown(GUIEvent& e);
-    virtual void onMouseEnter(GUIEvent& e){}
-    virtual void onMouseLeave(GUIEvent& e){}
-
-    void addChild(Widget* child){mChildren.push_back(child);}
-
-    //
-    // Setters
-    //
-    void setColor(RGBA& color) { mColor = color; }
-    void setVisibility(bool isVisible){mVisible = isVisible;}
-    void setMoveable(bool isMoveable){mMoveable = isMoveable;}
-    void setText(std::wstring& text, const UINT fontSize = 20)
-    {
-        mTextBlock.setText(text, fontSize);
-    }
+    virtual void onLayoutChanged(GUIEvent& evt) = 0;
+    virtual void onResize(GUIEvent& e) = 0;
+    virtual void onLBtnDown(GUIEvent& e) = 0;
+    virtual void onLBtnUp(GUIEvent& e) = 0;
+    virtual void onMouseMove(GUIEvent& e) = 0;
+    virtual void onMouseWheelUp(GUIEvent& e) = 0;
+    virtual void onMouseWheelDown(GUIEvent& e) = 0;
+    virtual void onMouseEnter(GUIEvent& e) = 0;
+    virtual void onMouseLeave(GUIEvent& e) = 0;
 
     //
-    // getters
-    //
-    virtual Box2D getClientArea();
+    virtual void getPaddedRect(Box2D& box) = 0;
+    virtual void getMarginRect(Box2D& box) = 0;
 
-    // TODO: by making render data public, these getters are to be removed.
-    //virtual void getRenderInfo(Box2D& box, int& layoutDepth, RGBA& color);
-    UINT getLayerDepth(){return mLayerDepth;}
-
-    //
-    // Graphics
-    //
-    virtual bool isPointInside(Point2D& point);
-
-protected:
     // Actions
-    void resize(Area2D& newArea);
-    void move(Vector2D& movement);
+    virtual void move(Vector2D& movement) = 0;
+    virtual void moveTo(Point2D& pos) = 0;
+    virtual void resize(Area2D& newSize) = 0;
+    virtual void solveLayout() = 0;
 
-protected:
     enum WidgetState
     {
         NORMAL = 0,
@@ -77,22 +56,16 @@ protected:
         STATE_NUMBER
     };
 
-protected:
+public:
     WidgetState mState;
     LayoutType mLayoutType;
-    LayoutSolver* mSolver;
 
-    // Widget position relative to its parent
-    Point2D mPos;
+    Box2D mLocalRect;
     PixelPadding mPadding;
-
-    bool mMoveable;
+    PixelMargin mMargin;
     
-    std::string mName;
     Widget* mParent;
     std::vector<Widget*> mChildren;
-
-    TextBlock mTextBlock;
 };
 
 

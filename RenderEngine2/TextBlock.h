@@ -4,6 +4,7 @@
 #include "IRenderable2D.h"
 #include <vector>
 #include "FontEngine.h"
+#include "TextureMgr.h"
 
 class TextElement: public IRenderable2D
 {
@@ -36,7 +37,13 @@ public:
         mText = text;
         for (UINT i = 0; i < mText.size(); ++i)
         {
-            mTextQuads.push_back(TextElement(mText[i]));
+            TextElement te(mText[i]);
+            te.mHasTexture = true;
+            te.mTextureName = mFontSheet->mFontSheetBmpFileName;
+            TextureMgr::getTexture(te.mTextureName);
+            te.mSortKey = TextureMgr::getTextureID(te.mTextureName);
+
+            mTextQuads.push_back(te);
         }
     }
 
@@ -62,8 +69,8 @@ public:
             // start a new line if \n
             if (c == 10)
             {
-                insertPos.x = 0;
-                insertPos.y += mFontSize;
+                insertPos.x = textArea.getLeft();
+                insertPos.y += lineSpace;
             }
 
             CD3D11_RECT srcRect = *(mFontSheet->getSrcRect(c));
@@ -86,15 +93,14 @@ public:
             insertPos.x += dstRectWidth;
 
             // Start a new line
-            if (insertPos.x > textArea.getWidth())
+            if (insertPos.x > textArea.getRight())
             {
-                insertPos.x = 0;
-                insertPos.y -= dstRectHeight;
+                insertPos.x = textArea.getLeft();
+                insertPos.y += lineSpace;
             }
         }
     }
 
-private:
     FontSheet* mFontSheet;
     std::wstring mText;
     UINT mFontSize;

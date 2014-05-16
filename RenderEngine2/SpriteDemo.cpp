@@ -23,31 +23,26 @@ bool SpriteDemo::init()
         return false;
     }
 
-    /*
-    mWidgetMgr.init(md3dDevice, md3dImmediateContext, &mMouse);
-    mWidgetMgr.batchBegin();
-    WidgetBase* p = mWidgetMgr.createWidget(-0.9f, 0.9f, 400, 300, std::wstring(L"HelloGameUI"));
-    p->setText(std::wstring(L"The Lord Of The Ring\nThe Fellowship Of The Ring"));
-    mWidgetMgr.batchEnd();
-    */
-
-    // version 2
     mRenderer.init(md3dDevice, md3dImmediateContext);
-    mWidgetMgr2.init(&mInput, &mRenderer);
+    mWidgetMgr.init(&mInput, &mRenderer);
 
     UINT vpNum = 1;
     D3D11_VIEWPORT vp;
     md3dImmediateContext->RSGetViewports(&vpNum, &vp);
 
-    mWidgetMgr2.createBegin();
-    Widget* root = mWidgetMgr2.createRootWidget("root",Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), RGBAColor::Transparent);
-    Widget* w1 = mWidgetMgr2.createChildWidget("", root, Area2D(700, 500), PixelPadding(), RGBAColor::Red);
-    for (UINT i = 0; i < 500; ++i)
+    mWidgetMgr.createBegin();
+    Widget* root = mWidgetMgr.createRootWidget(Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), RGBAColor::Transparent);
+    Widget* w1 = mWidgetMgr.createChildWidget(root, Area2D(300, 600), PixelPadding(), RGBAColor::Blue);
+    for (UINT i = 0; i < 1; ++i)
     {
-        mWidgetMgr2.createChildWidget("", w1, Area2D(20, 20), PixelPadding(), RGBAColor::Green);
+        Widget* w2 = mWidgetMgr.createChildWidget(w1, Area2D(250, 340), PixelPadding(), RGBAColor::Background,  WIDGET_LAYOUT_VERTICAL );
+        w2->setText(std::wstring(
+           L"// Font sheet bmp must be freed here...\n"
+           L"// Basically it does not make sense to let FontSheet hold a pointer to the Bitmap object...\n"
+           L"// Let me fix it later.\n"), 24);
     }
 
-    mWidgetMgr2.createEnd();
+    mWidgetMgr.createEnd();
 
     return true;
 }
@@ -79,7 +74,7 @@ void SpriteDemo::drawScene()
     mpModel->draw(tech, vp);
     md3dImmediateContext->RSSetState(0);
 
-    mWidgetMgr2.draw();
+    mWidgetMgr.draw();
 
     HR(mSwapChain->Present(0, 0));
 }
@@ -91,7 +86,6 @@ void SpriteDemo::onResize()
     UINT vpNum = 1;
     D3D11_VIEWPORT vp;
     md3dImmediateContext->RSGetViewports(&vpNum, &vp);
-    mWidgetMgr.onViewportResize(static_cast<int>(vp.Width), static_cast<int>(vp.Height));
 
     mInput.EventViewportResize.fire(static_cast<int>(vp.Width), static_cast<int>(vp.Height));
 }
@@ -111,13 +105,11 @@ void SpriteDemo::onMouseDown( WPARAM btnState, int x, int y )
 
     if( (btnState & MK_LBUTTON) != 0 )
     {
-        mWidgetMgr.onMouseLBtnDown(x, y);
 
         mInput.EventLBtnDown.fire(x, y);
     }
     else if ( (btnState & MK_RBUTTON) != 0)
     {
-        mWidgetMgr.onMouseRBtnDown(x, y);
     }
     else
     {
@@ -128,8 +120,6 @@ void SpriteDemo::onMouseUp( WPARAM btnState, int x, int y )
 {
     DemoBasic::onMouseUp(btnState, x, y);
 
-    mWidgetMgr.onMouseLBtnUp(x, y);
-
     mInput.EventLBtnUp.fire(x, y);
 
     if( (btnState & MK_LBUTTON) != 0 )
@@ -137,7 +127,6 @@ void SpriteDemo::onMouseUp( WPARAM btnState, int x, int y )
     }
     else if ( (btnState & MK_RBUTTON) != 0)
     {
-        mWidgetMgr.onMouseRBtnUp(x, y);
     }
     else
     {
@@ -149,12 +138,10 @@ void SpriteDemo::onMouseWheel( WPARAM btnState, int x, int y )
     int zDelta = GET_WHEEL_DELTA_WPARAM(btnState);
     if (zDelta < 0)
     {
-        mWidgetMgr.onMouseWheelUp(x, y);
         mInput.EventMouseWheelUp.fire(x, y);
     }
     else
     {
-        mWidgetMgr.onMouseWheelDown(x, y);
         mInput.EventMouseWheelDown.fire(x, y);
     }
 }

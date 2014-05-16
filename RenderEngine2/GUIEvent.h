@@ -8,7 +8,8 @@ class GUIEvent
 public:
     enum EventType 
     {
-        WidgetResize = 0,
+        LayoutChanged = 0,
+        WidgetResize, 
         MouseMove,
         MouseLBtnDown,
         MouseLBtnUp,
@@ -27,6 +28,12 @@ public:
 
     EventType mEventType;
     bool mPropagate;
+};
+
+class LayoutChangeEvent : public GUIEvent
+{
+public:
+    LayoutChangeEvent():GUIEvent(LayoutChanged){}
 };
 
 class WidgetResizeEvent : public GUIEvent

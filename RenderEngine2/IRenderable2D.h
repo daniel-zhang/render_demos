@@ -12,17 +12,18 @@ public:
     {
         mVisible = true;
         mHasTexture = false;
-        mSortKey = 0;
+        mSortKey = -1;
     }
     bool mVisible;
     bool mHasTexture;
     UINT mLayerDepth;
 
-    Point2D mAbsolutePos;
-    Area2D mSize;
+    //Point2D mAbsolutePos;
+    //Area2D mSize;
+    Box2D mDestRect;
+    FBox2D mTextureRect;
     RGBA mColor;
 
-    FBox2D mTextureRect;
     std::wstring mTextureName;
     int mSortKey;
 };

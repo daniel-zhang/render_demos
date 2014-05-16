@@ -36,12 +36,24 @@ void GUIRenderer::beginBatch()
     mSubsets.clear();
     mRenderQueue.clear();
     mMaxLayerDepth = 0;
+    
+    std::unordered_map<int, RenderQueueSubset>::iterator it = mSortSubsets.begin();
+    for (; it != mSortSubsets.end(); ++it)
+    {
+        it->second.clear();
+    }
 }
 
 void GUIRenderer::sortedBatch( IRenderable2D* sprite )
 {
     // Discard invisible sprite
     if (!sprite->mVisible) return;
+
+    // Keep track of layer number
+    if (mMaxLayerDepth < sprite->mLayerDepth)
+    {
+        mMaxLayerDepth = sprite->mLayerDepth;
+    }
 
     std::unordered_map<int, RenderQueueSubset>::iterator it = mSortSubsets.find(sprite->mSortKey);
     if (it == mSortSubsets.end())
@@ -75,10 +87,12 @@ void GUIRenderer::batch( std::vector<IRenderable2D*>& sprites)
 
 void GUIRenderer::endBatch()
 {
-    sortRenderQueueByTextureOrder_hashmap();
+    //sortRenderQueueByTextureOrder_hashmap();
     //sortRenderQueueByTextureOrder();
     //sortRenderQueueByTextureOrder_debug();
-    updateQuadBuffer();
+    //updateQuadBuffer();
+
+    updateQuadBuffer2();
 }
 
 // Sort the render queue by texture order
@@ -156,7 +170,7 @@ void GUIRenderer::sortRenderQueueByTextureOrder()
 
 void GUIRenderer::updateQuadBuffer2()
 {
-    std::vector<Vertex::OverlayVertex> vertices;
+    mVertices.clear();
     //vertices.reserve(mRenderQueue.size()*4);
 
     UINT spriteOffset = 0;
@@ -183,12 +197,12 @@ void GUIRenderer::updateQuadBuffer2()
 
                 v.Color = sprite->mColor.normalize();
 
-                vertices.push_back(v);
+                mVertices.push_back(v);
             }
             spriteOffset += 1;
         }
     }
-    mQuadBuffer.update(vertices);
+    mQuadBuffer.update(mVertices);
 }
 
 void GUIRenderer::updateQuadBuffer()
@@ -223,18 +237,16 @@ void GUIRenderer::updateQuadBuffer()
 void GUIRenderer::draw()
 {
     mQuadBuffer.setPipeline();
-
-    for (UINT i = 0; i < mSubsets.size(); ++i)
+    std::unordered_map<int, RenderQueueSubset>::iterator it = mSortSubsets.begin();
+    for (; it != mSortSubsets.end(); ++it)
     {
-        if (mSubsets[i].mTextureName.size() > 0)
+        RenderQueueSubset*  bucket = &(it->second);
+        if (bucket->mSortKey >= 0)
         {
-            mSubsets[i].mEffect->setDiffuseMap(TextureMgr::getTexture(mSubsets[i].mTextureName));
+            it->second.mEffect->setDiffuseMap(TextureMgr::getTexture(bucket->mSortKey));
         }
-        mSubsets[i].mTech->GetPassByIndex(mSubsets[i].mPassIndex)->Apply(0, mQuadBuffer.mCtx);
-        // TODO: blending code not working, why?
-        //float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
-        //mCtx->OMSetBlendState(RenderStateMgr::TransparentBS, blendFactor, 0xffffffff);
-        mQuadBuffer.mCtx->DrawIndexed(mSubsets[i].mIndexNum, mSubsets[i].mIndexStart, 0);
+        bucket->mTech->GetPassByIndex(bucket->mPassIndex)->Apply(0, mQuadBuffer.mCtx);
+        mQuadBuffer.mCtx->DrawIndexed(bucket->mIndexNum, bucket->mIndexStart, 0);
     }
 }
 

@@ -93,6 +93,7 @@
     <ClCompile Include="BaseWindow.cpp" />
     <ClCompile Include="BillboardDemo.cpp" />
     <ClCompile Include="BoxDemo.cpp" />
+    <ClCompile Include="Container.cpp" />
     <ClCompile Include="DemoBasic.cpp" />
     <ClCompile Include="EffectMgr.cpp" />
     <ClCompile Include="EmptyDemo.cpp" />
@@ -110,6 +111,7 @@
     <ClCompile Include="OverlayGraphics.cpp" />
     <ClCompile Include="OverlayMgr.cpp" />
     <ClCompile Include="RenderStateMgr.cpp" />
+    <ClCompile Include="Root.cpp" />
     <ClCompile Include="SceneDemo.cpp" />
     <ClCompile Include="InputLayoutMgr.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -119,8 +121,8 @@
     <ClCompile Include="WidgetBase.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="Math2D.cpp" />
+    <ClCompile Include="WidgetMgr_dep.cpp" />
     <ClCompile Include="WidgetMgr.cpp" />
-    <ClCompile Include="WidgetMgr2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Camera.h" />
@@ -138,6 +140,7 @@
     <ClInclude Include="BillboardDemo.h" />
     <ClInclude Include="BoxDemo.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Container.h" />
     <ClInclude Include="DemoBasic.h" />
     <ClInclude Include="EffectMgr.h" />
     <ClInclude Include="EmptyDemo.h" />
@@ -159,6 +162,7 @@
     <ClInclude Include="OverlayMgr.h" />
     <ClInclude Include="OverlayGraphics.h" />
     <ClInclude Include="RenderStateMgr.h" />
+    <ClInclude Include="Root.h" />
     <ClInclude Include="SceneDemo.h" />
     <ClInclude Include="InputLayoutMgr.h" />
     <ClInclude Include="Sprite.h" />
@@ -169,8 +173,8 @@
     <ClInclude Include="WidgetBase.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="Math2D.h" />
+    <ClInclude Include="WidgetMgr_dep.h" />
     <ClInclude Include="WidgetMgr.h" />
-    <ClInclude Include="WidgetMgr2.h" />
     <ClInclude Include="QuadBuffer.h" />
   </ItemGroup>
   <ItemGroup>

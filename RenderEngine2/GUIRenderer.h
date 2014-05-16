@@ -25,7 +25,6 @@ public:
 
         mIndexStart = 0;
         mIndexNum = 0;
-        mMaxLayerDepth = 0;
 
         if (sortKey == -1)
         {
@@ -45,16 +44,11 @@ public:
     {
         mIndexStart = 0;
         mIndexNum = 0;
-        mMaxLayerDepth = 0;
         mBucket.clear();
     }
 
     void add(IRenderable2D* sprite)
     {
-        if (mMaxLayerDepth < sprite->mLayerDepth)
-        {
-            mMaxLayerDepth = sprite->mLayerDepth;
-        }
         mBucket.push_back(sprite);
     }
     
@@ -62,7 +56,7 @@ public:
 
     UINT mIndexStart;
     UINT mIndexNum;
-    UINT mMaxLayerDepth;
+    std::vector<IRenderable2D*> mBucket;
 
     std::wstring mTextureName;
 
@@ -71,8 +65,6 @@ public:
     OverlayEffect* mEffect;
     ID3DX11EffectTechnique* mTech;
     UINT mPassIndex;
-
-    std::vector<IRenderable2D*> mBucket;
 };
 
 class GUIRenderer
@@ -114,6 +106,8 @@ private:
 
     std::vector<IRenderable2D*> mRenderQueue;
     std::vector<RenderQueueSubset> mSubsets;
+    std::vector<Vertex::OverlayVertex> mVertices;
+
 
     std::unordered_map<int, RenderQueueSubset> mSortSubsets;
 

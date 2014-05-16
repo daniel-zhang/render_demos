@@ -39,6 +39,12 @@ struct Box2D
     Box2D(const Box2D& box);
     Box2D& operator=(const Box2D& box);
 
+    // Setters
+    void resize(Area2D& size);
+    void move(Vector2D& vctr);
+    void moveTo(Point2D& pos);
+
+    // Getters
     Point2D getCenter();
     int getWidth();
     int getHeight();
@@ -56,16 +62,21 @@ class PixelPadding
 public:
     PixelPadding():left(0), top(0), right(0), bottom(0){}
     PixelPadding(int l, int t, int r, int b):left(l), top(t), right(r), bottom(b){}
+    PixelPadding& operator=(const PixelPadding& rhs)
+    {
+        if (this == &rhs)
+            return *this;
+
+        left = rhs.left;
+        top = rhs.top;
+        right = rhs.right;
+        bottom = rhs.bottom;
+
+        return *this;
+    }
     int left, top, right, bottom;
 };
-
-class PixelMargin
-{
-public:
-    PixelMargin() :left(0), top(0), right(0), bottom(0) {}
-
-    int left, top, right, bottom;
-};
+typedef PixelPadding PixelMargin;
 
 struct FPoint2D
 {
