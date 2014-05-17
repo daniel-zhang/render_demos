@@ -2,59 +2,45 @@
 #include "GUIRenderer.h"
 #include "GUIEvent.h"
 
-WidgetMgr::WidgetMgr(): mInput(0), mRoot(0), mRenderer(0) { }
+WidgetMgr::WidgetMgr(): mInput(0), mRoot(0), mSubmit(true), mRenderer(0) { }
 WidgetMgr::~WidgetMgr() 
 {
-    for (UINT i = 0; i < mWidgets.size(); ++i)
+    if (mRenderer)
     {
-        if (mWidgets[i])
-            delete mWidgets[i];
+        delete mRenderer;
+        mRenderer = 0;
     }
-    mWidgets.clear();
+
+    if (mRoot)
+    {
+        delete mRoot;
+        mRoot = 0;
+    }
 }
 
-bool WidgetMgr::init( Input* input, GUIRenderer* renderer)
+bool WidgetMgr::init( Input* input, ID3D11Device* device, ID3D11DeviceContext* context )
 {
     mInput = input;
-    mRenderer = renderer;
+
+    mRenderer = new GUIRenderer();
+    if(mRenderer->init(device, context) == false)
+        return false;
 
     mFontEngine.createFontSheet(mFontSheet, L"debug");
 
     hookEventHandlers();
 
-    return true;
-}
-
-
-Widget* WidgetMgr::createRootWidget( Area2D& viewportSize, const RGBA& color )
-{
-    // Root duplication is not allowed
     if (mRoot)
-        return NULL;
+    {
+        delete mRoot; mRoot = 0;
+    }
+    UINT vpNum = 1;
+    D3D11_VIEWPORT vp;
+    context->RSGetViewports(&vpNum, &vp);
+    mRoot = new Root( Area2D( static_cast<int>(vp.Width), static_cast<int>(vp.Height) ) );
+    mRoot->setWidgetMgr(this);
 
-    mRoot = new Widget( viewportSize, color, &mSolver);
-    mRoot->mTextBlock.init(&mFontSheet);
-    mWidgets.push_back(mRoot); 
-
-    return mRoot;
-}
-Widget* WidgetMgr::createChildWidget(Widget* parent, Area2D& size, PixelPadding& padding, const RGBA& color, LayoutType layoutType /*= WIDGET_LAYOUT_NULL */ )
-{
-    // Parent must be valid
-    if (parent == NULL)
-        return NULL;
-
-    Widget* w = 0;
-
-    if(layoutType != WIDGET_LAYOUT_NOT_SPECIFIED)
-        w = new Widget( parent, size, padding, color, &mSolver, layoutType);
-    else
-        w = new Widget( parent, size, padding, color, &mSolver);
-
-    w->mTextBlock.init(&mFontSheet);
-    mWidgets.push_back(w);
-
-    return w;
+    return true;
 }
 
 bool WidgetMgr::hookEventHandlers()
@@ -126,6 +112,52 @@ void WidgetMgr::onMouseWheelDown( int x, int y )
    evt.mMousePos = Point2D(x, y);
 
    mRoot->dispatch(evt);
+}
+
+Widget* WidgetMgr::getRoot()
+{
+    return mRoot;
+}
+
+FontSheet* WidgetMgr::getFontSheet()
+{
+    return &mFontSheet;
+}
+
+void WidgetMgr::draw()
+{
+    if (mSubmit)
+    {
+        mSubmit = false;
+
+        mRenderer->beginBatch();
+        submit();
+        mRenderer->endBatch();
+    }
+
+    mRenderer->draw();
+}
+
+void WidgetMgr::setSubmit()
+{
+    mSubmit = true;
+}
+
+void WidgetMgr::submit()
+{
+    _submit(mRoot, Point2D());
+}
+
+void WidgetMgr::_submit( Widget* w, Point2D& parentAbsPos )
+{
+    Point2D currAbsPos;
+    w->updateRenderable(parentAbsPos, currAbsPos);
+    mRenderer->sortedBatch(static_cast<IRenderable2D*>(w));
+
+    for (UINT i = 0; i < w->mChildren.size(); ++i)
+    {
+        _submit(w->mChildren[i], currAbsPos);
+    }
 }
 
 

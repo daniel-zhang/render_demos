@@ -11,12 +11,14 @@ enum LayoutType
     WIDGET_LAYOUT_CENTER = 0,
     WIDGET_LAYOUT_STATIC,
     WIDGET_LAYOUT_STREAM,
+    WIDGET_LAYOUT_TEXT_STREAM,
     WIDGET_LAYOUT_VERTICAL,
     WIDGET_LAYOUT_HORIZENAL,
     WIDGET_LAYOUT_DOCK_LEFT,
     WIDGET_LAYOUT_NOT_SPECIFIED
 };
 
+class WidgetMgr;
 class Widget : public IRenderable2D
 {
 public:
@@ -24,10 +26,17 @@ public:
     virtual ~Widget();
 
     // UI logic
+    WidgetMgr* getWidgetMgr();
+    void setWidgetMgr(WidgetMgr* w);
+
     void dispatch(GUIEvent& evt);
     void addChild(Widget* child);
 
-    virtual void onLayoutChanged(GUIEvent& evt) = 0;
+    // 
+    virtual void updateRenderable(Point2D& parentAbsPos, Point2D& myAbsPos) = 0;
+
+    // Event handlers
+    //virtual void onLayoutChanged(GUIEvent& evt) = 0;
     virtual void onResize(GUIEvent& e) = 0;
     virtual void onLBtnDown(GUIEvent& e) = 0;
     virtual void onLBtnUp(GUIEvent& e) = 0;
@@ -37,9 +46,10 @@ public:
     virtual void onMouseEnter(GUIEvent& e) = 0;
     virtual void onMouseLeave(GUIEvent& e) = 0;
 
-    //
-    virtual void getPaddedRect(Box2D& box) = 0;
-    virtual void getMarginRect(Box2D& box) = 0;
+    // Helpers
+    virtual void getPaddedRect(Box2D& box);
+    virtual void getPaddedRectLocal(Box2D& box);
+    virtual void getMarginRect(Box2D& box);
 
     // Actions
     virtual void move(Vector2D& movement) = 0;
@@ -56,7 +66,6 @@ public:
         STATE_NUMBER
     };
 
-public:
     WidgetState mState;
     LayoutType mLayoutType;
 
@@ -64,6 +73,7 @@ public:
     PixelPadding mPadding;
     PixelMargin mMargin;
     
+    WidgetMgr* mWidgetMgr;
     Widget* mParent;
     std::vector<Widget*> mChildren;
 };

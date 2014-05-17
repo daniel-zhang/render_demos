@@ -20,7 +20,7 @@ public:
 
     //Point2D mAbsolutePos;
     //Area2D mSize;
-    Box2D mDestRect;
+    Box2D mVisibleRect;
     FBox2D mTextureRect;
     RGBA mColor;
 

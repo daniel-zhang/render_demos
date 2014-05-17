@@ -28,7 +28,7 @@ void GUIRenderer::onViewportResize( Area2D& newArea )
 
 float GUIRenderer::getDepth( int layerIndex )
 {
-    return mZBoundary* ( 1.f - static_cast<float>(layerIndex)/mMaxLayerDepth);
+    return mZBoundary* ( 1.f - static_cast<float>(layerIndex)/(mMaxLayerDepth+1));
 }
 
 void GUIRenderer::beginBatch()
@@ -184,7 +184,7 @@ void GUIRenderer::updateQuadBuffer2()
         for (UINT i = 0; i < bucketSize; ++i)
         {
             IRenderable2D* sprite = it->second.mBucket[i];
-            NdcBox2D ndcBox(Box2D(sprite->mAbsolutePos, sprite->mSize), mViewport);
+            NdcBox2D ndcBox(sprite->mVisibleRect, mViewport);
             for (UINT j = 0; j < 4; ++j)
             {
                 Vertex::OverlayVertex v;
@@ -214,7 +214,7 @@ void GUIRenderer::updateQuadBuffer()
     for (UINT i = 0; i < mRenderQueue.size(); ++i)
     {
         // Transform quad form screen space to NDC space
-        NdcBox2D widgetNdcQuad(Box2D(mRenderQueue[i]->mAbsolutePos, mRenderQueue[i]->mSize), mViewport);
+        NdcBox2D widgetNdcQuad(mRenderQueue[i]->mVisibleRect, mViewport);
 
         for (UINT j = 0; j < 4; ++j)
         {

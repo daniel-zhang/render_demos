@@ -100,7 +100,6 @@
     <ClCompile Include="FontEngine.cpp" />
     <ClCompile Include="GridDemo.cpp" />
     <ClCompile Include="GUIRenderer.cpp" />
-    <ClCompile Include="LayoutSolver.cpp" />
     <ClCompile Include="LightingDemo.cpp" />
     <ClCompile Include="LightingDemo2.cpp" />
     <ClCompile Include="main.cpp" />
@@ -116,6 +115,8 @@
     <ClCompile Include="InputLayoutMgr.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteDemo.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextElement.cpp" />
     <ClCompile Include="TextureMgr.cpp" />
     <ClCompile Include="WaveDemo.cpp" />
     <ClCompile Include="WidgetBase.cpp" />
@@ -150,7 +151,6 @@
     <ClInclude Include="GUIRenderer.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="IRenderable2D.h" />
-    <ClInclude Include="LayoutSolver.h" />
     <ClInclude Include="LightingDemo.h" />
     <ClInclude Include="LightingDemo2.h" />
     <ClInclude Include="MeshLoaderDemo.h" />
@@ -167,7 +167,9 @@
     <ClInclude Include="InputLayoutMgr.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteDemo.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="TextBlock.h" />
+    <ClInclude Include="TextElement.h" />
     <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="WaveDemo.h" />
     <ClInclude Include="WidgetBase.h" />

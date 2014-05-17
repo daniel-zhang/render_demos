@@ -133,9 +133,6 @@
     <ClCompile Include="GUIRenderer.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="LayoutSolver.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="WidgetBase.cpp">
       <Filter>Deprecated</Filter>
     </ClCompile>
@@ -152,6 +149,12 @@
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="Root.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="TextElement.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
@@ -279,9 +282,6 @@
     <ClInclude Include="Color.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="LayoutSolver.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="IRenderable2D.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -307,6 +307,12 @@
       <Filter>GUI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="Root.h">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="TextElement.h">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
       <Filter>GUI\Widgets</Filter>
     </ClInclude>
   </ItemGroup>

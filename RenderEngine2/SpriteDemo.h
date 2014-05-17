@@ -3,9 +3,7 @@
 
 #include "DemoBasic.h"
 #include "FontEngine.h"
-
 #include "WidgetMgr.h"
-#include "GUIRenderer.h"
 #include "Input.h"
 
 class SpriteDemo : public DemoBasic
@@ -23,7 +21,6 @@ public:
     virtual void onMouseWheel(WPARAM btnState, int x, int y);
 
 private:
-    GUIRenderer mRenderer;
     WidgetMgr mWidgetMgr;
 
 private:

@@ -5,10 +5,22 @@
 #include "Math2D.h"
 #include <vector> 
 #include "Input.h"
-#include "LayoutSolver.h"
-#include "Widget.h"
 #include "GUIRenderer.h"
 #include "FontEngine.h"
+#include "Widget.h"
+#include "Root.h"
+
+/*
+void someUserCode()
+{
+    widgetMgr.init(...)
+
+    Container* container = new Container(WidgetMgr.getRoot(), ...);
+    Button* b = new Button(container, ...);
+
+    widgetMgr.draw();
+}
+*/
 
 class WidgetMgr
 {
@@ -18,58 +30,23 @@ public:
     WidgetMgr();
     ~WidgetMgr();
 
-    bool init(Input* input, GUIRenderer* renderer);
-    Widget* createRootWidget(Area2D& viewportSize, const RGBA& color);
-    Widget* createChildWidget(
-        Widget* parent, 
-        Area2D& size, PixelPadding& padding, const RGBA& color,
-        LayoutType layoutType = WIDGET_LAYOUT_NOT_SPECIFIED);
+    bool init(Input* input, ID3D11Device* device, ID3D11DeviceContext* context );
 
-    void createBegin(){}
-    void createEnd()
-    {
-        mSolver.solve(mRoot);
-    }
+    Widget* getRoot();
 
-    void draw()
-    {
-        if (mSolver.updated())
-        {
-            mSolver.resetUpdated();
+    FontSheet* getFontSheet();
 
-            mRenderer->beginBatch();
-            for (UINT i = 0; i < mWidgets.size(); ++i)
-            {
-                //mRenderer->batch(static_cast<IRenderable2D*>(mWidgets[i]));
-                mRenderer->sortedBatch(static_cast<IRenderable2D*>(mWidgets[i]));
-                if (mWidgets[i]->hasText())
-                {
-                    for (UINT j = 0; j < mWidgets[i]->mTextBlock.mTextQuads.size(); ++j)
-                    {
-                        mRenderer->sortedBatch(static_cast<IRenderable2D*>(&mWidgets[i]->mTextBlock.mTextQuads[j]));
-                    }
-                }
-            }
-            mRenderer->endBatch();
-        }
-        mRenderer->draw();
-    }
+    void draw();
 
-    //
-    // Getters
-    //
-    //WidgetArray& getWidgets(){return mWidgets;}
-    std::vector<IRenderable2D*> getRenderables()
-    {
-        std::vector<IRenderable2D*> ret;
-        for (UINT i = 0; i < mWidgets.size(); ++i)
-        {
-            ret.push_back(static_cast<IRenderable2D*>(mWidgets[i]));
-        }
-        return ret;
-    }
+    // Widgets use this method to notify their mgr that they needs to be re-batched to renderer
+    void setSubmit();
 
 private:
+
+    void submit();
+
+    void _submit(Widget* w, Point2D& parentAbsPos);
+
     //
     // Event handlers
     //
@@ -93,9 +70,9 @@ private:
     GUIRenderer* mRenderer;
     Point2D mLastMousePos;
     Input* mInput;
+
     Widget* mRoot;
-    WidgetArray mWidgets;
-    LayoutSolver mSolver;
+    bool mSubmit;
 
     FontEngine mFontEngine;
     FontSheet mFontSheet;

@@ -8,6 +8,8 @@ Notes
 #include "EffectMgr.h"
 #include "RenderStateMgr.h"
 
+#include "Text.h"
+
 SpriteDemo::SpriteDemo()
 {
 }
@@ -23,14 +25,14 @@ bool SpriteDemo::init()
         return false;
     }
 
-    mRenderer.init(md3dDevice, md3dImmediateContext);
-    mWidgetMgr.init(&mInput, &mRenderer);
+    mWidgetMgr.init(&mInput, md3dDevice, md3dImmediateContext);
 
-    UINT vpNum = 1;
-    D3D11_VIEWPORT vp;
-    md3dImmediateContext->RSGetViewports(&vpNum, &vp);
+    Root* root = static_cast<Root*>(mWidgetMgr.getRoot());
 
-    mWidgetMgr.createBegin();
+    Text* t = new Text(root, 30, mWidgetMgr.getFontSheet(), Point2D(50, 50), Area2D(100, 300), PixelPadding(), PixelMargin(), WIDGET_LAYOUT_STATIC);
+    t->setText(std::wstring(L"Hello World!"));
+
+    /*
     Widget* root = mWidgetMgr.createRootWidget(Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), RGBAColor::Transparent);
     Widget* w1 = mWidgetMgr.createChildWidget(root, Area2D(300, 600), PixelPadding(), RGBAColor::Blue);
     for (UINT i = 0; i < 1; ++i)
@@ -43,6 +45,7 @@ bool SpriteDemo::init()
     }
 
     mWidgetMgr.createEnd();
+    */
 
     return true;
 }
