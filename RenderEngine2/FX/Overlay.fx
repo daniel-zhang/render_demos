@@ -7,8 +7,8 @@ SamplerState samLinear
 {
     Filter = MIN_MAG_MIP_LINEAR;
 
-    AddressU = WRAP;
-    AddressV = WRAP;
+    //AddressU = WRAP;
+    //AddressV = WRAP;
 };
 
 SamplerState samAnisotropic
@@ -45,13 +45,22 @@ VertexOut VS(VertexIn vin)
     return vout;
 }
 
-float4 PS(VertexOut pin, uniform bool useTex) : SV_Target
+float4 PS(VertexOut pin, uniform bool useTex, uniform bool setFontColor) : SV_Target
 {
-    if(useTex)
+    if(useTex && setFontColor)
     {
         float4 texColor = float4(1.f, 1.f, 1.f, 1.f);
         texColor = gDiffuseMap.Sample( samLinear, pin.Tex );
-        clip( texColor.x - 0.3f );
+        clip( texColor.x - 0.2f );
+
+		return texColor * pin.Color;
+        //return pin.Color;
+    }
+    else if(useTex)
+    {
+        float4 texColor = float4(1.f, 1.f, 1.f, 1.f);
+        texColor = gDiffuseMap.Sample( samLinear, pin.Tex );
+        clip( texColor.x - 0.2f );
 
         return texColor;
     }
@@ -70,7 +79,7 @@ technique11 OverlayTech
         SetHullShader( NULL );
         SetDomainShader( NULL );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_5_0, PS(false) ) );
+        SetPixelShader( CompileShader( ps_5_0, PS(false, false) ) );
     }
 }
 
@@ -82,6 +91,6 @@ technique11 OverlayTexTech
         SetHullShader( NULL );
         SetDomainShader( NULL );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_5_0, PS(true) ) );
+        SetPixelShader( CompileShader( ps_5_0, PS(true, true) ) );
     }
 }

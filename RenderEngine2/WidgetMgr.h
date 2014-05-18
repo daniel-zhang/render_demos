@@ -45,7 +45,7 @@ private:
 
     void submit();
 
-    void _submit(Widget* w, Point2D& parentAbsPos);
+    void _submit(Widget* w);
 
     //
     // Event handlers

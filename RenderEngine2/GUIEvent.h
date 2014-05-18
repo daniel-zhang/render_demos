@@ -79,4 +79,15 @@ public:
     Point2D mMousePos;
 };
 
+class MouseEnterEvent : public GUIEvent
+{
+public:
+    MouseEnterEvent(): GUIEvent(MouseEnter){}
+};
+
+class MouseLeaveEvent : public GUIEvent
+{
+public:
+    MouseLeaveEvent(): GUIEvent(MouseLeave){}
+};
 #endif

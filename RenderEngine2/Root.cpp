@@ -8,16 +8,6 @@ Root::Root( Area2D& vpSize )
     mLayerDepth = 0;
 }
 
-void Root::updateRenderable( Point2D& parentAbsPos, Point2D& myAbsPos )
-{
-    myAbsPos = parentAbsPos + mLocalRect.point[0];
-
-    mVisibleRect.resize(Area2D(mLocalRect.getWidth(), mLocalRect.getHeight()));
-    mVisibleRect.moveTo(myAbsPos);
-
-    mWidgetMgr->setSubmit();
-}
-
 void Root::onResize( GUIEvent& e )
 {
     WidgetResizeEvent& evt = reinterpret_cast<WidgetResizeEvent&>(e);
@@ -60,12 +50,6 @@ void Root::onMouseLeave( GUIEvent& e )
 
 }
 
-void Root::move( Vector2D& movement )
-{
-    // root widget not movealbe
-}
-
-
 void Root::resize( Area2D& newSize )
 {
     // Maintain static widgets' position when size changed
@@ -75,17 +59,17 @@ void Root::resize( Area2D& newSize )
         if (child->mLayoutType == WIDGET_LAYOUT_STATIC)
         {
             FPoint2D intermediatePos(
-                static_cast<float>(child->mLocalRect.getLeft())/this->mLocalRect.getWidth(),
-                static_cast<float>(child->mLocalRect.getTop())/this->mLocalRect.getHeight()
+                static_cast<float>(child->mRect.getLeft())/this->mRect.getWidth(),
+                static_cast<float>(child->mRect.getTop())/this->mRect.getHeight()
                 );
-            child->mLocalRect.moveTo( Point2D(
+            child->moveTo( Point2D(
                 static_cast<int>(newSize.width * intermediatePos.x),
                 static_cast<int>(newSize.height * intermediatePos.y)
                 ));
         }
     }
 
-    mLocalRect.resize(newSize);
+    mRect.resize(newSize);
     solveLayout();
 }
 
@@ -105,12 +89,12 @@ void Root::solveLayout()
             //TODO: support dock_right, dock_bottom, and dock_top
         case WIDGET_LAYOUT_DOCK_LEFT:
             {
-                Box2D paddedArea;
-                child->getPaddedRect(paddedArea);
+                Area2D childMargined;
+                child->getMarginedArea(childMargined);
                 child->moveTo(Point2D(dockLeftInsertPos.x + child->mMargin.left, dockLeftInsertPos.y + child->mMargin.top));
                 child->mLayerDepth = this->mLayerDepth + 1;
 
-                dockLeftInsertPos.y += paddedArea.getHeight();
+                dockLeftInsertPos.y += childMargined.height;
             }
             break;
             
@@ -120,11 +104,6 @@ void Root::solveLayout()
             break;
         }
     }
-}
-
-void Root::moveTo( Point2D& pos )
-{
-
 }
 
 

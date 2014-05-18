@@ -14,8 +14,10 @@ public:
     void setText(std::wstring& s);
     void clearText();
     void setFontSize(int newSize);
+    void setFontColor(RGBA& color);
+    void setBgColor(RGBA& color);
 
-    virtual void updateRenderable(Point2D& parentAbsPos, Point2D& myAbsPos);
+    virtual void updateRenderable();
 
     //virtual void onLayoutChanged(GUIEvent& evt);
     virtual void onResize(GUIEvent& e);
@@ -27,8 +29,6 @@ public:
     virtual void onMouseEnter(GUIEvent& e);
     virtual void onMouseLeave(GUIEvent& e);
 
-    virtual void move(Vector2D& movement);
-    virtual void moveTo(Point2D& pos);
     virtual void resize(Area2D& newSize);
     virtual void solveLayout();
 
@@ -36,6 +36,10 @@ protected:
     int mFontSize;
     FontSheet* mFontSheet;
     std::wstring mString;
+    RGBA mBgColor;
+    RGBA mFontColor;
+    RGBA mActiveBgColor;
+    RGBA mActiveFontColor;
 };
 
 #endif

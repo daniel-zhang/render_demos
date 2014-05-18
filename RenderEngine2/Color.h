@@ -7,6 +7,20 @@ struct RGBA
 {
     RGBA(){red = 0; green = 0; blue = 0; alpha = 255;}
     RGBA(int r, int g, int b, int a = 255 ): red(r), green(g), blue(b), alpha(a) {}
+    RGBA& operator=(const RGBA& rhs)
+    {
+        if (this == & rhs)
+        {
+            return *this;
+        }
+        this->red = rhs.red;
+        this->green = rhs.green;
+        this->blue = rhs.blue;
+        this->alpha = rhs.alpha;
+
+        return *this; 
+    }
+
 
     XMFLOAT4 normalize()
     {
@@ -32,6 +46,8 @@ namespace RGBAColor
     _GLOABAL_CONST RGBA Green(100, 248, 100, 255);
     _GLOABAL_CONST RGBA Red(255, 100, 100, 255);
     _GLOABAL_CONST RGBA Blue(100, 100, 255, 255);
+    _GLOABAL_CONST RGBA White(200, 200, 255, 255);
+    _GLOABAL_CONST RGBA Yellow(200, 200, 155, 255);
 }
 
 #endif

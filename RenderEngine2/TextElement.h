@@ -11,8 +11,7 @@ public:
     TextElement(Widget* parent, int fontSize, wchar_t charactor, FontSheet* fontSheet );
 
     wchar_t& getChar(){return mCharacter;}
-
-    virtual void updateRenderable(Point2D& parentAbsPos, Point2D& myAbsPos);
+    void setColor(RGBA& color);
 
     //virtual void onLayoutChanged(GUIEvent& evt);
     virtual void onResize(GUIEvent& e);
@@ -24,8 +23,6 @@ public:
     virtual void onMouseEnter(GUIEvent& e);
     virtual void onMouseLeave(GUIEvent& e);
 
-    virtual void move(Vector2D& movement);
-    virtual void moveTo(Point2D& pos);
     virtual void resize(Area2D& newSize);
     virtual void solveLayout();
 
@@ -33,5 +30,6 @@ protected:
     int mFontSize;
     FontSheet* mFontSheet;
     wchar_t mCharacter;
+    RGBA mFontColor;
 };
 #endif

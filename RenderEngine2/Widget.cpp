@@ -4,7 +4,7 @@
 
 Widget::Widget( Widget* parent, Area2D& size, PixelPadding& padding, PixelMargin& margin, const RGBA& color, LayoutType layoutType  )
 {
-    mLocalRect.resize(size); 
+    mRect.resize(size); 
     mPadding = padding;
     mMargin = margin;
     mColor = color;
@@ -40,17 +40,6 @@ void Widget::dispatch( GUIEvent& evt )
 {
     switch(evt.mEventType)
     {
-        /*
-    case GUIEvent::LayoutChanged:
-        {
-            this->onLayoutChanged(evt);
-            if (evt.mPropagate)
-                for (UINT i = 0; i < mChildren.size(); ++i)
-                    mChildren[i]->dispatch(evt);
-        }
-        break;
-        */
-
     case GUIEvent::WidgetResize:
         {
             this->onResize(evt);
@@ -146,37 +135,47 @@ void Widget::setWidgetMgr( WidgetMgr* w )
 
 void Widget::getPaddedRect( Box2D& box )
 {
-    Point2D pos = this->mLocalRect.point[0] + Vector2D(mPadding.left, mPadding.top);
+    Point2D pos = this->mRect.point[0] + Vector2D(mPadding.left, mPadding.top);
 
     Area2D clientSize;
-    clientSize.width = mLocalRect.getWidth() - (mPadding.left+ mPadding.right);
-    clientSize.height = mLocalRect.getHeight() - (mPadding.top + mPadding.bottom);
-
-    box.resize(clientSize);
-    box.moveTo(pos);
-}
-void Widget::getPaddedRectLocal( Box2D& box )
-{
-    Point2D pos = Point2D(mPadding.left, mPadding.top);
-
-    Area2D clientSize;
-    clientSize.width = mLocalRect.getWidth() - (mPadding.left+ mPadding.right);
-    clientSize.height = mLocalRect.getHeight() - (mPadding.top + mPadding.bottom);
+    clientSize.width = mRect.getWidth() - (mPadding.left+ mPadding.right);
+    clientSize.height = mRect.getHeight() - (mPadding.top + mPadding.bottom);
 
     box.resize(clientSize);
     box.moveTo(pos);
 }
 
-void Widget::getMarginRect( Box2D& box )
+void Widget::getMarginedArea( Area2D& area )
 {
-    Point2D pos = this->mLocalRect.point[0] - Vector2D(mMargin.left, mMargin.top);
-    Area2D size(
-        mLocalRect.getWidth() + (mMargin.left + mMargin.right),
-        mLocalRect.getHeight() + (mMargin.top + mMargin.bottom) );
-
-    box.resize(size);
-    box.moveTo(pos);
+    area.width = mRect.getWidth() + (mMargin.left + mMargin.right);
+    area.height = mRect.getHeight() + (mMargin.top + mMargin.bottom);
 }
+
+void Widget::updateRenderable()
+{
+    mVisibleRect = mRect;
+}
+
+void Widget::move( Vector2D& movement )
+{
+    mRect.move(movement);
+    for (UINT i = 0; i < mChildren.size(); ++i)
+    {
+        mChildren[i]->move(movement);
+    }
+
+    mWidgetMgr->setSubmit();
+}
+
+void Widget::moveTo( Point2D& pos )
+{
+    Vector2D movement = pos - mRect.point[0];
+    move(movement);
+
+    mWidgetMgr->setSubmit();
+}
+
+
 
 
 

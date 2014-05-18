@@ -145,18 +145,17 @@ void WidgetMgr::setSubmit()
 
 void WidgetMgr::submit()
 {
-    _submit(mRoot, Point2D());
+    _submit(mRoot);
 }
 
-void WidgetMgr::_submit( Widget* w, Point2D& parentAbsPos )
+void WidgetMgr::_submit( Widget* w)
 {
-    Point2D currAbsPos;
-    w->updateRenderable(parentAbsPos, currAbsPos);
+    w->updateRenderable();
     mRenderer->sortedBatch(static_cast<IRenderable2D*>(w));
 
     for (UINT i = 0; i < w->mChildren.size(); ++i)
     {
-        _submit(w->mChildren[i], currAbsPos);
+        _submit(w->mChildren[i]);
     }
 }
 

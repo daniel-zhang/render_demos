@@ -52,6 +52,18 @@ const Point2D Point2D::operator-(const Point2D& other) const
     return Point2D(*this) -= other; 
 }
 
+bool Point2D::operator==( const Point2D& rhs ) const
+{
+    if (this->x == rhs.x && this->y == rhs.y)
+        return true;
+    return false;
+}
+
+bool Point2D::operator!=( const Point2D& rhs ) const
+{
+    return !(*this == rhs);
+}
+
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 Area2D::Area2D():width(0), height(0) {}

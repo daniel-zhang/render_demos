@@ -12,6 +12,7 @@ enum LayoutType
     WIDGET_LAYOUT_STATIC,
     WIDGET_LAYOUT_STREAM,
     WIDGET_LAYOUT_TEXT_STREAM,
+    WIDGET_LAYOUT_TEXT_STREAM_CENTERED,
     WIDGET_LAYOUT_VERTICAL,
     WIDGET_LAYOUT_HORIZENAL,
     WIDGET_LAYOUT_DOCK_LEFT,
@@ -33,7 +34,7 @@ public:
     void addChild(Widget* child);
 
     // 
-    virtual void updateRenderable(Point2D& parentAbsPos, Point2D& myAbsPos) = 0;
+    virtual void updateRenderable();
 
     // Event handlers
     //virtual void onLayoutChanged(GUIEvent& evt) = 0;
@@ -46,16 +47,15 @@ public:
     virtual void onMouseEnter(GUIEvent& e) = 0;
     virtual void onMouseLeave(GUIEvent& e) = 0;
 
-    // Helpers
-    virtual void getPaddedRect(Box2D& box);
-    virtual void getPaddedRectLocal(Box2D& box);
-    virtual void getMarginRect(Box2D& box);
-
     // Actions
-    virtual void move(Vector2D& movement) = 0;
-    virtual void moveTo(Point2D& pos) = 0;
-    virtual void resize(Area2D& newSize) = 0;
     virtual void solveLayout() = 0;
+    virtual void resize(Area2D& newSize) = 0;
+    virtual void move(Vector2D& movement);
+    virtual void moveTo(Point2D& pos);
+
+    // Helpers
+    void getPaddedRect(Box2D& box);
+    void getMarginedArea(Area2D& area);
 
     enum WidgetState
     {
@@ -69,7 +69,7 @@ public:
     WidgetState mState;
     LayoutType mLayoutType;
 
-    Box2D mLocalRect;
+    Box2D mRect;
     PixelPadding mPadding;
     PixelMargin mMargin;
     

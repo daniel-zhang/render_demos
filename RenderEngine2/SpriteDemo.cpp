@@ -29,8 +29,13 @@ bool SpriteDemo::init()
 
     Root* root = static_cast<Root*>(mWidgetMgr.getRoot());
 
-    Text* t = new Text(root, 30, mWidgetMgr.getFontSheet(), Point2D(50, 50), Area2D(100, 300), PixelPadding(), PixelMargin(), WIDGET_LAYOUT_STATIC);
-    t->setText(std::wstring(L"Hello World!"));
+    Text* t1 = new Text(root, 20, mWidgetMgr.getFontSheet(), Point2D(50, 50), Area2D(170, 80), PixelPadding(), PixelMargin(), WIDGET_LAYOUT_STATIC);
+    t1->setText(std::wstring(L"Hello Widgets!"));
+
+    Text* t2 = new Text(root, 18, mWidgetMgr.getFontSheet(), Point2D(450, 50), Area2D(300, 200), PixelPadding(8,3,8,3), PixelMargin(), WIDGET_LAYOUT_STATIC);
+    t2->setText(std::wstring(
+        L"Widget* root = mWidgetMgr.createRootWidget(Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), RGBAColor::Transparent);"
+        ));
 
     /*
     Widget* root = mWidgetMgr.createRootWidget(Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), RGBAColor::Transparent);
