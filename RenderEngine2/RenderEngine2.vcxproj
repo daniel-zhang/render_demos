@@ -114,7 +114,9 @@
     <ClCompile Include="SceneDemo.cpp" />
     <ClCompile Include="InputLayoutMgr.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Sprite2D.cpp" />
     <ClCompile Include="SpriteDemo.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextElement.cpp" />
     <ClCompile Include="TextureMgr.cpp" />
@@ -166,7 +168,9 @@
     <ClInclude Include="SceneDemo.h" />
     <ClInclude Include="InputLayoutMgr.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Sprite2D.h" />
     <ClInclude Include="SpriteDemo.h" />
+    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextBlock.h" />
     <ClInclude Include="TextElement.h" />

@@ -3,6 +3,7 @@
 // Init static member variables
 ID3D11RasterizerState* RenderStateMgr::WireframeRS = 0;
 ID3D11RasterizerState* RenderStateMgr::NoCullRS    = 0;
+ID3D11RasterizerState* RenderStateMgr::ScissorRS = 0;
      
 ID3D11BlendState*      RenderStateMgr::AlphaToCoverageBS = 0;
 ID3D11BlendState*      RenderStateMgr::TransparentBS     = 0;
@@ -32,6 +33,25 @@ void RenderStateMgr::initAll( ID3D11Device* device )
     noCullDesc.DepthClipEnable = true;
 
     HR(device->CreateRasterizerState(&noCullDesc, &NoCullRS));
+
+    //
+    // ScissorRS
+    //
+    D3D11_RASTERIZER_DESC scissorDesc;
+    ZeroMemory(&scissorDesc, sizeof(D3D11_RASTERIZER_DESC));
+    scissorDesc.FillMode = D3D11_FILL_SOLID;
+    scissorDesc.CullMode = D3D11_CULL_BACK;
+    scissorDesc.FrontCounterClockwise = FALSE;
+    scissorDesc.DepthBias = D3D11_DEFAULT_DEPTH_BIAS;
+    scissorDesc.DepthBiasClamp = D3D11_DEFAULT_DEPTH_BIAS_CLAMP;
+    scissorDesc.SlopeScaledDepthBias = D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
+    scissorDesc.DepthClipEnable = TRUE;
+    scissorDesc.ScissorEnable = TRUE;
+    scissorDesc.MultisampleEnable = FALSE;
+    scissorDesc.AntialiasedLineEnable = FALSE;
+
+    HR(device->CreateRasterizerState(&scissorDesc, &ScissorRS));
+    
 
     //
     // AlphaToCoverageBS
@@ -72,3 +92,4 @@ void RenderStateMgr::destroyAll()
     safe_release(&AlphaToCoverageBS);
     safe_release(&TransparentBS);
 }
+

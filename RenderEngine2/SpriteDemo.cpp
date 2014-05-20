@@ -7,6 +7,7 @@ Notes
 #include "SpriteDemo.h"
 #include "EffectMgr.h"
 #include "RenderStateMgr.h"
+#include "Color.h"
 
 #include "Text.h"
 
@@ -24,6 +25,16 @@ bool SpriteDemo::init()
     {
         return false;
     }
+
+    // New Renderer Test Begin
+    mSpriteRenderer.init(md3dDevice, md3dImmediateContext);
+    mSprite.init(mSpriteRenderer.getRenderEnv(), EffectMgr::OverlayFX, EffectMgr::OverlayFX->OverlayTech);
+    mSprite.resize(Area2D(200, 200));
+    mSprite.setColor(RGBAColor::Background);
+    mSprite.setRSState(RenderStateMgr::ScissorRS);
+    mSprite.setClipBox(Box2D(Point2D(0,0), Area2D(50,50)));
+    //mSprite.enableClip();
+    // New Renderer Test End
 
     mWidgetMgr.init(&mInput, md3dDevice, md3dImmediateContext);
 
@@ -84,6 +95,8 @@ void SpriteDemo::drawScene()
 
     mWidgetMgr.draw();
 
+    mSpriteRenderer.draw(mSprite);
+
     HR(mSwapChain->Present(0, 0));
 }
 
@@ -94,6 +107,8 @@ void SpriteDemo::onResize()
     UINT vpNum = 1;
     D3D11_VIEWPORT vp;
     md3dImmediateContext->RSGetViewports(&vpNum, &vp);
+
+    mSpriteRenderer.onViewportResize(Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)));
 
     mInput.EventViewportResize.fire(static_cast<int>(vp.Width), static_cast<int>(vp.Height));
 }

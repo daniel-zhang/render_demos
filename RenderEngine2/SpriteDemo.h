@@ -6,6 +6,8 @@
 #include "WidgetMgr.h"
 #include "Input.h"
 
+#include "SpriteRenderer.h"
+
 class SpriteDemo : public DemoBasic
 {
 public:
@@ -29,6 +31,9 @@ private:
 //   Animation2D mAnim;
 //    std::vector<OverlayUI::Quad*> mQuads;
     Input mInput;
+
+    SpriteRenderer mSpriteRenderer;
+    Sprite2D mSprite;
 };
 
 #endif
