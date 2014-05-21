@@ -1,25 +1,13 @@
 #include "Text.h"
-#include "WidgetMgr.h"
+#include "FontEngine.h"
 
-Text::Text( Widget* parent, int fontSize, FontSheet* fontSheet, Area2D& size, PixelPadding& padding, PixelMargin& margin, LayoutType layoutType )
-        :Widget(parent, size, padding, margin, RGBA(), layoutType)
+Text::Text(D3DEnv* env, int fontSize, FontSheet* fontSheet, Point2D& pos, Area2D& size, PixelPadding& padding, PixelMargin& margin, LayoutType layoutType /*= WIDGET_LAYOUT_STATIC*/ )
+    :
+    Widget(env, pos, size, padding, margin, RGBA(), layoutType)
 {
-    mFontSize = fontSize;
-    mFontSheet = fontSheet;
-
-    mBgColor = RGBAColor::Background;
-    mFontColor = RGBAColor::White;
-    mActiveBgColor = RGBAColor::Background;
-    mActiveFontColor = RGBAColor::Blue;
-
+    mType = WIDGET_TYPE_TEXT,
     mVisible = true;
-    mHasTexture = false;
-    mSortKey = -1;
-}
 
-Text::Text( Widget* parent, int fontSize, FontSheet* fontSheet, Point2D& pos, Area2D& size, PixelPadding& padding, PixelMargin& margin, LayoutType layoutType /*= WIDGET_LAYOUT_STATIC*/ )
-        :Widget(parent, size, padding, margin, RGBA(), layoutType)
-{
     mFontSize = fontSize;
     mFontSheet = fontSheet;
 
@@ -27,17 +15,17 @@ Text::Text( Widget* parent, int fontSize, FontSheet* fontSheet, Point2D& pos, Ar
     mFontColor = RGBAColor::White;
     mActiveBgColor = RGBAColor::Background;
     mActiveFontColor = RGBAColor::Yellow;
-
-    mRect.moveTo(pos);
-
-    mVisible = true;
-    mHasTexture = false;
-    mSortKey = -1;
 }
 
-void Text::updateRenderable( )
+bool Text::init()
 {
-    mVisibleRect = mRect;
+    mSprite.init(*mEnv);
+    mSprite.setEffect(EffectMgr::OverlayFX);
+    mSprite.setTechique(EffectMgr::OverlayFX->OverlayTech);
+    mSprite.setDstBox(mLogicalBox);
+
+    mState = NORMAL;
+    return true;
 }
 
 void Text::onResize( GUIEvent& e )
@@ -49,8 +37,10 @@ void Text::onLBtnDown( GUIEvent& e )
 {
     MouseLBtnDownEvent& evt = reinterpret_cast<MouseLBtnDownEvent&>(e);
     
-    if (mRect.isPointInside(evt.mMousePos))
+    if (mLogicalBox.isPointInside(evt.mMousePos))
     {
+        //if (!isActive()) 
+        this->setActive();
         mState = PRESSED_DOWN;
         e.mPropagate = false;
     }
@@ -70,11 +60,11 @@ void Text::onMouseMove( GUIEvent& e )
     MouseMoveEvent& evt = reinterpret_cast<MouseMoveEvent&>(e);
 
     // TODO: emit mouse enter/ mouse leave event here...
-    if (mRect.isPointInside(evt.mLastMousePos) == false && mRect.isPointInside(evt.mMousePos)== true)
+    if (mLogicalBox.isPointInside(evt.mLastMousePos) == false && mLogicalBox.isPointInside(evt.mMousePos)== true)
     {
         dispatch(MouseEnterEvent());
     }
-    else if (mRect.isPointInside(evt.mLastMousePos) == true && mRect.isPointInside(evt.mMousePos)== false)
+    else if (mLogicalBox.isPointInside(evt.mLastMousePos) == true && mLogicalBox.isPointInside(evt.mMousePos)== false)
     {
         dispatch(MouseLeaveEvent());
     }
@@ -100,9 +90,8 @@ void Text::onMouseEnter( GUIEvent& e )
 {
     MouseEnterEvent& evt = reinterpret_cast<MouseEnterEvent&>(e);
 
-    setFontColor(mActiveFontColor);
+    setTextColor(mActiveFontColor);
     setBgColor(mActiveBgColor);
-    mWidgetMgr->setSubmit();
 
     evt.mPropagate = false;
 }
@@ -111,19 +100,18 @@ void Text::onMouseLeave( GUIEvent& e )
 {
     MouseLeaveEvent& evt = reinterpret_cast<MouseLeaveEvent&>(e);
 
-    setFontColor(mFontColor);
+    setTextColor(mFontColor);
     setBgColor(mBgColor);
-    mWidgetMgr->setSubmit();
 
     evt.mPropagate = false;
 }
 
 void Text::resize( Area2D& newSize )
 {
-    mRect.resize(newSize);
-    solveLayout();
+    mLogicalBox.resize(newSize);
+    mSprite.resize(newSize);
 
-    mWidgetMgr->setSubmit();
+    solveLayout();
 }
 
 void Text::solveLayout()
@@ -154,7 +142,6 @@ void Text::solveLayout()
                 }
 
                 child->moveTo(Point2D(insertPos.x + child->mMargin.left, insertPos.y + child->mMargin.top));
-                child->mLayerDepth = mLayerDepth + 1;
 
                 insertPos.x += marginedArea.width;
             }
@@ -174,7 +161,6 @@ void Text::solveLayout()
                 }
 
                 child->moveTo(Point2D(insertPos_Centered.x + child->mMargin.left, insertPos_Centered.y + child->mMargin.top));
-                child->mLayerDepth = mLayerDepth + 1;
 
                 insertPos_Centered.x += marginedArea.width;
             }
@@ -220,33 +206,29 @@ void Text::setText( std::wstring& s )
 
     for (UINT i = 0; i < mString.size(); ++i)
     {
-        TextElement* te = new TextElement(this, mFontSize, mString[i], mFontSheet);
+        TextElement* te = new TextElement(mEnv, mString[i], mFontSize, mFontSheet);
+        te->init();
+        te->enableExternalTextureSrc();
+        this->addChild(te);
     }
     solveLayout();
 
     setBgColor(mBgColor);
-    setFontColor(mFontColor);
+    setTextColor(mFontColor);
 }
 
 void Text::clearText()
 {
-    for (UINT i = 0; i < mChildren.size(); ++i)
-    {
-        if (mChildren[i])
-        {
-            delete mChildren[i];
-            mChildren[i] = 0;
-        }
-    }
-    mChildren.clear();
+    Widget::clear();
     mString.clear();
 }
 
-void Text::setFontSize( int newSize )
+void Text::setTextSize( int newSize )
 {
 
 }
-void Text::setFontColor(RGBA& color)
+
+void Text::setTextColor(RGBA& color)
 {
     for (UINT i = 0; i < mChildren.size(); ++i)
     {
@@ -256,6 +238,16 @@ void Text::setFontColor(RGBA& color)
 
 void Text::setBgColor(RGBA& color)
 {
-   mColor = color; 
+   mSprite.setColor(color);
+}
+
+void Text::beforeDrawChildren()
+{
+    EffectMgr::OverlayFX->setDiffuseMap(mFontSheet->mFontSRV);
+}
+
+void Text::afterDrawChildren()
+{
+
 }
 

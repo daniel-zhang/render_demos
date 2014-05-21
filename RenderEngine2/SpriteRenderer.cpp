@@ -1,5 +1,6 @@
 #include "SpriteRenderer.h"
 #include "InputLayoutMgr.h"
+#include "RenderStateMgr.h"
 
 SpriteRenderer::SpriteRenderer()
 {
@@ -26,6 +27,28 @@ bool SpriteRenderer::init( ID3D11Device* device, ID3D11DeviceContext* ctx )
 
 void SpriteRenderer::draw( Sprite2D& sprite )
 {
+    _beforeDraw();
+    _draw(sprite);
+    _afterDraw();
+}
+
+void SpriteRenderer::onViewportResize( Area2D& newArea )
+{
+    mVpSize = newArea;
+}
+
+D3DEnv& SpriteRenderer::getRenderEnv() 
+{
+    return mEnv;
+}
+
+void SpriteRenderer::_beforeDraw()
+{
+    mEnv.context->OMSetDepthStencilState(RenderStateMgr::NoDepthTestDS, 0);
+}
+
+void SpriteRenderer::_draw( Sprite2D& sprite )
+{
     mEnv.context->IASetInputLayout(InputLayoutMgr::OverlayVertex);
     mEnv.context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -40,12 +63,7 @@ void SpriteRenderer::draw( Sprite2D& sprite )
     sprite.afterDraw(mEnv);
 }
 
-void SpriteRenderer::onViewportResize( Area2D& newArea )
+void SpriteRenderer::_afterDraw()
 {
-    mVpSize = newArea;
-}
-
-D3DEnv& SpriteRenderer::getRenderEnv() 
-{
-    return mEnv;
+    mEnv.context->OMSetDepthStencilState(0, 0);
 }

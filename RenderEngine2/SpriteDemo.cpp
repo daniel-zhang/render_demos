@@ -9,7 +9,6 @@ Notes
 #include "RenderStateMgr.h"
 #include "Color.h"
 
-#include "Text.h"
 
 SpriteDemo::SpriteDemo()
 {
@@ -26,42 +25,56 @@ bool SpriteDemo::init()
         return false;
     }
 
+    /*
     // New Renderer Test Begin
     mSpriteRenderer.init(md3dDevice, md3dImmediateContext);
-    mSprite.init(mSpriteRenderer.getRenderEnv(), EffectMgr::OverlayFX, EffectMgr::OverlayFX->OverlayTech);
+    mSprite.init(mSpriteRenderer.getRenderEnv());
+    mSprite.setEffect(EffectMgr::OverlayFX);
+    mSprite.setTechique(EffectMgr::OverlayFX->OverlayTech);
     mSprite.resize(Area2D(200, 200));
     mSprite.setColor(RGBAColor::Background);
     mSprite.setRSState(RenderStateMgr::ScissorRS);
     mSprite.setClipBox(Box2D(Point2D(0,0), Area2D(50,50)));
     //mSprite.enableClip();
     // New Renderer Test End
+    */
 
+    FontEngine fontEngine;
+    fontEngine.createFontSheet(md3dDevice, mFontSheet, L"debug");
     mWidgetMgr.init(&mInput, md3dDevice, md3dImmediateContext);
 
-    Root* root = static_cast<Root*>(mWidgetMgr.getRoot());
-
-    Text* t1 = new Text(root, 20, mWidgetMgr.getFontSheet(), Point2D(50, 50), Area2D(170, 80), PixelPadding(), PixelMargin(), WIDGET_LAYOUT_STATIC);
-    t1->setText(std::wstring(L"Hello Widgets!"));
-
-    Text* t2 = new Text(root, 18, mWidgetMgr.getFontSheet(), Point2D(450, 50), Area2D(300, 200), PixelPadding(8,3,8,3), PixelMargin(), WIDGET_LAYOUT_STATIC);
-    t2->setText(std::wstring(
-        L"Widget* root = mWidgetMgr.createRootWidget(Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), RGBAColor::Transparent);"
-        ));
-
-    /*
-    Widget* root = mWidgetMgr.createRootWidget(Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)), RGBAColor::Transparent);
-    Widget* w1 = mWidgetMgr.createChildWidget(root, Area2D(300, 600), PixelPadding(), RGBAColor::Blue);
-    for (UINT i = 0; i < 1; ++i)
+for (UINT i = 0; i < 3; ++i)
+{
+    for (UINT j = 0; j < 5; ++j)
     {
-        Widget* w2 = mWidgetMgr.createChildWidget(w1, Area2D(250, 340), PixelPadding(), RGBAColor::Background,  WIDGET_LAYOUT_VERTICAL );
-        w2->setText(std::wstring(
-           L"// Font sheet bmp must be freed here...\n"
-           L"// Basically it does not make sense to let FontSheet hold a pointer to the Bitmap object...\n"
-           L"// Let me fix it later.\n"), 24);
+        RGBA bgColor;
+        switch(j%3)
+        {
+        case 0:
+            bgColor = RGBAColor::Red;
+            break;
+        case 1:
+            bgColor = RGBAColor::Green;
+            break;
+        case 2:
+            bgColor = RGBAColor::Blue;
+            break;
+        }
+        Text* t = new Text(mWidgetMgr.getRenderEnv(), 30, &mFontSheet, Point2D(355*i, 40*j), Area2D(350, 35), PixelPadding(), PixelMargin(), WIDGET_LAYOUT_STATIC);
+        t->setText(std::wstring(L"The One Ring that Rules All !!"));
+        t->mBgColor = bgColor;
+        t->mActiveBgColor = bgColor;
+        mWidgetMgr.addWidget(t);
     }
+}
+ 
+    mInfoBox = new Text(mWidgetMgr.getRenderEnv(), 20, &mFontSheet, Point2D(250, 150), Area2D(300, 200), PixelPadding(), PixelMargin(), WIDGET_LAYOUT_STATIC);
 
-    mWidgetMgr.createEnd();
-    */
+    std::wostringstream out;
+    out << L"Total Widgets: " << 100 << "\nSynced Widgets: " << 32 << std::endl; 
+    mInfoBox->setText(out.str());
+
+    mWidgetMgr.addWidget(mInfoBox);
 
     return true;
 }
@@ -93,9 +106,13 @@ void SpriteDemo::drawScene()
     mpModel->draw(tech, vp);
     md3dImmediateContext->RSSetState(0);
 
+    std::wostringstream out;
+    out << L"Total Widgets: " << 123 << L"\nSynced Widgets: " << 111 << std::endl
+        << L"Time: " << mTimer.totalTime();
+    mInfoBox->setText(out.str());
+
     mWidgetMgr.draw();
 
-    mSpriteRenderer.draw(mSprite);
 
     HR(mSwapChain->Present(0, 0));
 }
@@ -107,8 +124,6 @@ void SpriteDemo::onResize()
     UINT vpNum = 1;
     D3D11_VIEWPORT vp;
     md3dImmediateContext->RSGetViewports(&vpNum, &vp);
-
-    mSpriteRenderer.onViewportResize(Area2D(static_cast<int>(vp.Width), static_cast<int>(vp.Height)));
 
     mInput.EventViewportResize.fire(static_cast<int>(vp.Width), static_cast<int>(vp.Height));
 }

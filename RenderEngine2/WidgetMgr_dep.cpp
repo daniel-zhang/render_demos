@@ -41,7 +41,7 @@ bool WidgetMgr_deprecated::init( ID3D11Device* device, ID3D11DeviceContext* cont
     mpMouse->EventMove.hook(MouseEvent::SIGNAL_TYPE::slot_type(&WidgetMgr_deprecated::onMouseMove, this, _1, _2));
 
     // Init font
-    mFontEngine.createFontSheet(mFontSheet, L"debug");
+    mFontEngine.createFontSheet(device, mFontSheet, L"debug");
     mFontAtlas = TextureMgr::getTexture(mFontSheet.mFontSheetBmpFileName);
 
     return true;

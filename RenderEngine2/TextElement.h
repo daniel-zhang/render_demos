@@ -1,17 +1,24 @@
 #ifndef TEXT_ELEMENT_H
 #define TEXT_ELEMENT_H
-
 #include "Widget.h"
-#include "FontEngine.h"
 
+class FontSheet;
 class TextElement : public Widget
 {
 public:
-    
-    TextElement(Widget* parent, int fontSize, wchar_t charactor, FontSheet* fontSheet );
+    TextElement(D3DEnv* env, wchar_t charactor, int fontSize, FontSheet* fontSheet );
+    virtual bool init();
 
-    wchar_t& getChar(){return mCharacter;}
-    void setColor(RGBA& color);
+    void setChar(wchar_t charactor);
+    wchar_t& getChar(){return mCharactor;}
+
+    void setFontSize(int fontSize);
+    int getFontSize(){return mFontSize;}
+
+    void enableExternalTextureSrc();
+    void disableExternalTextureSrc();
+
+    void setColor(const RGBA& color);
 
     //virtual void onLayoutChanged(GUIEvent& evt);
     virtual void onResize(GUIEvent& e);
@@ -29,7 +36,6 @@ public:
 protected:
     int mFontSize;
     FontSheet* mFontSheet;
-    wchar_t mCharacter;
-    RGBA mFontColor;
+    wchar_t mCharactor;
 };
 #endif

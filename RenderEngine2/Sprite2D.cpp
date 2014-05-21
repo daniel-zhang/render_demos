@@ -1,10 +1,11 @@
 #include "Sprite2D.h"
 #include "SpriteRenderer.h"
+#include "RenderStateMgr.h"
 //#include "Util.h"
 
 Sprite2D::Sprite2D() :
     mIsClipped(false), mIsSynced(false), mTextureManagedExternally(false),
-    mSRV(0), mVB(0), mIB(0), mRSState(0), mRSCachedState(0),
+    mSRV(0), mVB(0), mIB(0), 
     mEffect(0), mTech(0)
 {
     mVertices.reserve(4);
@@ -12,12 +13,11 @@ Sprite2D::Sprite2D() :
 
 Sprite2D::~Sprite2D()
 {
+    clearGeometryBuffer();
 }
 
-bool Sprite2D::init( D3DEnv& env, OverlayEffect* effect, ID3DX11EffectTechnique* tech )
+bool Sprite2D::init( D3DEnv& env )
 {
-    mEffect = effect;
-    mTech = tech;
     return createGeometryBuffer(env);
 }
 
@@ -34,6 +34,24 @@ void Sprite2D::resize( Area2D& newSize )
     mIsSynced = false;
 }
 
+void Sprite2D::setEffect( OverlayEffect* effect )
+{
+    mEffect = effect;
+    mIsSynced = false;
+}
+
+void Sprite2D::setTechique( ID3DX11EffectTechnique* tech )
+{
+    mTech = tech;
+    mIsSynced = false;
+}
+
+void Sprite2D::setDstBox( Box2D& box )
+{
+    mDstBox = box;
+    mIsSynced = false;
+}
+
 void Sprite2D::setTexture( ID3D11ShaderResourceView* srv, FBox2D& srcBox )
 {
     mSRV = srv;
@@ -43,7 +61,6 @@ void Sprite2D::setTexture( ID3D11ShaderResourceView* srv, FBox2D& srcBox )
 void Sprite2D::setClipBox( Box2D& clipBox )
 {
     mClipBox = clipBox;
-    mIsSynced = false;
 }
 
 void Sprite2D::enableClip()
@@ -60,6 +77,7 @@ void Sprite2D::disableClip()
 void Sprite2D::setColor( const RGBA& color )
 {
     mVertexColor = color; 
+    mIsSynced = false;
 }
 
 bool Sprite2D::createGeometryBuffer(D3DEnv& env)
@@ -122,7 +140,7 @@ void Sprite2D::syncGeomtryBuffer( Area2D& vpSize, D3DEnv& env)
             Vertex::OverlayVertex v;
             v.Pos.x = ndcDstBox.point[i].x;
             v.Pos.y = ndcDstBox.point[i].y;
-            v.Pos.z = 0.2f;
+            v.Pos.z = 0.1f;
 
             v.Tex.x = mSrcBox.point[i].x;
             v.Tex.y = mSrcBox.point[i].y;
@@ -161,8 +179,7 @@ void Sprite2D::beforeDraw( D3DEnv& env )
 
     if (mIsClipped)
     {
-        env.context->RSGetState(&mRSCachedState);
-        env.context->RSSetState(mRSState);
+        env.context->RSSetState(RenderStateMgr::ScissorRS);
 
         D3D11_RECT clip;
         clip.left   = static_cast<LONG>(mClipBox.getLeft());
@@ -171,15 +188,20 @@ void Sprite2D::beforeDraw( D3DEnv& env )
         clip.bottom = static_cast<LONG>(mClipBox.getBottom());
         env.context->RSSetScissorRects(1, &clip);
     }
+    float blendFactor[4] = {1.f};
+    //env.context->OMSetBlendState(RenderStateMgr::AlphaToCoverageBS, blendFactor, 0xffffffff);
+    env.context->OMSetBlendState(RenderStateMgr::TransparentBS, blendFactor, 0xffffffff);
 }
 
 void Sprite2D::afterDraw( D3DEnv& env )
 {
     if (mIsClipped)
     {
-        env.context->RSSetState(mRSCachedState);
-        safe_release(&mRSCachedState);
+        env.context->RSSetState(0);
     }
+
+    float blendFactor[4] = {1.f};
+    env.context->OMSetBlendState(0, blendFactor, 0xffffffff);
 }
 
 void Sprite2D::enableExternalTextureManagement()
@@ -190,6 +212,11 @@ void Sprite2D::enableExternalTextureManagement()
 void Sprite2D::disableExternalTextureManagement()
 {
     mTextureManagedExternally = false;
+}
+
+Box2D& Sprite2D::getDstBox()
+{
+    return mDstBox;
 }
 
 

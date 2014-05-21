@@ -49,9 +49,9 @@ FontEngine::~FontEngine()
 
 }
 
-void FontEngine::createFontSheet( FontSheet& fs, std::wstring debugFilename )
+void FontEngine::createFontSheet(ID3D11Device* dvc,  FontSheet& fs, std::wstring debugFilename)
 {
-    ULONG_PTR token;
+    ULONG_PTR token = NULL;
     Gdiplus::GdiplusStartupInput startupInput(NULL, TRUE, TRUE);
     Gdiplus::GdiplusStartupOutput startupOutput;
     Gdiplus::GdiplusStartup(&token, &startupInput, &startupOutput);
@@ -90,18 +90,18 @@ void FontEngine::createFontSheet( FontSheet& fs, std::wstring debugFilename )
         fs.mCharRects.push_back(CD3D11_RECT( sheetPosX, sheetPosY, sheetPosX + fs.mSpaceWidth, sheetPosY + fs.mCharHeight));
         sheetPosX += fs.mSpaceWidth;
 
-        fs.mFontSheetBmp = new Gdiplus::Bitmap(fs.mTextureWidth, fs.mTextureHeight, PixelFormat32bppARGB);
+        Gdiplus::Bitmap fontSheetBitmap(fs.mTextureWidth, fs.mTextureHeight, PixelFormat32bppARGB);
 
-        Gdiplus::Graphics fontSheetGraphics(fs.mFontSheetBmp);
+        Gdiplus::Graphics fontSheetGraphics(&fontSheetBitmap);
         fontSheetGraphics.SetCompositingMode(fs.mCompositeMode);
-        fontSheetGraphics.Clear(fs.mBackgroundColor);
-        Gdiplus::SolidBrush whiteBrush(fs.mForegroundColor);
+        fontSheetGraphics.Clear(Gdiplus::Color(0, 0, 0, 0));
+        Gdiplus::SolidBrush whiteBrush(Gdiplus::Color(255, 255, 255, 255));
 
         WCHAR str[2] = {' ', 0};
         for (UINT i = 1; i < fs.mCharSetNum; ++i)
         {
             str[0] = fs.mCharSet[i];
-            charGraphics.Clear(fs.mBackgroundColor);
+            charGraphics.Clear(Gdiplus::Color(0, 0, 0, 0));
             // draw st..r onto charBitmap
             charGraphics.DrawString(str, 1, &font, Gdiplus::PointF(0.f, 0.f), &whiteBrush);
             int minX = getMinX(charBitmap);
@@ -126,16 +126,42 @@ void FontEngine::createFontSheet( FontSheet& fs, std::wstring debugFilename )
         CLSID clsid;
         GetEncoderClsid(L"image/bmp", &clsid);
         fs.mFontSheetBmpFileName = fs.mFontName + L"_" + debugFilename +  L".bmp"; 
-        fs.mFontSheetBmp->Save((fs.mFontSheetBmpFilePath + fs.mFontSheetBmpFileName).c_str(), &clsid, NULL);
+        fontSheetBitmap.Save((fs.mFontSheetBmpFilePath + fs.mFontSheetBmpFileName).c_str(), &clsid, NULL);
 
-        // Font sheet bmp must be freed here... 
-        // Basically it does not make sense to let FontSheet hold a pointer to the Bitmap object...
-        // Let me fix it later.
-        if (fs.mFontSheetBmp)
-        {
-            delete fs.mFontSheetBmp;
-            fs.mFontSheetBmp = 0;
-        }
+        Gdiplus::BitmapData bmData;
+        fontSheetBitmap.LockBits(&Gdiplus::Rect(0, 0, fs.mTextureWidth, fs.mTextureHeight), 
+            Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bmData);  
+
+        // Copy into a texture.
+        D3D11_TEXTURE2D_DESC texDesc;
+        texDesc.Width  = fs.mTextureWidth;
+        texDesc.Height = fs.mTextureHeight;
+        texDesc.MipLevels = 1;
+        texDesc.ArraySize = 1;
+        texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        texDesc.SampleDesc.Count = 1;
+        texDesc.SampleDesc.Quality = 0;
+        texDesc.Usage = D3D11_USAGE_IMMUTABLE;
+        texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        texDesc.CPUAccessFlags = 0;
+        texDesc.MiscFlags = 0;
+
+        D3D11_SUBRESOURCE_DATA data;        
+        data.pSysMem = bmData.Scan0;
+        data.SysMemPitch = fs.mTextureWidth* 4;
+        data.SysMemSlicePitch = 0;
+
+        dvc->CreateTexture2D(&texDesc, &data, &fs.mFontSheetTex);
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+        srvDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MipLevels = 1;
+        srvDesc.Texture2D.MostDetailedMip = 0;
+
+        dvc->CreateShaderResourceView(fs.mFontSheetTex, &srvDesc, &fs.mFontSRV);
+
+        fontSheetBitmap.UnlockBits(&bmData);  
 
     }// Scope ends
 
@@ -186,7 +212,7 @@ int FontEngine::getMinX( Gdiplus::Bitmap& bitmap )
 FontSheet::FontSheet( std::wstring fontName /*= L"Consolas"*/, float fontSizeInPixel /*= 96.f*/, int textureWidth /*= 1024*/,  Gdiplus::FontStyle fontStyle /*= Gdiplus::FontStyleRegular*/, Gdiplus::TextRenderingHint hint /*= Gdiplus::TextRenderingHintAntiAlias*/, Gdiplus::CompositingMode compositeMode /*= Gdiplus::CompositingModeSourceCopy*/, Gdiplus::Color bgc /*= Gdiplus::Color(0, 0, 0, 0)*/, Gdiplus::Color fgc /*= Gdiplus::Color(255, 255, 255, 255) */ )
     :
     mFontName(fontName),
-    mFontSizeInPixel(fontSizeInPixel),
+    mFontSizeInPixel(128.f),
     mTextureWidth(textureWidth),
     mFontStyle(fontStyle),
     mHint(hint),
@@ -195,8 +221,9 @@ FontSheet::FontSheet( std::wstring fontName /*= L"Consolas"*/, float fontSizeInP
     mForegroundColor(fgc),
     mCharSet(0),
     mCharSetNum(0),
-    mFontSheetBmp(0),
-    mFontSheetBmpFilePath(L"../Textures/")
+    mFontSheetBmpFilePath(L"../Textures/"),
+    mFontSheetTex(0),
+    mFontSRV(0)
 {
     // ASCII
     mStartChar = 32;
@@ -227,12 +254,6 @@ FontSheet::~FontSheet()
     {
         delete[] mCharSet;
         mCharSet = 0;
-    }
-
-    if (mFontSheetBmp)
-    {
-        delete mFontSheetBmp;
-        mFontSheetBmp = 0;
     }
 }
 

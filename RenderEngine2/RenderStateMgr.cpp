@@ -5,6 +5,8 @@ ID3D11RasterizerState* RenderStateMgr::WireframeRS = 0;
 ID3D11RasterizerState* RenderStateMgr::NoCullRS    = 0;
 ID3D11RasterizerState* RenderStateMgr::ScissorRS = 0;
      
+ID3D11DepthStencilState* RenderStateMgr::NoDepthTestDS = 0;
+
 ID3D11BlendState*      RenderStateMgr::AlphaToCoverageBS = 0;
 ID3D11BlendState*      RenderStateMgr::TransparentBS     = 0;
 
@@ -45,13 +47,19 @@ void RenderStateMgr::initAll( ID3D11Device* device )
     scissorDesc.DepthBias = D3D11_DEFAULT_DEPTH_BIAS;
     scissorDesc.DepthBiasClamp = D3D11_DEFAULT_DEPTH_BIAS_CLAMP;
     scissorDesc.SlopeScaledDepthBias = D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-    scissorDesc.DepthClipEnable = TRUE;
+    scissorDesc.DepthClipEnable = FALSE;
     scissorDesc.ScissorEnable = TRUE;
     scissorDesc.MultisampleEnable = FALSE;
     scissorDesc.AntialiasedLineEnable = FALSE;
 
     HR(device->CreateRasterizerState(&scissorDesc, &ScissorRS));
     
+    //
+    // NoDepthTestDS
+    //
+    CD3D11_DEPTH_STENCIL_DESC noDepthTestDesc(D3D11_DEFAULT);
+    noDepthTestDesc.DepthEnable = FALSE;
+    HR(device->CreateDepthStencilState(&noDepthTestDesc, &NoDepthTestDS));
 
     //
     // AlphaToCoverageBS
@@ -92,4 +100,6 @@ void RenderStateMgr::destroyAll()
     safe_release(&AlphaToCoverageBS);
     safe_release(&TransparentBS);
 }
+
+
 

@@ -1,6 +1,5 @@
 #ifndef TEXT_H
 #define TEXT_H
-
 #include "Widget.h"
 #include "TextElement.h"
 #include <string>
@@ -8,16 +7,18 @@
 class Text : public Widget
 {
 public:
-    Text( Widget* parent, int fontSize,  FontSheet* fontSheet, Area2D& size, PixelPadding& padding, PixelMargin& margin, LayoutType layoutType);
-    Text( Widget* parent, int fontSize,  FontSheet* fontSheet, Point2D& pos, Area2D& size, PixelPadding& padding, PixelMargin& margin, LayoutType layoutType = WIDGET_LAYOUT_STATIC);
+    Text(D3DEnv* env, int fontSize,  FontSheet* fontSheet, Point2D& pos, Area2D& size, PixelPadding& padding, PixelMargin& margin, LayoutType layoutType = WIDGET_LAYOUT_STATIC);
+
+    virtual bool init();
 
     void setText(std::wstring& s);
     void clearText();
-    void setFontSize(int newSize);
-    void setFontColor(RGBA& color);
+    void setTextSize(int newSize);
+    void setTextColor(RGBA& color);
     void setBgColor(RGBA& color);
 
-    virtual void updateRenderable();
+    virtual void beforeDrawChildren();
+    virtual void afterDrawChildren();
 
     //virtual void onLayoutChanged(GUIEvent& evt);
     virtual void onResize(GUIEvent& e);
@@ -36,6 +37,8 @@ protected:
     int mFontSize;
     FontSheet* mFontSheet;
     std::wstring mString;
+
+public:
     RGBA mBgColor;
     RGBA mFontColor;
     RGBA mActiveBgColor;

@@ -6,7 +6,6 @@
 class Container : public Widget
 {
 public:
-    Container(Widget* parent, Area2D& size, PixelPadding& padding, PixelMargin& margin, const RGBA& color, LayoutType layoutType); 
 
     virtual void onLayoutChanged(GUIEvent& evt);
     virtual void onResize(GUIEvent& e);

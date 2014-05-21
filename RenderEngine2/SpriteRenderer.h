@@ -3,13 +3,6 @@
 
 #include "Sprite2D.h"
 
-struct D3DEnv 
-{
-    D3DEnv(){ZeroMemory(this, sizeof D3DEnv);}
-    ID3D11Device* device;
-    ID3D11DeviceContext* context;
-};
-
 class SpriteRenderer
 {
 public:
@@ -22,6 +15,9 @@ public:
     D3DEnv& getRenderEnv();
 
 protected:
+    void _beforeDraw();
+    void _draw(Sprite2D& sprite);
+    void _afterDraw();
     D3DEnv mEnv;
     Area2D mVpSize;
 };

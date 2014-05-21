@@ -139,6 +139,7 @@
     <ClInclude Include="..\Common\Waves.h" />
     <ClInclude Include="..\Common\WavesSimple.h" />
     <ClInclude Include="..\Common\WindowBase.h" />
+    <ClInclude Include="AllWidgets.h" />
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="BillboardDemo.h" />
     <ClInclude Include="BoxDemo.h" />

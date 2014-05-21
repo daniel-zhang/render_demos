@@ -1,9 +1,5 @@
 #include "Container.h"
 
-Container::Container( Widget* parent, Area2D& size, PixelPadding& padding, PixelMargin& margin, const RGBA& color, LayoutType layoutType )
-    : Widget(parent, size, padding, margin, color, layoutType)
-{
-}
 
 void Container::onLayoutChanged( GUIEvent& evt )
 {

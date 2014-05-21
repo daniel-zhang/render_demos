@@ -6,7 +6,9 @@
 class Root : public Widget
 {
 public:
-    Root(Area2D& vpSize); 
+    Root(D3DEnv* env, Area2D& vpSize); 
+
+    virtual bool init();
 
     //virtual void onLayoutChanged(GUIEvent& evt);
     virtual void onResize(GUIEvent& e);

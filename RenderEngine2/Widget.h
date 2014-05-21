@@ -1,10 +1,10 @@
 #ifndef WIDGET_H
 #define WIDGET_H
-
 #include <string>
 #include <vector>
-#include "IRenderable2D.h"
 #include "GUIEvent.h"
+#include "Math2D.h"
+#include "Sprite2D.h"
 
 enum LayoutType
 {
@@ -19,22 +19,34 @@ enum LayoutType
     WIDGET_LAYOUT_NOT_SPECIFIED
 };
 
-class WidgetMgr;
-class Widget : public IRenderable2D
+enum WidgetType
+{
+    WIDGET_TYPE_INVALID = 0,
+    WIDGET_TYPE_ROOT, 
+    WIDGET_TYPE_TEXTELEMENT,
+    WIDGET_TYPE_TEXT,
+    TOTAL_NUMBER
+};
+
+class Widget 
 {
 public:
-    Widget(Widget* parent, Area2D& size, PixelPadding& padding, PixelMargin& margin, const RGBA& color, LayoutType layoutType); 
+    Widget(D3DEnv* env, Point2D& pos, Area2D& size, PixelPadding& padding, PixelMargin& margin, const RGBA& color, LayoutType layoutType); 
+
+    bool operator==(const Widget& rhs){return this == &rhs;}
+    bool operator!=(const Widget& rhs){return !(*this == rhs);}
+
     virtual ~Widget();
 
-    // UI logic
-    WidgetMgr* getWidgetMgr();
-    void setWidgetMgr(WidgetMgr* w);
-
-    void dispatch(GUIEvent& evt);
+    virtual bool init() = 0;
+    void clear();
     void addChild(Widget* child);
+    void dispatch(GUIEvent& evt);
 
-    // 
-    virtual void updateRenderable();
+    void setActive();
+    void setInActive();
+    bool isActive(){return mIsActive;}
+    void setChildActive(Widget* child);
 
     // Event handlers
     //virtual void onLayoutChanged(GUIEvent& evt) = 0;
@@ -53,13 +65,16 @@ public:
     virtual void move(Vector2D& movement);
     virtual void moveTo(Point2D& pos);
 
+    virtual void beforeDrawChildren(){}
+    virtual void afterDrawChildren(){}
+
     // Helpers
     void getPaddedRect(Box2D& box);
     void getMarginedArea(Area2D& area);
-
     enum WidgetState
     {
-        NORMAL = 0,
+        UN_INITIALIIZED = 0,
+        NORMAL,
         ON_HOVER,
         PRESSED_DOWN,
         DISABLED,
@@ -69,13 +84,24 @@ public:
     WidgetState mState;
     LayoutType mLayoutType;
 
-    Box2D mRect;
+    Box2D mLogicalBox;
+    RGBA mColor;
     PixelPadding mPadding;
     PixelMargin mMargin;
+    bool mVisible;
+
+    D3DEnv* mEnv;
+    Sprite2D mSprite;
     
-    WidgetMgr* mWidgetMgr;
+    WidgetType mType;
     Widget* mParent;
+    Widget* mActiveChild;
+
     std::vector<Widget*> mChildren;
+    std::vector<Widget*> mDepthQueue;
+    std::vector<Widget*> mDispatchQueue;
+
+    bool mIsActive;
 };
 
 

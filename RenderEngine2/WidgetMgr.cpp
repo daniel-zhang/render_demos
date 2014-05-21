@@ -1,16 +1,9 @@
 #include "WidgetMgr.h"
-#include "GUIRenderer.h"
 #include "GUIEvent.h"
 
-WidgetMgr::WidgetMgr(): mInput(0), mRoot(0), mSubmit(true), mRenderer(0) { }
+WidgetMgr::WidgetMgr(): mInput(0), mRoot(0){ }
 WidgetMgr::~WidgetMgr() 
 {
-    if (mRenderer)
-    {
-        delete mRenderer;
-        mRenderer = 0;
-    }
-
     if (mRoot)
     {
         delete mRoot;
@@ -20,25 +13,24 @@ WidgetMgr::~WidgetMgr()
 
 bool WidgetMgr::init( Input* input, ID3D11Device* device, ID3D11DeviceContext* context )
 {
+    //mFontEngine.createFontSheet(mFontSheet, L"debug");
+
     mInput = input;
-
-    mRenderer = new GUIRenderer();
-    if(mRenderer->init(device, context) == false)
-        return false;
-
-    mFontEngine.createFontSheet(mFontSheet, L"debug");
-
     hookEventHandlers();
 
+    if(!mSpriteRenderer.init(device, context))
+        return false;
+
+    // In case of init() is called twice
     if (mRoot)
     {
         delete mRoot; mRoot = 0;
     }
+
     UINT vpNum = 1;
     D3D11_VIEWPORT vp;
     context->RSGetViewports(&vpNum, &vp);
-    mRoot = new Root( Area2D( static_cast<int>(vp.Width), static_cast<int>(vp.Height) ) );
-    mRoot->setWidgetMgr(this);
+    mRoot = new Root(getRenderEnv(), Area2D( static_cast<int>(vp.Width), static_cast<int>(vp.Height) ) );
 
     return true;
 }
@@ -63,11 +55,12 @@ bool WidgetMgr::hookEventHandlers()
 //////////////////////////////////////////////////////////////////////////////////////
 void WidgetMgr::onViewportResize( int width, int height )
 {
+    mSpriteRenderer.onViewportResize(Area2D(width, height));
+
     WidgetResizeEvent evt;
     evt.mSize = Area2D(width, height);
 
     mRoot->dispatch(evt);
-    mRenderer->onViewportResize(Area2D(width, height));
 }
 
 void WidgetMgr::onMouseMove( int x, int y )
@@ -114,49 +107,46 @@ void WidgetMgr::onMouseWheelDown( int x, int y )
    mRoot->dispatch(evt);
 }
 
-Widget* WidgetMgr::getRoot()
-{
-    return mRoot;
-}
-
-FontSheet* WidgetMgr::getFontSheet()
-{
-    return &mFontSheet;
-}
-
 void WidgetMgr::draw()
 {
-    if (mSubmit)
+    submitToRenderer(mRoot);
+}
+
+void WidgetMgr::submitToRenderer( Widget* widget )
+{
+    if (widget->mVisible)
     {
-        mSubmit = false;
-
-        mRenderer->beginBatch();
-        submit();
-        mRenderer->endBatch();
+        mSpriteRenderer.draw(widget->mSprite);
     }
-
-    mRenderer->draw();
-}
-
-void WidgetMgr::setSubmit()
-{
-    mSubmit = true;
-}
-
-void WidgetMgr::submit()
-{
-    _submit(mRoot);
-}
-
-void WidgetMgr::_submit( Widget* w)
-{
-    w->updateRenderable();
-    mRenderer->sortedBatch(static_cast<IRenderable2D*>(w));
-
-    for (UINT i = 0; i < w->mChildren.size(); ++i)
+    
+    widget->beforeDrawChildren();
+    for (UINT i = 0; i < widget->mDepthQueue.size(); ++i)
     {
-        _submit(w->mChildren[i]);
+        submitToRenderer(widget->mDepthQueue[i]);
     }
+    widget->afterDrawChildren();
+}
+
+void WidgetMgr::addWidget( Widget* widget, Widget* parent /*= NULL*/ )
+{
+    if (widget)
+    {
+        widget->init();
+
+        if (parent)
+        {
+            parent->addChild(widget);
+        }
+        else
+        {
+            mRoot->addChild(widget);
+        }
+    }
+}
+
+D3DEnv* WidgetMgr::getRenderEnv()
+{
+    return &mSpriteRenderer.getRenderEnv();
 }
 
 

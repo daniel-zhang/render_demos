@@ -7,8 +7,8 @@ SamplerState samLinear
 {
     Filter = MIN_MAG_MIP_LINEAR;
 
-    //AddressU = WRAP;
-    //AddressV = WRAP;
+    AddressU = WRAP;
+    AddressV = WRAP;
 };
 
 SamplerState samAnisotropic
@@ -51,10 +51,10 @@ float4 PS(VertexOut pin, uniform bool useTex, uniform bool setFontColor) : SV_Ta
     {
         float4 texColor = float4(1.f, 1.f, 1.f, 1.f);
         texColor = gDiffuseMap.Sample( samLinear, pin.Tex );
-        clip( texColor.x - 0.2f );
+        clip( texColor.a - 0.1f );
 
-		return texColor * pin.Color;
-        //return pin.Color;
+        return texColor * pin.Color;
+        //return texColor;
     }
     else if(useTex)
     {

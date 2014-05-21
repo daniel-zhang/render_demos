@@ -31,7 +31,11 @@ ID3D11ShaderResourceView* TextureMgr::getTexture( std::wstring& texName )
         for (UINT i = 0; i < mPath.size(); ++i)
         {
             std::wstring dir = mPath[i] + texName;
-            HRESULT hr = D3DX11CreateShaderResourceViewFromFile(mDevice, dir.c_str(), 0, 0, &srv, 0 );
+
+
+            D3DX11_IMAGE_LOAD_INFO info;
+            info.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+            HRESULT hr = D3DX11CreateShaderResourceViewFromFile(mDevice, dir.c_str(), &info, 0, &srv, 0 );
             if(FAILED(hr))											
                 continue;
 

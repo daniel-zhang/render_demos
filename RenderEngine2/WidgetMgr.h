@@ -5,9 +5,7 @@
 #include "Math2D.h"
 #include <vector> 
 #include "Input.h"
-#include "GUIRenderer.h"
-#include "FontEngine.h"
-#include "Widget.h"
+#include "SpriteRenderer.h"
 #include "Root.h"
 
 /*
@@ -15,8 +13,11 @@ void someUserCode()
 {
     widgetMgr.init(...)
 
-    Container* container = new Container(WidgetMgr.getRoot(), ...);
-    Button* b = new Button(container, ...);
+    Container* container = new Container( ...);
+    widgetMgr.addWidget(container);
+
+    Button* b = new Button(...);
+    widgetMgr.addWidget(b, container);
 
     widgetMgr.draw();
 }
@@ -25,27 +26,18 @@ void someUserCode()
 class WidgetMgr
 {
 public:
-    typedef std::vector<Widget*> WidgetArray;
-
     WidgetMgr();
     ~WidgetMgr();
 
     bool init(Input* input, ID3D11Device* device, ID3D11DeviceContext* context );
-
-    Widget* getRoot();
-
-    FontSheet* getFontSheet();
+    void addWidget(Widget* widget, Widget* parent = NULL);
 
     void draw();
 
-    // Widgets use this method to notify their mgr that they needs to be re-batched to renderer
-    void setSubmit();
+    D3DEnv* getRenderEnv();
 
 private:
-
-    void submit();
-
-    void _submit(Widget* w);
+    void submitToRenderer(Widget* widget);
 
     //
     // Event handlers
@@ -67,15 +59,11 @@ private:
     */
 
 private:
-    GUIRenderer* mRenderer;
+    SpriteRenderer mSpriteRenderer;
+    Widget* mRoot;
+
     Point2D mLastMousePos;
     Input* mInput;
-
-    Widget* mRoot;
-    bool mSubmit;
-
-    FontEngine mFontEngine;
-    FontSheet mFontSheet;
 };
 
 #endif

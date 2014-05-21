@@ -9,26 +9,35 @@
 #include "Color.h"
 
 class SpriteRenderer;
-struct D3DEnv;
+
+struct D3DEnv 
+{
+    D3DEnv(){ZeroMemory(this, sizeof D3DEnv);}
+    ID3D11Device* device;
+    ID3D11DeviceContext* context;
+};
 
 class Sprite2D
 {
 public:
-    friend SpriteRenderer;
+    friend class SpriteRenderer;
 
     Sprite2D();
     ~Sprite2D();
 
-    bool init(D3DEnv& env, OverlayEffect* effect, ID3DX11EffectTechnique* tech);
+    bool init(D3DEnv& env);
 
     void move(Vector2D& movement);
     void resize(Area2D& newSize);
+    void setDstBox(Box2D& box);
+    Box2D& getDstBox();
 
+    void setEffect(OverlayEffect* effect);
+    void setTechique(ID3DX11EffectTechnique* tech);
     void setTexture(ID3D11ShaderResourceView* srv, FBox2D& srcBox);
     void setColor(const RGBA& color);
-    void setRSState(ID3D11RasterizerState* state){mRSState = state;}
-
     void setClipBox(Box2D& clipBox);
+
     void enableClip();
     void disableClip();
 
@@ -59,9 +68,6 @@ private:
     ID3D11ShaderResourceView* mSRV;
     ID3D11Buffer* mVB;
     ID3D11Buffer* mIB;
-
-    ID3D11RasterizerState* mRSState;
-    ID3D11RasterizerState* mRSCachedState;
 
     OverlayEffect* mEffect;
     ID3DX11EffectTechnique* mTech;

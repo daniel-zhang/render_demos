@@ -9,7 +9,7 @@ class FontSheet
 public:
     FontSheet(
         std::wstring fontName = L"Consolas", 
-        float fontSizeInPixel = 128.f, 
+        float fontSizeInPixel = 30.f, 
         int textureWidth = 1024,
 
         Gdiplus::FontStyle fontStyle = Gdiplus::FontStyleRegular, 
@@ -42,9 +42,9 @@ public:
     //
     // Output properties
     //
-    Gdiplus::Bitmap* mFontSheetBmp;
     std::wstring mFontSheetBmpFileName;
     std::wstring mFontSheetBmpFilePath;
+    ID3D11Texture2D* mFontSheetTex;
     ID3D11ShaderResourceView* mFontSRV;
     std::vector<CD3D11_RECT> mCharRects;
 
@@ -59,8 +59,7 @@ public:
     FontEngine();
     ~FontEngine();
 
-    void init();
-    void createFontSheet(FontSheet& fs, std::wstring debugFilename = L"");
+    void createFontSheet(ID3D11Device* dvc, FontSheet& fs, std::wstring debugFilename = L"");
 
 protected:
     int getMinX(Gdiplus::Bitmap& bitmap);

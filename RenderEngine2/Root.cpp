@@ -1,11 +1,17 @@
 #include "Root.h"
 #include "WidgetMgr.h"
 
-Root::Root( Area2D& vpSize )
-    :Widget(NULL, vpSize, PixelPadding(), PixelMargin(), RGBAColor::Background, WIDGET_LAYOUT_NOT_SPECIFIED)
+Root::Root( D3DEnv* env, Area2D& vpSize ) :
+    Widget(env, Point2D(), vpSize, PixelPadding(), PixelMargin(), RGBAColor::Background, WIDGET_LAYOUT_NOT_SPECIFIED)
 {
     mVisible = false;
-    mLayerDepth = 0;
+    mType = WIDGET_TYPE_ROOT;
+}
+
+bool Root::init()
+{
+    mState = NORMAL;
+    return true;
 }
 
 void Root::onResize( GUIEvent& e )
@@ -59,8 +65,8 @@ void Root::resize( Area2D& newSize )
         if (child->mLayoutType == WIDGET_LAYOUT_STATIC)
         {
             FPoint2D intermediatePos(
-                static_cast<float>(child->mRect.getLeft())/this->mRect.getWidth(),
-                static_cast<float>(child->mRect.getTop())/this->mRect.getHeight()
+                static_cast<float>(child->mLogicalBox.getLeft())/this->mLogicalBox.getWidth(),
+                static_cast<float>(child->mLogicalBox.getTop())/this->mLogicalBox.getHeight()
                 );
             child->moveTo( Point2D(
                 static_cast<int>(newSize.width * intermediatePos.x),
@@ -69,7 +75,7 @@ void Root::resize( Area2D& newSize )
         }
     }
 
-    mRect.resize(newSize);
+    mLogicalBox.resize(newSize);
     solveLayout();
 }
 
@@ -92,7 +98,6 @@ void Root::solveLayout()
                 Area2D childMargined;
                 child->getMarginedArea(childMargined);
                 child->moveTo(Point2D(dockLeftInsertPos.x + child->mMargin.left, dockLeftInsertPos.y + child->mMargin.top));
-                child->mLayerDepth = this->mLayerDepth + 1;
 
                 dockLeftInsertPos.y += childMargined.height;
             }
@@ -100,11 +105,11 @@ void Root::solveLayout()
             
         case WIDGET_LAYOUT_STATIC:
         default:
-            child->mLayerDepth = this->mLayerDepth + 1;
             break;
         }
     }
 }
+
 
 
 

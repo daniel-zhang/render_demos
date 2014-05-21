@@ -5,8 +5,8 @@
 #include "FontEngine.h"
 #include "WidgetMgr.h"
 #include "Input.h"
-
-#include "SpriteRenderer.h"
+#include <string>
+#include "AllWidgets.h"
 
 class SpriteDemo : public DemoBasic
 {
@@ -25,15 +25,12 @@ public:
 private:
     WidgetMgr mWidgetMgr;
 
-private:
     FontSheet mFontSheet;
+    Text* mInfoBox;
 //    OverlayUI::OverlayGraphics mOverlayGraphics;
 //   Animation2D mAnim;
 //    std::vector<OverlayUI::Quad*> mQuads;
     Input mInput;
-
-    SpriteRenderer mSpriteRenderer;
-    Sprite2D mSprite;
 };
 
 #endif

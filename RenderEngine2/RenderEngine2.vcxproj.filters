@@ -130,9 +130,6 @@
     <ClCompile Include="Math2D.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="GUIRenderer.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="WidgetBase.cpp">
       <Filter>Deprecated</Filter>
     </ClCompile>
@@ -154,14 +151,17 @@
     <ClCompile Include="TextElement.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>GUI\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite2D.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="SpriteRenderer.cpp">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIRenderer.cpp">
+      <Filter>Deprecated</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,9 +276,6 @@
     <ClInclude Include="Math2D.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="GUIRenderer.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Input</Filter>
     </ClInclude>
@@ -288,13 +285,7 @@
     <ClInclude Include="Color.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="IRenderable2D.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="GUIEvent.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="TextBlock.h">
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="WidgetBase.h">
@@ -318,14 +309,26 @@
     <ClInclude Include="TextElement.h">
       <Filter>GUI\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>GUI\Widgets</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite2D.h">
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="SpriteRenderer.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AllWidgets.h">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderable2D.h">
+      <Filter>Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIRenderer.h">
+      <Filter>Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBlock.h">
+      <Filter>Deprecated</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
