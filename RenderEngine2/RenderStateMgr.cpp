@@ -47,7 +47,7 @@ void RenderStateMgr::initAll( ID3D11Device* device )
     scissorDesc.DepthBias = D3D11_DEFAULT_DEPTH_BIAS;
     scissorDesc.DepthBiasClamp = D3D11_DEFAULT_DEPTH_BIAS_CLAMP;
     scissorDesc.SlopeScaledDepthBias = D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-    scissorDesc.DepthClipEnable = FALSE;
+    scissorDesc.DepthClipEnable = TRUE;
     scissorDesc.ScissorEnable = TRUE;
     scissorDesc.MultisampleEnable = FALSE;
     scissorDesc.AntialiasedLineEnable = FALSE;

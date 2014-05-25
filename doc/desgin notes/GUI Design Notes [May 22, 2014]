@@ -1,0 +1,13 @@
+Considerations about Optimization
+-------------------------------------------------
+I used to create a single VB for all widgets, which was then proved to be lack of flexibility.
+Now each widget has its own VB. Given the fact that text charactors are treated like widgets, the performance becomes unbearable. 20fps for a simple scene.
+
+There are 2 reasons for the performance hit:
+i) Each charactor has a underlying VB, thus incurrs a draw call each frame
+ii) Operations like move/resize/rotation should not directly write into GPU vertices in the dynamic VB. They should be performed by matrix transformations via cbuffer. A map/unmap to VB should only be done when it is absolutely necessary()
+
+Reason 1 is okay for sake of simpilicity and flexibility.
+Reason 2 is totally a shitty design.
+
+Sprite's dstBox and srcBox

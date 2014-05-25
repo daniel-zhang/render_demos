@@ -14,12 +14,14 @@ TextElement::TextElement(D3DEnv* env, wchar_t charactor, int fontSize, FontSheet
 
 bool TextElement::init()
 {
+    /*
     mSprite.init(*mEnv);
     mSprite.setEffect(EffectMgr::OverlayFX);
     mSprite.setTechique(EffectMgr::OverlayFX->OverlayTexTech);
 
     // Sprite size and texture rect are initialized here
     setChar(mCharactor);
+    */
 
     mState = NORMAL;
     return true;
@@ -68,7 +70,7 @@ void TextElement::onMouseLeave( GUIEvent& e )
 void TextElement::resize( Area2D& newSize )
 {
     mLogicalBox.resize(newSize);
-    mSprite.resize(newSize);
+    //mSprite.resize(newSize);
 }
 
 void TextElement::solveLayout()
@@ -78,7 +80,7 @@ void TextElement::solveLayout()
 
 void TextElement::setColor(const RGBA& color )
 {
-    mSprite.setColor(color);
+    //mSprite.setColor(color);
 }
 
 void TextElement::setChar( wchar_t charactor )
@@ -97,7 +99,7 @@ void TextElement::setChar( wchar_t charactor )
                     static_cast<float>(srcRect.top)/mFontSheet->mTextureHeight,
                     static_cast<float>(srcRect.right)/mFontSheet->mTextureWidth,
                     static_cast<float>(srcRect.bottom)/mFontSheet->mTextureHeight );
-    mSprite.setTexture(mFontSheet->mFontSRV, srcBox);
+    //mSprite.setTexture(mFontSheet->mFontSRV, srcBox);
 }
 
 void TextElement::setFontSize( int fontSize )
@@ -108,12 +110,12 @@ void TextElement::setFontSize( int fontSize )
 
 void TextElement::enableExternalTextureSrc()
 {
-    mSprite.enableExternalTextureManagement();
+    //mSprite.enableExternalTextureManagement();
 }
 
 void TextElement::disableExternalTextureSrc()
 {
-    mSprite.disableExternalTextureManagement();
+    //mSprite.disableExternalTextureManagement();
 }
 
 

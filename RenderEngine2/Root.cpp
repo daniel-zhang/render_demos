@@ -4,8 +4,15 @@
 Root::Root( D3DEnv* env, Area2D& vpSize ) :
     Widget(env, Point2D(), vpSize, PixelPadding(), PixelMargin(), RGBAColor::Background, WIDGET_LAYOUT_NOT_SPECIFIED)
 {
-    mVisible = false;
+    // Begin: Overridden by derivatives
     mType = WIDGET_TYPE_ROOT;
+    mVisible = false;
+    mState = UN_INITIALIZED;
+
+    mClippedByParent = false;
+    mLinkedToParent = false;
+    mIsActive = false;
+    // End: Overridden by derivatives
 }
 
 bool Root::init()
@@ -21,61 +28,10 @@ void Root::onResize( GUIEvent& e )
     evt.mPropagate = false;
 }
 
-void Root::onLBtnDown( GUIEvent& e )
-{
-
-}
-
-void Root::onLBtnUp( GUIEvent& e )
-{
-
-}
-
-void Root::onMouseMove( GUIEvent& e )
-{
-
-}
-
-void Root::onMouseWheelUp( GUIEvent& e )
-{
-
-}
-
-void Root::onMouseWheelDown( GUIEvent& e )
-{
-
-}
-
-void Root::onMouseEnter( GUIEvent& e )
-{
-
-}
-
-void Root::onMouseLeave( GUIEvent& e )
-{
-
-}
-
 void Root::resize( Area2D& newSize )
 {
-    // Maintain static widgets' position when size changed
-    for (UINT i = 0; i < mChildren.size(); ++i)
-    {
-        Widget* child = mChildren[i];
-        if (child->mLayoutType == WIDGET_LAYOUT_STATIC)
-        {
-            FPoint2D intermediatePos(
-                static_cast<float>(child->mLogicalBox.getLeft())/this->mLogicalBox.getWidth(),
-                static_cast<float>(child->mLogicalBox.getTop())/this->mLogicalBox.getHeight()
-                );
-            child->moveTo( Point2D(
-                static_cast<int>(newSize.width * intermediatePos.x),
-                static_cast<int>(newSize.height * intermediatePos.y)
-                ));
-        }
-    }
-
     mLogicalBox.resize(newSize);
+    synClipAndClickBoxes();
     solveLayout();
 }
 

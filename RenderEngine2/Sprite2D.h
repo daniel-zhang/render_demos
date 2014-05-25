@@ -25,42 +25,74 @@ public:
     Sprite2D();
     ~Sprite2D();
 
-    bool init(D3DEnv& env);
+    bool init(
+        D3DEnv* env, Point2D& pos, Area2D& size, const RGBA& color, 
+        OverlayEffect* effect, ID3DX11EffectTechnique* tech,
+        bool useDynamicVB = false,
+        ID3D11ShaderResourceView* srv = NULL,
+        FBox2D& srcBox = FBox2D()
+        );
 
     void move(Vector2D& movement);
+    void moveTo(Point2D& pos);
     void resize(Area2D& newSize);
-    void setDstBox(Box2D& box);
-    Box2D& getDstBox();
 
+    // setTexutre(...) only works for static sprite
+    void setTexture(ID3D11ShaderResourceView* srv);
     void setEffect(OverlayEffect* effect);
     void setTechique(ID3DX11EffectTechnique* tech);
-    void setTexture(ID3D11ShaderResourceView* srv, FBox2D& srcBox);
     void setColor(const RGBA& color);
-    void setClipBox(Box2D& clipBox);
 
+    void dynamicSync(Point2D& pos, Area2D& size, FBox2D& srcBox, ID3D11ShaderResourceView* srv);
+
+    // D3D pipeline receives clip box in screen space.
+    void setClipBox(Box2D* clipBox);
     void enableClip();
     void disableClip();
 
     void enableExternalTextureManagement();
     void disableExternalTextureManagement();
 
+    Box2D* getCacheBox();
+
 private:
-    bool createGeometryBuffer(D3DEnv& env);
+    bool createStaticGeometryBuffer();
+    bool createDynamicGeometryBuffer();
+    void syncDynamicGeomtryBuffer();
+
     void clearGeometryBuffer();
-    void syncGeomtryBuffer(Area2D& vpSize, D3DEnv& env);
+
+    void getViewportSize(Area2D& vpSize);
+
+    void syncTransformation();
 
     void beforeDraw(D3DEnv& env);
     void afterDraw(D3DEnv& env);
 
 private:
-    Box2D mDstBox;
-    Box2D mClipBox;
+    // Cache Rect is used to expose screen space interface to user code.
+    // It stores the sprite's current position and size in screen space, and is something like a 
+    // command cache for user operations(like move and resize). CacheRect is synced to transform
+    // matrices in shader at each frame. This way the VB can be static if texcoords are not changed.
+    Box2D mCacheRect;
+
+    // Reference rect and intialVP are immutable through out the life time of the sprite.
+    // RefereceRect is directly mapped to VB 
+    // initialViewport is stored so sprite size can remain unchanged and independent 
+    // of viewport size.
+    NdcBox2D mReferenceRect;
+    Area2D mInitialVP;
+
+    Box2D* mClipBox;
     FBox2D mSrcBox;
+
     RGBA mVertexColor;
+    XMFLOAT4X4 mTranslation;
+    XMFLOAT4X4 mScale;
 
     bool mIsClipped;
-    bool mIsSynced;
     bool mTextureManagedExternally;
+    bool mDynamic;
 
     // Keep a CPU copy of vertices, which also saves overhead of mem alloc
     // and makes vector::push_back() slightly faster.
@@ -71,8 +103,7 @@ private:
 
     OverlayEffect* mEffect;
     ID3DX11EffectTechnique* mTech;
+    D3DEnv* mEnv;
 };
-
-
 
 #endif

@@ -1,0 +1,84 @@
+Set Active
+---------------------------------------------
+widget:
+    setInActive():
+        state = InActive
+
+    setActive():
+        state = Active
+        if(parent)
+            parent.setActiveChild(this)
+
+    setActiveChild(w):
+        if activeChild != w
+            activeChild.setInActive()
+            it = depthQueue.rfind(w)
+            depthQueue.erase(it)
+            depthQueue.append(it)
+            activeChild = w
+        // the propagation of setActive action:
+        if state != Active
+            this.setActive()
+
+Event processing in SetActive
+-----------------------------------------
+0. quad A is on top of quad B, A and B are children of P
+1. click event is sent both to A and B
+2. A cannot stop event from sending to B, since
+   B is its sibling rather than child; and the 
+   verse versa.
+3. B should decide whether to handle this event, how?
+
+sol1. P has a flag to indicate whether a specified event
+is consumed or not, and all of P's children will refer to
+this flag to decide whether to handle an event.
+i.e. A is the top-most child and when it receives the event
+the flag is false so it handles the event and set the flag to
+true, later B will not touch the event as the flag is set to true
+by A.
+
+sol2. The current event dispatch code:
+dispatch(evt):
+    this.handle(evt)
+    if(evt.propagate)
+    for each child of self's children vector:
+        child.handle(evt)
+
+can be tweaked into this:
+dispatch(evt):
+    this.handle(evt)
+    if(evt.propagate)
+    for each child of self's depth queue<reverse iterate>:
+        if evt.propagate:
+            child.handle(evt)
+        else
+            break;
+
+so A will set evt.propaget to false after it handles the event
+and the event propagation is stopped for any widgets before A 
+in the depth queue.
+
+side_effect:
+    event is dispatched to an element's children in reverse order
+    of depth queue, which means the top-most child will receive
+    the event first and the bottom-most child last.
+
+    it generally does not matter for the time being, anyway children
+    will always receive event in an order(either their creation order
+    or depth order)
+
+Adding a dispatcher queue
+-----------------------------------------
+1. there's a depth queue in each element
+2. click event is dispatched to children in the order of their parent's depth
+   queue 
+3. click event triggers the children to 'set active', which effectively writes
+   to their parent's depth queue, which in turn invalidates the dispatcher's iteration over the depth queue
+
+sol1. 
+1. each widget has a depthQueue and a dispQueue
+2. dispatcher reversely iterates the dispQueue to dispatch event to children
+3. 'activate' actions will re-sort the depthQueue
+4. after dispatcher finishes the iteration, dispQueue is synce with the new
+   depthQueue which can be updated by children during the iteration
+

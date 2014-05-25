@@ -1,6 +1,13 @@
 #include "LightHelper.fx"
 
 // Nonnumeric values cannot be added to a cbuffer.
+cbuffer cbPerObject
+{
+    float4x4 gTranslation;
+    float4x4 gScale;
+    float4 gVertexColor;
+}; 
+
 Texture2D gDiffuseMap;
 
 SamplerState samLinear
@@ -38,7 +45,7 @@ struct VertexOut
 VertexOut VS(VertexIn vin)
 {
     VertexOut vout;
-    vout.PosNDC = float4(vin.PosNDC, 1.f);
+    vout.PosNDC = mul(float4(vin.PosNDC, 1.f), mul(gScale, gTranslation));
     vout.Tex = vin.Tex;
     vout.Color = vin.Color;
     
@@ -49,11 +56,11 @@ float4 PS(VertexOut pin, uniform bool useTex, uniform bool setFontColor) : SV_Ta
 {
     if(useTex && setFontColor)
     {
-        float4 texColor = float4(1.f, 1.f, 1.f, 1.f);
-        texColor = gDiffuseMap.Sample( samLinear, pin.Tex );
-        clip( texColor.a - 0.1f );
+        float4 texColor = gDiffuseMap.Sample( samLinear, pin.Tex );
+        clip( texColor.a - 0.25f );
 
-        return texColor * pin.Color;
+        //return gVertexColor;
+        return texColor * gVertexColor;
         //return texColor;
     }
     else if(useTex)
@@ -66,8 +73,7 @@ float4 PS(VertexOut pin, uniform bool useTex, uniform bool setFontColor) : SV_Ta
     }
     else
     {
-        clip(pin.Color.a - 0.1f);
-        return pin.Color;
+        return gVertexColor;
     }
 }
 

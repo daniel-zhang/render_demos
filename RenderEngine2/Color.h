@@ -5,8 +5,15 @@
 
 struct RGBA
 {
-    RGBA(){red = 0; green = 0; blue = 0; alpha = 255;}
-    RGBA(int r, int g, int b, int a = 255 ): red(r), green(g), blue(b), alpha(a) {}
+    RGBA()
+    {
+        red = 0; green = 0; blue = 0; alpha = 255;
+        _normalize(); 
+    }
+    RGBA(int r, int g, int b, int a = 255 ): red(r), green(g), blue(b), alpha(a) 
+    {
+        _normalize();
+    }
     RGBA& operator=(const RGBA& rhs)
     {
         if (this == & rhs)
@@ -17,24 +24,38 @@ struct RGBA
         this->green = rhs.green;
         this->blue = rhs.blue;
         this->alpha = rhs.alpha;
+        _normalize();
 
         return *this; 
     }
 
-
     XMFLOAT4 normalize()
     {
-        XMFLOAT4 normalized;
+        return normalized;
+    }
+
+    XMFLOAT4 normalize(float alpha)
+    {
+        XMFLOAT4 ret = normalized;
+        ret.w = alpha;
+        return ret;
+    }
+
+    XMFLOAT4 getNormalized()
+    {
+        return normalized;
+    }
+    void _normalize()
+    {
         normalized.x = static_cast<float>(red)/255;
         normalized.y = static_cast<float>(green)/255;
         normalized.z = static_cast<float>(blue)/255;
         normalized.w = static_cast<float>(alpha)/255;
-
-        return normalized;
     }
 
     int red, green, blue;
     int alpha;
+    XMFLOAT4 normalized;
 };
 
 #define _GLOABAL_CONST extern CONST __declspec(selectany)

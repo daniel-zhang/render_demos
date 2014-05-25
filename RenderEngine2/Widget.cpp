@@ -3,27 +3,34 @@
 
 Widget::Widget(D3DEnv* env, Point2D& pos, Area2D& size, PixelPadding& padding, PixelMargin& margin, const RGBA& color,  LayoutType layoutType  )
 {
-    mType = WIDGET_TYPE_INVALID;
-    mVisible = true;
-    mState = UN_INITIALIIZED;
-
     mEnv = env;
 
+    // Begin: Overridden by derivatives
+    mType = WIDGET_TYPE_INVALID;
+    mVisible = true;
+    mState = UN_INITIALIZED;
+
+    mClippedByParent = true;
+    mLinkedToParent = true;
+    mIsActive = false;
+    // End: Overridden by derivatives
+
     mLogicalBox = Box2D(pos, size);
+    mClickBox = mLogicalBox;
+
     mPadding = padding;
     mMargin = margin;
     mColor = color;
+
     mLayoutType = layoutType;
+
     mParent = 0;
     mActiveChild = 0;
 }
 
 Widget::~Widget() 
 {
-    for (UINT i = 0; i < mChildren.size(); ++i)
-    {
-        delete mChildren[i];
-    }
+    clear();
 }
 
 void Widget::dispatch( GUIEvent& evt )
@@ -152,21 +159,48 @@ void Widget::getMarginedArea( Area2D& area )
     area.height = mLogicalBox.getHeight() + (mMargin.top + mMargin.bottom);
 }
 
+UINT Widget::getValidSpritesNumber()
+{
+    return mSprites.size();
+}
+
 void Widget::move( Vector2D& movement )
 {
     mLogicalBox.move(movement);
-    mSprite.move(movement);
+    synClipAndClickBoxes();
+
+    for(UINT i = 0; i < mSprites.size(); ++i)
+    {
+        mSprites[i]->move(movement);
+    }
 
     for (UINT i = 0; i < mChildren.size(); ++i)
     {
-        mChildren[i]->move(movement);
+        if(mChildren[i]->mLinkedToParent)
+            mChildren[i]->move(movement);
     }
 }
 
 void Widget::moveTo( Point2D& pos )
 {
-    Vector2D movement = pos - mSprite.getDstBox().point[0];
+    Vector2D movement = pos - mLogicalBox.point[0];
     move(movement);
+}
+
+void Widget::synClipAndClickBoxes()
+{
+    if (!mParent)
+        return;
+
+    if(mClippedByParent)
+    {
+        mClipBox.getIntersection(mLogicalBox, mParent->mLogicalBox);
+        mClickBox = mClipBox;
+    }
+    else
+    {
+        mClickBox = mLogicalBox;
+    }
 }
 
 void Widget::setActive()
@@ -175,6 +209,10 @@ void Widget::setActive()
     if (mParent)
     {
         mParent->setChildActive(this);
+        if (!mParent->isActive())
+        {
+            mParent->setActive();
+        }
     }
 }
 
@@ -200,6 +238,16 @@ void Widget::setChildActive( Widget* child )
 
 void Widget::clear()
 {
+    for (UINT i = 0; i < mSprites.size(); ++i)
+    {
+        if (mSprites[i])
+        {
+            delete mSprites[i];
+            mSprites[i] = 0;
+        }
+    }
+    mSprites.clear();
+
     for (UINT i = 0; i < mChildren.size(); ++i)
     {
         if (mChildren[i])
@@ -211,6 +259,59 @@ void Widget::clear()
     mChildren.clear();
     mDepthQueue.clear();
     mDispatchQueue.clear();
+}
+
+void Widget::onLBtnDown( GUIEvent& e )
+{
+    MouseLBtnUpEvent& evt = static_cast<MouseLBtnUpEvent&>(e);
+
+    if (mClickBox.isPointInside(evt.mMousePos))
+    {
+        bool reallyMe = true;
+        for (UINT i = 0; i < mDepthQueue.size(); ++i)
+        {
+            if (mDepthQueue[i]->mClickBox.isPointInside(evt.mMousePos))
+            {
+                reallyMe = false;
+            }
+        }
+        if (reallyMe)
+        {
+            setActive();
+            evt.mPropagate = false;
+            mState = PRESSED_DOWN;
+        }
+    }
+}
+
+void Widget::onLBtnUp( GUIEvent& e )
+{
+    if (mState == PRESSED_DOWN)
+    {
+        mState = NORMAL;
+        e.mPropagate = false;
+    }
+}
+
+void Widget::onMouseMove( GUIEvent& e )
+{
+    MouseMoveEvent& evt = reinterpret_cast<MouseMoveEvent&>(e);
+
+    // Emit mouse enter/leave event 
+    if (mLogicalBox.isPointInside(evt.mLastMousePos) == false && mLogicalBox.isPointInside(evt.mMousePos)== true)
+    {
+        dispatch(MouseEnterEvent());
+    }
+    else if (mLogicalBox.isPointInside(evt.mLastMousePos) == true && mLogicalBox.isPointInside(evt.mMousePos)== false)
+    {
+        dispatch(MouseLeaveEvent());
+    }
+
+    if (mState == PRESSED_DOWN )
+    {
+        move(static_cast<Vector2D>(evt.mMousePos - evt.mLastMousePos));
+        evt.mPropagate = false;
+    }
 }
 
 

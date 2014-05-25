@@ -63,6 +63,8 @@
       <AdditionalLibraryDirectories>$(SolutionDir)/Common;$(DXSDK_DIR)/lib/x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>Effects11d.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;dxgi.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -93,6 +95,7 @@
     <ClCompile Include="BaseWindow.cpp" />
     <ClCompile Include="BillboardDemo.cpp" />
     <ClCompile Include="BoxDemo.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="DemoBasic.cpp" />
     <ClCompile Include="EffectMgr.cpp" />
@@ -100,6 +103,7 @@
     <ClCompile Include="FontEngine.cpp" />
     <ClCompile Include="GridDemo.cpp" />
     <ClCompile Include="GUIRenderer.cpp" />
+    <ClCompile Include="GuiTest.cpp" />
     <ClCompile Include="LightingDemo.cpp" />
     <ClCompile Include="LightingDemo2.cpp" />
     <ClCompile Include="main.cpp" />
@@ -143,6 +147,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="BillboardDemo.h" />
     <ClInclude Include="BoxDemo.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="DemoBasic.h" />
@@ -152,6 +157,7 @@
     <ClInclude Include="GridDemo.h" />
     <ClInclude Include="GUIEvent.h" />
     <ClInclude Include="GUIRenderer.h" />
+    <ClInclude Include="GuiTest.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="IRenderable2D.h" />
     <ClInclude Include="LightingDemo.h" />

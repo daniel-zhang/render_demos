@@ -4,5 +4,7 @@
 #include "Root.h"
 #include "TextElement.h"
 #include "Text.h"
+#include "Container.h"
+#include "Button.h"
 
 #endif

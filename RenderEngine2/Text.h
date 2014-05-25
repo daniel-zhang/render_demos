@@ -7,41 +7,78 @@
 class Text : public Widget
 {
 public:
-    Text(D3DEnv* env, int fontSize,  FontSheet* fontSheet, Point2D& pos, Area2D& size, PixelPadding& padding, PixelMargin& margin, LayoutType layoutType = WIDGET_LAYOUT_STATIC);
+    struct Attributes 
+    {
+        Point2D position;
+        Area2D size;
+        PixelPadding padding;
+        PixelMargin margin;
+        std::wstring text_string;
+        int font_size;
+        FontSheet* font_sheet;
+        bool center_text;
+        RGBA font_color;
+        RGBA active_font_color;
+        LayoutType layout_type;
+        bool visible;
+        bool clipped_by_parent;
+        bool linked_to_parent;
+
+        Attributes()
+        {
+            position          = Point2D();
+            size              = Area2D(80, 40);
+            padding           = PixelPadding();
+            margin            = PixelMargin();
+            text_string       = L"Text";
+            font_size         = 30;
+            font_sheet        = NULL;
+            center_text       = true;
+            font_color        = RGBAColor::White;
+            active_font_color = RGBAColor::Blue;
+            layout_type       = WIDGET_LAYOUT_STATIC;
+            visible           = true;
+            clipped_by_parent = true;
+            linked_to_parent  = true;
+        }
+    };
+
+    Text(D3DEnv* env, Attributes& attr);
+
+    Text( D3DEnv* env, 
+        Point2D& pos, Area2D& size, 
+        int fontSize,  FontSheet* fontSheet, bool centerText = true,
+        const RGBA& fontColor = RGBAColor::White, 
+        const RGBA& activeFontColor = RGBAColor::Blue,
+        LayoutType layoutType = WIDGET_LAYOUT_STATIC
+        );
 
     virtual bool init();
 
     void setText(std::wstring& s);
-    void clearText();
     void setTextSize(int newSize);
     void setTextColor(RGBA& color);
-    void setBgColor(RGBA& color);
 
-    virtual void beforeDrawChildren();
-    virtual void afterDrawChildren();
+    virtual void beforeDrawSelf();
+    virtual void afterDrawSelf();
 
-    //virtual void onLayoutChanged(GUIEvent& evt);
-    virtual void onResize(GUIEvent& e);
-    virtual void onLBtnDown(GUIEvent& e);
-    virtual void onLBtnUp(GUIEvent& e);
-    virtual void onMouseMove(GUIEvent& e);
-    virtual void onMouseWheelUp(GUIEvent& e);
-    virtual void onMouseWheelDown(GUIEvent& e);
     virtual void onMouseEnter(GUIEvent& e);
     virtual void onMouseLeave(GUIEvent& e);
 
     virtual void resize(Area2D& newSize);
-    virtual void solveLayout();
 
 protected:
+    void generateTextSprites();
+    void getCharactorRects(wchar_t c, Area2D& dstSize, FBox2D& srcRect);
+    virtual UINT getValidSpritesNumber();
+    void layoutText(bool centered);
+
     int mFontSize;
     FontSheet* mFontSheet;
     std::wstring mString;
+    bool mCenterText;
 
-public:
-    RGBA mBgColor;
     RGBA mFontColor;
-    RGBA mActiveBgColor;
     RGBA mActiveFontColor;
 };
 

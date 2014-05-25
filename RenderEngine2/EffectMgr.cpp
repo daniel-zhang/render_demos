@@ -161,6 +161,9 @@ OverlayEffect::OverlayEffect( ID3D11Device* device, const std::wstring& filename
     OverlayTexTech = mFX->GetTechniqueByName("OverlayTexTech");
 
     mfxDiffuseMap = mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
+    mTranslation = mFX->GetVariableByName("gTranslation")->AsMatrix();
+    mScale = mFX->GetVariableByName("gScale")->AsMatrix();
+    mColor = mFX->GetVariableByName("gVertexColor")->AsVector();
 }
 
 void OverlayEffect::setDiffuseMap( ID3D11ShaderResourceView* tex )

@@ -6,22 +6,16 @@
 class Container : public Widget
 {
 public:
+    Container(
+        D3DEnv* env, 
+        Point2D& pos, Area2D& size, const RGBA& color,
+        PixelPadding& padding, PixelMargin& margin, 
+        LayoutType layoutType = WIDGET_LAYOUT_STATIC);
 
-    virtual void onLayoutChanged(GUIEvent& evt);
-    virtual void onResize(GUIEvent& e);
-
-    virtual void onLBtnDown(GUIEvent& e);
-    virtual void onLBtnUp(GUIEvent& e);
-
-    virtual void onMouseMove(GUIEvent& e);
-
-    virtual void onMouseWheelUp(GUIEvent& e);
-    virtual void onMouseWheelDown(GUIEvent& e);
-
+    virtual bool init();
     virtual void onMouseEnter(GUIEvent& e);
     virtual void onMouseLeave(GUIEvent& e);
 
-protected:
-    bool mPosFixed;
+    Sprite2D* mBkgSprite;
 };
 #endif

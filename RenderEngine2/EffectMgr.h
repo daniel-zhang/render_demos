@@ -170,10 +170,16 @@ public:
     ~OverlayEffect(){}
 
     void setDiffuseMap(ID3D11ShaderResourceView* tex);
+    void setTranslation(CXMMATRIX M) { mTranslation->SetMatrix(reinterpret_cast<const float*>(&M)); }
+    void setScale(CXMMATRIX M) { mScale->SetMatrix(reinterpret_cast<const float*>(&M)); }
+    void setColor(const FXMVECTOR v){mColor->SetFloatVector(reinterpret_cast<const float*>(&v));}
 
     ID3DX11EffectTechnique* OverlayTech;
     ID3DX11EffectTechnique* OverlayTexTech;
     ID3DX11EffectShaderResourceVariable* mfxDiffuseMap;
+    ID3DX11EffectMatrixVariable* mTranslation;
+    ID3DX11EffectMatrixVariable* mScale;
+    ID3DX11EffectVectorVariable* mColor;
 };
 
 // A simple effect manager that expose global access to various effects

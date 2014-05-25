@@ -12,7 +12,7 @@ public:
         float fontSizeInPixel = 30.f, 
         int textureWidth = 1024,
 
-        Gdiplus::FontStyle fontStyle = Gdiplus::FontStyleRegular, 
+        Gdiplus::FontStyle fontStyle = Gdiplus::FontStyleBold, 
         Gdiplus::TextRenderingHint hint = Gdiplus::TextRenderingHintAntiAlias,
         Gdiplus::CompositingMode compositeMode = Gdiplus::CompositingModeSourceCopy,
         Gdiplus::Color bgc = Gdiplus::Color(0, 0, 0, 0),

@@ -14,6 +14,8 @@
 #include "DemoBasic.h"
 #include "SpriteDemo.h"
 
+#include "GuiTest.h"
+
 //
 // TODO: Add a sprite based GUI system that supports in-game selection of demos 
 //
@@ -26,6 +28,7 @@ int WINAPI wWinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance,
 #endif
 
 	SpriteDemo demo;
+	//GUITest demo;
 	//LightingDemo2 demo;
 	if(!demo.init()) return 0;
 

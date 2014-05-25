@@ -25,6 +25,8 @@ enum WidgetType
     WIDGET_TYPE_ROOT, 
     WIDGET_TYPE_TEXTELEMENT,
     WIDGET_TYPE_TEXT,
+    WIDGET_TYPE_CONTAINER,
+    WIDGET_TYPE_BUTTON,
     TOTAL_NUMBER
 };
 
@@ -43,37 +45,42 @@ public:
     void addChild(Widget* child);
     void dispatch(GUIEvent& evt);
 
+    bool isActive(){return mIsActive;}
     void setActive();
     void setInActive();
-    bool isActive(){return mIsActive;}
     void setChildActive(Widget* child);
 
     // Event handlers
     //virtual void onLayoutChanged(GUIEvent& evt) = 0;
-    virtual void onResize(GUIEvent& e) = 0;
-    virtual void onLBtnDown(GUIEvent& e) = 0;
-    virtual void onLBtnUp(GUIEvent& e) = 0;
-    virtual void onMouseMove(GUIEvent& e) = 0;
-    virtual void onMouseWheelUp(GUIEvent& e) = 0;
-    virtual void onMouseWheelDown(GUIEvent& e) = 0;
-    virtual void onMouseEnter(GUIEvent& e) = 0;
-    virtual void onMouseLeave(GUIEvent& e) = 0;
+    virtual void onResize(GUIEvent& e){} 
+    virtual void onLBtnDown(GUIEvent& e); 
+    virtual void onLBtnUp(GUIEvent& e);
+    virtual void onMouseMove(GUIEvent& e);
+    virtual void onMouseWheelUp(GUIEvent& e){}
+    virtual void onMouseWheelDown(GUIEvent& e){}
+    virtual void onMouseEnter(GUIEvent& e) {}
+    virtual void onMouseLeave(GUIEvent& e) {}
 
     // Actions
-    virtual void solveLayout() = 0;
-    virtual void resize(Area2D& newSize) = 0;
+    virtual void resize(Area2D& newSize){} 
     virtual void move(Vector2D& movement);
     virtual void moveTo(Point2D& pos);
+    virtual void synClipAndClickBoxes();
 
+    // Callbacks to WidgetMgr
+    virtual void beforeDrawSelf(){}
+    virtual void afterDrawSelf(){}
     virtual void beforeDrawChildren(){}
     virtual void afterDrawChildren(){}
 
-    // Helpers
+    // Misc
     void getPaddedRect(Box2D& box);
     void getMarginedArea(Area2D& area);
+    virtual UINT getValidSpritesNumber();
+
     enum WidgetState
     {
-        UN_INITIALIIZED = 0,
+        UN_INITIALIZED = 0,
         NORMAL,
         ON_HOVER,
         PRESSED_DOWN,
@@ -84,23 +91,35 @@ public:
     WidgetState mState;
     LayoutType mLayoutType;
 
+    // Behaviors 
+    bool mVisible;
+    bool mClippedByParent;      
+    bool mLinkedToParent;      
+
     Box2D mLogicalBox;
-    RGBA mColor;
+    Box2D mClipBox;
+    Box2D mClickBox;
+
     PixelPadding mPadding;
     PixelMargin mMargin;
-    bool mVisible;
+    RGBA mColor;
 
     D3DEnv* mEnv;
-    Sprite2D mSprite;
-    
+    std::vector<Sprite2D*> mSprites;
+
+    // Children in their creation order.
+    std::vector<Widget*> mChildren;
+    // Children in their draw order: the first item is bottom-most, and the last is top-most.
+    // Used by WidgetMgr to submit sprites to renderer.
+    std::vector<Widget*> mDepthQueue;
+    // Children in their dispatch order: the first item has highest priority to handle event.
+    // Used by dispatcher to dispatch event to children.
+    std::vector<Widget*> mDispatchQueue;
+
+    // Linkage
     WidgetType mType;
     Widget* mParent;
     Widget* mActiveChild;
-
-    std::vector<Widget*> mChildren;
-    std::vector<Widget*> mDepthQueue;
-    std::vector<Widget*> mDispatchQueue;
-
     bool mIsActive;
 };
 

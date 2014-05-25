@@ -25,57 +25,64 @@ bool SpriteDemo::init()
         return false;
     }
 
-    /*
-    // New Renderer Test Begin
-    mSpriteRenderer.init(md3dDevice, md3dImmediateContext);
-    mSprite.init(mSpriteRenderer.getRenderEnv());
-    mSprite.setEffect(EffectMgr::OverlayFX);
-    mSprite.setTechique(EffectMgr::OverlayFX->OverlayTech);
-    mSprite.resize(Area2D(200, 200));
-    mSprite.setColor(RGBAColor::Background);
-    mSprite.setRSState(RenderStateMgr::ScissorRS);
-    mSprite.setClipBox(Box2D(Point2D(0,0), Area2D(50,50)));
-    //mSprite.enableClip();
-    // New Renderer Test End
-    */
-
     FontEngine fontEngine;
+    //mFontSheet.mFontName = L"Arial Unicode MS";
+    mFontSheet.mFontName = L"Arial";
+    mFontSheet.mFontStyle = Gdiplus::FontStyleRegular;
+    mFontSheet.mFontSizeInPixel = 42;
     fontEngine.createFontSheet(md3dDevice, mFontSheet, L"debug");
+
     mWidgetMgr.init(&mInput, md3dDevice, md3dImmediateContext);
 
-for (UINT i = 0; i < 3; ++i)
-{
-    for (UINT j = 0; j < 5; ++j)
-    {
-        RGBA bgColor;
-        switch(j%3)
-        {
-        case 0:
-            bgColor = RGBAColor::Red;
-            break;
-        case 1:
-            bgColor = RGBAColor::Green;
-            break;
-        case 2:
-            bgColor = RGBAColor::Blue;
-            break;
-        }
-        Text* t = new Text(mWidgetMgr.getRenderEnv(), 30, &mFontSheet, Point2D(355*i, 40*j), Area2D(350, 35), PixelPadding(), PixelMargin(), WIDGET_LAYOUT_STATIC);
-        t->setText(std::wstring(L"The One Ring that Rules All !!"));
-        t->mBgColor = bgColor;
-        t->mActiveBgColor = bgColor;
-        mWidgetMgr.addWidget(t);
-    }
-}
+    Container* window1 = new Container(
+        mWidgetMgr.getRenderEnv(),
+        Point2D(100, 100), Area2D(200, 200), RGBAColor::Red,
+        PixelPadding(), PixelMargin(), 
+        WIDGET_LAYOUT_STATIC);
+
+    Container* window2 = new Container(
+        mWidgetMgr.getRenderEnv(),
+        Point2D(200, 50), Area2D(200, 200), RGBAColor::Green,
+        PixelPadding(), PixelMargin(), 
+        WIDGET_LAYOUT_STATIC);
+
+    Container* child1 = new Container(
+        mWidgetMgr.getRenderEnv(),
+        Point2D(110, 110), Area2D(150, 50), RGBAColor::Background,
+        PixelPadding(), PixelMargin(), 
+        WIDGET_LAYOUT_STATIC);
+
+    /*
+    mInfoBox = new Text(
+        mWidgetMgr.getRenderEnv(),
+        Point2D(210, 60), Area2D(250, 50), 
+        24, &mFontSheet);
+        */
+
+    Button::Attributes buttonAttr;
+    buttonAttr.position = Point2D(210, 60);
+    buttonAttr.size = Area2D(150, 50);
+    buttonAttr.label_font_sheet = &mFontSheet;
+    buttonAttr.label_font_size = 20;
+    buttonAttr.label_string =  L"Button 1";
+    buttonAttr.info_font_sheet = &mFontSheet;
+    buttonAttr.info_string = L"This is button 1's info string.\nThis is button 1's info string.";
+    buttonAttr.info_frame_size = Area2D(230, 120);
+    buttonAttr.info_font_size = 20;
+
+    Button* button1 = new Button(mWidgetMgr.getRenderEnv(), buttonAttr);
+    buttonAttr.position = Point2D(210, 120);
+    buttonAttr.label_string =  L"Button 2";
+    buttonAttr.info_string = L"This is button 2's info string.\nThis is button 2's info string.";
+    Button* button2 = new Button(mWidgetMgr.getRenderEnv(), buttonAttr);
+
+    mWidgetMgr.addWidget(window1);
+    mWidgetMgr.addWidget(window2);
+    mWidgetMgr.addWidget(child1, window1);
+    // mWidgetMgr.addWidget(mInfoBox);
+    mWidgetMgr.addWidget(button1, window2);
+    mWidgetMgr.addWidget(button2, window2);
  
-    mInfoBox = new Text(mWidgetMgr.getRenderEnv(), 20, &mFontSheet, Point2D(250, 150), Area2D(300, 200), PixelPadding(), PixelMargin(), WIDGET_LAYOUT_STATIC);
-
-    std::wostringstream out;
-    out << L"Total Widgets: " << 100 << "\nSynced Widgets: " << 32 << std::endl; 
-    mInfoBox->setText(out.str());
-
-    mWidgetMgr.addWidget(mInfoBox);
-
     return true;
 }
 
@@ -106,13 +113,14 @@ void SpriteDemo::drawScene()
     mpModel->draw(tech, vp);
     md3dImmediateContext->RSSetState(0);
 
+    /*
     std::wostringstream out;
-    out << L"Total Widgets: " << 123 << L"\nSynced Widgets: " << 111 << std::endl
-        << L"Time: " << mTimer.totalTime();
+    float t = mTimer.totalTime();
+    out << L"Hello World!!\n" <<  mTimer.totalTime()  << L"\n12345678";
     mInfoBox->setText(out.str());
+    */
 
     mWidgetMgr.draw();
-
 
     HR(mSwapChain->Present(0, 0));
 }

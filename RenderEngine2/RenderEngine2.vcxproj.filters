@@ -32,6 +32,9 @@
     <Filter Include="GUI\Widgets">
       <UniqueIdentifier>{25026604-c524-4cb7-b678-13c6ca008610}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUITest">
+      <UniqueIdentifier>{db7b77b9-31b2-41e8-8b78-f22b11d8a51f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxDemo.cpp">
@@ -162,6 +165,12 @@
     </ClCompile>
     <ClCompile Include="GUIRenderer.cpp">
       <Filter>Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiTest.cpp">
+      <Filter>GUITest</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>GUI\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +338,12 @@
     </ClInclude>
     <ClInclude Include="TextBlock.h">
       <Filter>Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiTest.h">
+      <Filter>GUITest</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>GUI\Widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

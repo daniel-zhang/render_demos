@@ -13,8 +13,6 @@ WidgetMgr::~WidgetMgr()
 
 bool WidgetMgr::init( Input* input, ID3D11Device* device, ID3D11DeviceContext* context )
 {
-    //mFontEngine.createFontSheet(mFontSheet, L"debug");
-
     mInput = input;
     hookEventHandlers();
 
@@ -109,14 +107,19 @@ void WidgetMgr::onMouseWheelDown( int x, int y )
 
 void WidgetMgr::draw()
 {
+    mSpriteRenderer.beforeDraw();
     submitToRenderer(mRoot);
+    mSpriteRenderer.afterDraw();
 }
 
 void WidgetMgr::submitToRenderer( Widget* widget )
 {
     if (widget->mVisible)
     {
-        mSpriteRenderer.draw(widget->mSprite);
+        widget->beforeDrawSelf();
+        for(UINT i = 0;  i < widget->getValidSpritesNumber(); ++i)
+            mSpriteRenderer.draw(*(widget->mSprites[i]));
+        widget->afterDrawSelf();
     }
     
     widget->beforeDrawChildren();
@@ -131,8 +134,6 @@ void WidgetMgr::addWidget( Widget* widget, Widget* parent /*= NULL*/ )
 {
     if (widget)
     {
-        widget->init();
-
         if (parent)
         {
             parent->addChild(widget);
@@ -141,12 +142,13 @@ void WidgetMgr::addWidget( Widget* widget, Widget* parent /*= NULL*/ )
         {
             mRoot->addChild(widget);
         }
+        widget->init();
     }
 }
 
 D3DEnv* WidgetMgr::getRenderEnv()
 {
-    return &mSpriteRenderer.getRenderEnv();
+    return mSpriteRenderer.getRenderEnv();
 }
 
 
