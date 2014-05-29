@@ -22,32 +22,6 @@ Button::Button( D3DEnv* env, Attributes& attr )
     mAttr = attr;
 }
 
-
-    /*
-Button::Button( D3DEnv* env, Point2D& pos, Area2D& size, const RGBA& color, std::wstring& label, std::wstring& info, FontSheet* fontSheet, PixelPadding& padding, PixelMargin& margin, LayoutType layoutType /*= WIDGET_LAYOUT_STATIC/ )
-    :
-    Widget(env, pos, size, padding, margin, color, layoutType)
-{
-    // Begin: Overridden by derivatives
-    mType = WIDGET_TYPE_BUTTON;
-    mVisible = true;
-    mState = UN_INITIALIZED;
-
-    mClippedByParent = true;
-    mLinkedToParent = true;
-    mIsActive = false;
-    // End: Overridden by derivatives
-
-    mLabelBkgSprite = 0;
-    mLabelTextWidget = 0;
-    mInfoTextWidget = 0;
-
-    mFontSheet = fontSheet;
-    mLabelString = label;
-    mInfoString = info;
-}
-    */
-
 bool Button::init()
 {
     synClipAndClickBoxes();

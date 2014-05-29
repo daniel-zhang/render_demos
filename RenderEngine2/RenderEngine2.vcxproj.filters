@@ -172,6 +172,9 @@
     <ClCompile Include="Button.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="List.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\RenderCore.h">
@@ -343,6 +346,9 @@
       <Filter>GUITest</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
       <Filter>GUI\Widgets</Filter>
     </ClInclude>
   </ItemGroup>

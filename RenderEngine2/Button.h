@@ -44,12 +44,6 @@ public:
     };
 
     Button(D3DEnv* env, Attributes& attr);
-    Button(
-        D3DEnv* env, 
-        Point2D& pos, Area2D& size, const RGBA& color,
-        std::wstring& label, std::wstring& info, FontSheet* fontSheet,
-        PixelPadding& padding, PixelMargin& margin, 
-        LayoutType layoutType = WIDGET_LAYOUT_STATIC);
 
     virtual bool init();
     virtual void onLBtnDown( GUIEvent& e );

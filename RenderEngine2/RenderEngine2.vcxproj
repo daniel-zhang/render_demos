@@ -106,6 +106,7 @@
     <ClCompile Include="GuiTest.cpp" />
     <ClCompile Include="LightingDemo.cpp" />
     <ClCompile Include="LightingDemo2.cpp" />
+    <ClCompile Include="List.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshLoaderDemo.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="IRenderable2D.h" />
     <ClInclude Include="LightingDemo.h" />
     <ClInclude Include="LightingDemo2.h" />
+    <ClInclude Include="List.h" />
     <ClInclude Include="MeshLoaderDemo.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h" />

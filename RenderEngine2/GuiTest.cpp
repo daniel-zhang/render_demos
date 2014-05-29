@@ -23,7 +23,7 @@ bool GUITest::init()
     mClipBox = Box2D(Point2D(10, 10), Area2D(300, 300));
 
     mRenderer.init(md3dDevice, md3dImmediateContext);
-    for (UINT i = 0; i < 3; ++i)
+    for (UINT i = 0; i < 10; ++i)
     {
         Sprite2D* s = new Sprite2D();
         mSprites.push_back(s);
@@ -42,10 +42,10 @@ bool GUITest::init()
         }
         s->init(
         mRenderer.getRenderEnv(), 
-        Point2D(4*i, 3*i), Area2D(60, 60), color,
+        Point2D(100, 100 + 20*i), Area2D(i + 1, 20), color,
         EffectMgr::OverlayFX, EffectMgr::OverlayFX->OverlayTech);
-        s->setClipBox(&mClipBox);
-        s->enableClip();
+        //s->setClipBox(&mClipBox);
+        //s->enableClip();
     }
     return true;
 }

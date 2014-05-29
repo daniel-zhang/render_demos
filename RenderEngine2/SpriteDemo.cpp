@@ -26,10 +26,10 @@ bool SpriteDemo::init()
     }
 
     FontEngine fontEngine;
-    //mFontSheet.mFontName = L"Arial Unicode MS";
-    mFontSheet.mFontName = L"Arial";
+    mFontSheet.mFontName = L"Arial Unicode MS";
+    //mFontSheet.mFontName = L"Arial";
     mFontSheet.mFontStyle = Gdiplus::FontStyleRegular;
-    mFontSheet.mFontSizeInPixel = 42;
+    mFontSheet.mFontSizeInPixel = 40;
     fontEngine.createFontSheet(md3dDevice, mFontSheet, L"debug");
 
     mWidgetMgr.init(&mInput, md3dDevice, md3dImmediateContext);
@@ -42,7 +42,7 @@ bool SpriteDemo::init()
 
     Container* window2 = new Container(
         mWidgetMgr.getRenderEnv(),
-        Point2D(200, 50), Area2D(200, 200), RGBAColor::Green,
+        Point2D(200, 50), Area2D(150, 200), RGBAColor::Green,
         PixelPadding(), PixelMargin(), 
         WIDGET_LAYOUT_STATIC);
 
@@ -60,21 +60,40 @@ bool SpriteDemo::init()
         */
 
     Button::Attributes buttonAttr;
-    buttonAttr.position = Point2D(210, 60);
-    buttonAttr.size = Area2D(150, 50);
+    buttonAttr.position = Point2D(200, 50);
+    buttonAttr.size = Area2D(150, 20);
     buttonAttr.label_font_sheet = &mFontSheet;
     buttonAttr.label_font_size = 20;
     buttonAttr.label_string =  L"Button 1";
     buttonAttr.info_font_sheet = &mFontSheet;
     buttonAttr.info_string = L"This is button 1's info string.\nThis is button 1's info string.";
     buttonAttr.info_frame_size = Area2D(230, 120);
-    buttonAttr.info_font_size = 20;
+    buttonAttr.info_font_size = 18;
 
     Button* button1 = new Button(mWidgetMgr.getRenderEnv(), buttonAttr);
-    buttonAttr.position = Point2D(210, 120);
+    buttonAttr.position = Point2D(200, 73);
     buttonAttr.label_string =  L"Button 2";
     buttonAttr.info_string = L"This is button 2's info string.\nThis is button 2's info string.";
     Button* button2 = new Button(mWidgetMgr.getRenderEnv(), buttonAttr);
+
+    List::Attributes listAttr;
+    listAttr.font_sheet = &mFontSheet;
+    listAttr.font_size = 20;
+    listAttr.background_color = RGBAColor::Blue;
+    listAttr.active_background_color = RGBAColor::Yellow;
+    listAttr.item_desc.push_back(List::ItemDesc(L"BillboardDemo", 
+        L"Focused on:\n"
+        L"How to build sprites in GS\n"
+        L"How to use the texture array\n"
+        L"Alpha-to-coverage: specify a 2D object's silhouette by alpha map\n"
+        L"so MXAA can be applied to 2d stuff" ));
+    listAttr.item_desc.push_back(List::ItemDesc(L"MeshLoaderDemo", 
+        L"Info..."));
+    listAttr.item_desc.push_back(List::ItemDesc(L"BoxDemo", L"Info..."));
+    listAttr.item_desc.push_back(List::ItemDesc(L"EmptyDemo", L"Info..."));
+    listAttr.item_desc.push_back(List::ItemDesc(L"LightingDemo", L"Info..."));
+    listAttr.item_desc.push_back(List::ItemDesc(L"LightingDemo2", L"Info..."));
+    List* lst = new List(mWidgetMgr.getRenderEnv(), listAttr);
 
     mWidgetMgr.addWidget(window1);
     mWidgetMgr.addWidget(window2);
@@ -82,6 +101,7 @@ bool SpriteDemo::init()
     // mWidgetMgr.addWidget(mInfoBox);
     mWidgetMgr.addWidget(button1, window2);
     mWidgetMgr.addWidget(button2, window2);
+    mWidgetMgr.addWidget(lst);
  
     return true;
 }

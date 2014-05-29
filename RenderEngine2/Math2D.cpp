@@ -326,8 +326,11 @@ float NdcBox2D::getHeight()
 
 void NdcBox2D::buildFromScreenArea( Area2D& size, Area2D& vp )
 {
-    float width = 2.f * static_cast<float>(size.width)/vp.width;
-    float height = 2.f * static_cast<float>(size.height)/vp.height;
+    // An rounding workaround, though not technically correct.
+    // Round 0.0024999 to 0.0025
+    float K = 0.000001f;
+    float width = 2.f * static_cast<float>(size.width)/vp.width + K;
+    float height = 2.f * static_cast<float>(size.height)/vp.height + K;
     point[0] = FPoint2D(0.f, 0.f);
     point[1] = FPoint2D(width, 0);
     point[2] = FPoint2D(width, -1.f* height);

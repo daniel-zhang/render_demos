@@ -60,6 +60,8 @@ public:
     virtual void onMouseWheelDown(GUIEvent& e){}
     virtual void onMouseEnter(GUIEvent& e) {}
     virtual void onMouseLeave(GUIEvent& e) {}
+    virtual void onKeyboardDown(GUIEvent& e){}
+    virtual void onKeyboardUp(GUIEvent& e){}
 
     // Actions
     virtual void resize(Area2D& newSize){} 
@@ -112,7 +114,7 @@ public:
     // Children in their draw order: the first item is bottom-most, and the last is top-most.
     // Used by WidgetMgr to submit sprites to renderer.
     std::vector<Widget*> mDepthQueue;
-    // Children in their dispatch order: the first item has highest priority to handle event.
+    // Children in their dispatch order: the last item has highest priority to handle event.
     // Used by dispatcher to dispatch event to children.
     std::vector<Widget*> mDispatchQueue;
 
