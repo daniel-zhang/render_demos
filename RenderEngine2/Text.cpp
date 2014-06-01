@@ -103,10 +103,118 @@ void Text::onMouseLeave( GUIEvent& e )
 void Text::resize( Area2D& newSize )
 {
     mLogicalBox.resize(newSize);
-    layoutText(mCenterText);
+    mClickBox.resize(newSize);
+    //layoutText(mCenterText);
 }
 
+struct WordElement
+{
+    WordElement()
+    {
+        clear();
+    }
+    void foreSeek(std::vector<Sprite2D*>& sprites, std::wstring& str, UINT pos)
+    {
+        clear();
+        if (str.size() == 0) return;
+
+        start = pos;
+        end = start;
+        while(true)
+        {
+            if (end == str.size())
+            {
+                return;
+            }
+            width += sprites[end]->getCacheBox()->getWidth();
+
+            wchar_t c = str[end];
+            // if c is not '0-9a-zA-Z'
+            if (   (c < L'0' || c > L'9') && (c < L'A' || c > L'Z') && (c < L'a' || c > L'z')  )
+            {
+                end++;
+                return;
+            }
+            end++;
+        }
+    }
+
+    void clear()
+    {
+        width = 0;
+        start = end = 0;
+    }
+
+    int width;
+    UINT start, end;
+};
+
 void Text::layoutText(bool centered)
+{
+    Box2D textArea;
+    getPaddedRect(textArea);
+
+    Point2D insertPos(textArea.point[0]);
+    int lineSpace = mFontSize;
+    int charSpace = 1;
+
+    WordElement word;
+    UINT i = 0;
+    while(i < mString.size())
+    {
+        if (mString[i] == L'\n')
+        {
+            insertPos.x = textArea.getLeft();
+            insertPos.y += lineSpace;
+            mSprites[i]->moveTo(insertPos);
+            i++; continue;
+        }
+
+        // Text soft wrap 
+        word.foreSeek(mSprites, mString, i);
+        if (insertPos.x + word.width > textArea.getRight())
+        {
+            insertPos.x = textArea.getLeft();
+            insertPos.y += lineSpace;
+        }
+        for (UINT j = word.start; j < word.end; ++j)
+        {
+            mSprites[j]->moveTo(Point2D(insertPos.x, insertPos.y));
+            insertPos.x += mSprites[j]->getCacheBox()->getWidth() + charSpace;
+        }
+        i += word.end - word.start;
+    }
+
+    Area2D filledArea;
+    if (insertPos.y == textArea.getTop())
+    {
+        filledArea.width = insertPos.x - textArea.getLeft();
+        filledArea.height = lineSpace;
+    }
+    else
+    {
+        filledArea.width = textArea.getWidth();
+        filledArea.height = insertPos.y + lineSpace - textArea.getTop();
+    }
+
+    // Calculate height if it is not specified by user.
+    if(mLogicalBox.getHeight() == 0)
+    {
+        mLogicalBox.resize(Area2D(textArea.getWidth(), filledArea.height));
+        mClickBox = mLogicalBox;
+    }
+
+    if(centered)
+    {
+        int x = (textArea.getWidth() - filledArea.width) / 2;
+        int y = (textArea.getHeight() - filledArea.height) / 2;
+        Vector2D centered(x, y);
+        for (UINT i = 0; i < mString.size(); ++i)
+            mSprites[i]->move(centered);
+    }
+}
+
+void Text::layoutText_bak(bool centered)
 {
     Box2D textArea;
     getPaddedRect(textArea);
@@ -165,21 +273,21 @@ void Text::getCharactorRects( wchar_t c, Area2D& dstSize, FBox2D& srcRect )
 {
     float resizeRatio = static_cast<float>(mFontSize) / mFontSheet->mCharHeight;
 
-    CD3D11_RECT* texRect = (mFontSheet->getSrcRect(c));
+    Box2D* texRect = (mFontSheet->getSrcRect(c));
 
-    
-    dstSize.width = static_cast<int>((texRect->right - texRect->left) * resizeRatio);
-    dstSize.height = static_cast<int>((texRect->bottom - texRect->top) * resizeRatio);
+    // Simple rounding
+    dstSize.width = static_cast<int>((texRect->getRight()- texRect->getLeft()) * resizeRatio + 0.5f);
+    dstSize.height = static_cast<int>((texRect->getBottom()- texRect->getTop()) * resizeRatio + 0.5f);
     /*
     dstSize.width = static_cast<int>(texRect->right - texRect->left);
     dstSize.height = static_cast<int>(texRect->bottom - texRect->top);
     */
 
     srcRect.build(
-    static_cast<float>(texRect->left)/mFontSheet->mTextureWidth,
-    static_cast<float>(texRect->top)/mFontSheet->mTextureHeight,
-    static_cast<float>(texRect->right)/mFontSheet->mTextureWidth,
-    static_cast<float>(texRect->bottom)/mFontSheet->mTextureHeight );
+    static_cast<float>(texRect->getLeft())/mFontSheet->mTextureWidth,
+    static_cast<float>(texRect->getTop())/mFontSheet->mTextureHeight,
+    static_cast<float>(texRect->getRight())/mFontSheet->mTextureWidth,
+    static_cast<float>(texRect->getBottom())/mFontSheet->mTextureHeight );
 }
 
 UINT Text::getValidSpritesNumber()

@@ -97,6 +97,7 @@ public:
     bool mVisible;
     bool mClippedByParent;      
     bool mLinkedToParent;      
+    bool mFixed;
 
     Box2D mLogicalBox;
     Box2D mClipBox;

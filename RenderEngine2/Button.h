@@ -17,6 +17,7 @@ public:
         LayoutType layout_type;
         bool clipped_by_parent;
         bool linked_to_parent;
+        bool fixed;
 
         bool label_visible;
         std::wstring label_string;

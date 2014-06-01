@@ -71,6 +71,7 @@ protected:
     void generateTextSprites();
     void getCharactorRects(wchar_t c, Area2D& dstSize, FBox2D& srcRect);
     virtual UINT getValidSpritesNumber();
+    void layoutText_bak(bool centered);
     void layoutText(bool centered);
 
     int mFontSize;

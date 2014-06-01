@@ -4,6 +4,7 @@
 Widget::Widget(D3DEnv* env, Point2D& pos, Area2D& size, PixelPadding& padding, PixelMargin& margin, const RGBA& color,  LayoutType layoutType  )
 {
     mEnv = env;
+    mFixed = false;
 
     // Begin: Overridden by derivatives
     mType = WIDGET_TYPE_INVALID;
@@ -298,6 +299,15 @@ void Widget::onMouseMove( GUIEvent& e )
     MouseMoveEvent& evt = reinterpret_cast<MouseMoveEvent&>(e);
 
     // Emit mouse enter/leave event 
+    if (mClickBox.isPointInside(evt.mLastMousePos) == false && mClickBox.isPointInside(evt.mMousePos)== true)
+    {
+        dispatch(MouseEnterEvent());
+    }
+    else if (mClickBox.isPointInside(evt.mLastMousePos) == true && mClickBox.isPointInside(evt.mMousePos)== false)
+    {
+        dispatch(MouseLeaveEvent());
+    }
+    /*
     if (mLogicalBox.isPointInside(evt.mLastMousePos) == false && mLogicalBox.isPointInside(evt.mMousePos)== true)
     {
         dispatch(MouseEnterEvent());
@@ -306,8 +316,9 @@ void Widget::onMouseMove( GUIEvent& e )
     {
         dispatch(MouseLeaveEvent());
     }
+    */
 
-    if (mState == PRESSED_DOWN )
+    if (mState == PRESSED_DOWN && !mFixed)
     {
         move(static_cast<Vector2D>(evt.mMousePos - evt.mLastMousePos));
         evt.mPropagate = false;

@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Common">
-      <UniqueIdentifier>{4537b932-321a-4965-b482-d8f2ac0bc70d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FX">
       <UniqueIdentifier>{ebb3bfd8-d999-452e-806f-24292f0678d2}</UniqueIdentifier>
     </Filter>
@@ -32,7 +29,7 @@
     <Filter Include="GUI\Widgets">
       <UniqueIdentifier>{25026604-c524-4cb7-b678-13c6ca008610}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GUITest">
+    <Filter Include="Test">
       <UniqueIdentifier>{db7b77b9-31b2-41e8-8b78-f22b11d8a51f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -43,20 +40,8 @@
     <ClCompile Include="EmptyDemo.cpp">
       <Filter>Demos</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\RenderCore.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Timer.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\MathHelper.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="GridDemo.cpp">
       <Filter>Demos</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\GeometryGenerator.cpp">
-      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="SceneDemo.cpp">
       <Filter>Demos</Filter>
@@ -70,12 +55,6 @@
     <ClCompile Include="LightingDemo.cpp">
       <Filter>Demos</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\WavesSimple.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Waves.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="LightingDemo2.cpp">
       <Filter>Demos</Filter>
     </ClCompile>
@@ -87,9 +66,6 @@
     </ClCompile>
     <ClCompile Include="EffectMgr.cpp">
       <Filter>Infrastructure</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Camera.cpp">
-      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="ObjLoader.cpp">
       <Filter>Infrastructure</Filter>
@@ -151,9 +127,6 @@
     <ClCompile Include="Root.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="TextElement.cpp">
-      <Filter>GUI\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite2D.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -167,7 +140,7 @@
       <Filter>Deprecated</Filter>
     </ClCompile>
     <ClCompile Include="GuiTest.cpp">
-      <Filter>GUITest</Filter>
+      <Filter>Test</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>GUI\Widgets</Filter>
@@ -175,38 +148,35 @@
     <ClCompile Include="List.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Camera.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\GeometryGenerator.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\MathHelper.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\RenderCore.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Timer.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Waves.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\WavesSimple.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializationTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="TextElement.cpp">
+      <Filter>Deprecated</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Common\RenderCore.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Timer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Util.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\WindowBase.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\MathHelper.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\d3dx11effect.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\GeometryGenerator.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\LightHelper.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\WavesSimple.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Waves.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="RenderStateMgr.h">
       <Filter>Infrastructure</Filter>
     </ClInclude>
@@ -215,9 +185,6 @@
     </ClInclude>
     <ClInclude Include="EffectMgr.h">
       <Filter>Infrastructure</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Camera.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="ObjLoader.h">
       <Filter>Infrastructure</Filter>
@@ -318,9 +285,6 @@
     <ClInclude Include="Root.h">
       <Filter>GUI\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="TextElement.h">
-      <Filter>GUI\Widgets</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite2D.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -343,13 +307,52 @@
       <Filter>Deprecated</Filter>
     </ClInclude>
     <ClInclude Include="GuiTest.h">
-      <Filter>GUITest</Filter>
+      <Filter>Test</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>GUI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="List.h">
       <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Camera.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\d3dx11effect.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\GeometryGenerator.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\LightHelper.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\MathHelper.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\RenderCore.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Timer.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Util.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Waves.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\WavesSimple.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\WindowBase.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializationTest.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="TextElement.h">
+      <Filter>Deprecated</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

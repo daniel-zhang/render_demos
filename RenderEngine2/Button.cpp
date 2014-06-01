@@ -8,6 +8,7 @@ Button::Button( D3DEnv* env, Attributes& attr )
     mType = WIDGET_TYPE_BUTTON;
     mVisible = attr.label_visible;
     mState = UN_INITIALIZED;
+    mFixed = attr.fixed;
 
     mClippedByParent = attr.clipped_by_parent;
     mLinkedToParent = attr.linked_to_parent;
@@ -25,21 +26,6 @@ Button::Button( D3DEnv* env, Attributes& attr )
 bool Button::init()
 {
     synClipAndClickBoxes();
-
-    // Create panels for label and info
-    mLabelBkgSprite = new Sprite2D();
-    mLabelBkgSprite->init( mEnv, 
-        mLogicalBox.point[0], mLogicalBox.getArea(), mAttr.label_background_color, 
-        EffectMgr::OverlayFX, EffectMgr::OverlayFX->OverlayTech);
-
-    mInfoBkgSprite = new Sprite2D();
-    mInfoBkgSprite->init( mEnv,
-        mLogicalBox.point[1], mAttr.info_frame_size, mAttr.info_background_color,
-        EffectMgr::OverlayFX, EffectMgr::OverlayFX->OverlayTech);
-
-    // This order is important for masking out infoBkgSprite
-    mSprites.push_back(mLabelBkgSprite);
-    mSprites.push_back(mInfoBkgSprite);
 
     // Create text widget for label and info 
     Text::Attributes labelAttr;
@@ -70,6 +56,21 @@ bool Button::init()
     mInfoTextWidget = new Text( mEnv, infoAttr);
     mInfoTextWidget->init();
     mLabelTextWidget->addChild(mInfoTextWidget);
+
+    // Create panels for label and info
+    mLabelBkgSprite = new Sprite2D();
+    mLabelBkgSprite->init( mEnv, 
+        mLogicalBox.point[0], mLogicalBox.getArea(), mAttr.label_background_color, 
+        EffectMgr::OverlayFX, EffectMgr::OverlayFX->OverlayTech);
+
+    mInfoBkgSprite = new Sprite2D();
+    mInfoBkgSprite->init( mEnv,
+        mLogicalBox.point[1], mInfoTextWidget->mLogicalBox.getArea(), mAttr.info_background_color,
+        EffectMgr::OverlayFX, EffectMgr::OverlayFX->OverlayTech);
+
+    // This order is important for masking out infoBkgSprite
+    mSprites.push_back(mLabelBkgSprite);
+    mSprites.push_back(mInfoBkgSprite);
 
     //////////////////////////////////////
     if (mClippedByParent)
@@ -132,6 +133,7 @@ Button::Attributes& Button::Attributes::operator=( const Attributes& rhs )
     layout_type                   = rhs.layout_type;
     clipped_by_parent             = rhs.clipped_by_parent;
     linked_to_parent              = rhs.linked_to_parent;
+    fixed                         = rhs.fixed;
     label_visible                 = rhs.label_visible;
     label_string                  = rhs.label_string;
     label_font_sheet              = rhs.label_font_sheet;
@@ -163,6 +165,7 @@ Button::Attributes::Attributes()
     layout_type       = WIDGET_LAYOUT_STATIC;
     clipped_by_parent = true;
     linked_to_parent  = true;
+    fixed             = true;
 
     label_visible                 = true;
     label_string                  = L"Button";

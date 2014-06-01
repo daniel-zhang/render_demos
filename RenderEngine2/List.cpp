@@ -89,7 +89,7 @@ bool List::init()
         buttonAttr.label_string =  mAttr.item_desc[i].label;
         buttonAttr.info_font_sheet = mAttr.font_sheet;
         buttonAttr.info_string = mAttr.item_desc[i].info;
-        buttonAttr.info_frame_size = Area2D(mAttr.size.width, 220);
+        buttonAttr.info_frame_size = Area2D(mAttr.size.width, 0);
         buttonAttr.info_font_size = mAttr.font_size;
 
         Button* b = new Button(mEnv, buttonAttr);
@@ -111,7 +111,11 @@ void List::onMouseWheelUp( GUIEvent& e )
         evt.mPropagate = false;
         for (UINT i = 0; i < mChildren.size(); ++i)
         {
-            mChildren[i]->move(Vector2D(0, 5));
+            mChildren[i]->move(Vector2D(0, 15));
+            if (mChildren[i]->mClickBox.isPointInside(evt.mMousePos))
+                mChildren[i]->dispatch(MouseEnterEvent());
+            else
+                mChildren[i]->dispatch(MouseLeaveEvent());
         }
     }
 }
@@ -125,7 +129,11 @@ void List::onMouseWheelDown( GUIEvent& e )
         evt.mPropagate = false;
         for (UINT i = 0; i < mChildren.size(); ++i)
         {
-            mChildren[i]->move(Vector2D(0, -5));
+            mChildren[i]->move(Vector2D(0, -15));
+            if (mChildren[i]->mClickBox.isPointInside(evt.mMousePos))
+                mChildren[i]->dispatch(MouseEnterEvent());
+            else
+                mChildren[i]->dispatch(MouseLeaveEvent());
         }
     }
 }
@@ -146,6 +154,7 @@ void List::solveLayout()
     if(childNum < 1)
         return;
 
+    // Vertical layout
     Point2D insertPos = mLogicalBox.point[0] + Vector2D(mChildren[0]->mMargin.left, mChildren[0]->mMargin.top);
     for (UINT i = 0; i < mChildren.size(); ++i)
     {

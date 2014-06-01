@@ -24,13 +24,15 @@ bool SpriteDemo::init()
     {
         return false;
     }
+    FontMgr fontMgr(md3dDevice, md3dImmediateContext);
+    fontMgr.init();
 
     FontEngine fontEngine;
-    mFontSheet.mFontName = L"Arial Unicode MS";
-    //mFontSheet.mFontName = L"Arial";
+    //mFontSheet.mFontName = L"Arial Unicode MS";
+    mFontSheet.mFontName = L"Arial";
     mFontSheet.mFontStyle = Gdiplus::FontStyleRegular;
-    mFontSheet.mFontSizeInPixel = 40;
-    fontEngine.createFontSheet(md3dDevice, mFontSheet, L"debug");
+    mFontSheet.mFontSizeInPixel = 20;
+    fontEngine.createFontSheet(md3dImmediateContext, md3dDevice, mFontSheet, L"debug");
 
     mWidgetMgr.init(&mInput, md3dDevice, md3dImmediateContext);
 
@@ -64,7 +66,7 @@ bool SpriteDemo::init()
     buttonAttr.size = Area2D(150, 20);
     buttonAttr.label_font_sheet = &mFontSheet;
     buttonAttr.label_font_size = 20;
-    buttonAttr.label_string =  L"Button 1";
+    buttonAttr.label_string =  L"LA1";
     buttonAttr.info_font_sheet = &mFontSheet;
     buttonAttr.info_string = L"This is button 1's info string.\nThis is button 1's info string.";
     buttonAttr.info_frame_size = Area2D(230, 120);
@@ -82,6 +84,7 @@ bool SpriteDemo::init()
     listAttr.background_color = RGBAColor::Blue;
     listAttr.active_background_color = RGBAColor::Yellow;
     listAttr.item_desc.push_back(List::ItemDesc(L"BillboardDemo", 
+        L"Info...\n"
         L"Focused on:\n"
         L"How to build sprites in GS\n"
         L"How to use the texture array\n"

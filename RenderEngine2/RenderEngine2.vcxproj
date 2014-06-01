@@ -60,7 +60,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/Common;$(DXSDK_DIR)/lib/x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\workspace\boost_1_55_0\boost_1_55_0\stage\lib;$(SolutionDir)/Common;$(DXSDK_DIR)/lib/x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>Effects11d.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;dxgi.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
       <OptimizeReferences>false</OptimizeReferences>
@@ -80,7 +80,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)/Common;$(DXSDK_DIR)/lib/x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\workspace\boost_1_55_0\boost_1_55_0\stage\lib;$(SolutionDir)/Common;$(DXSDK_DIR)/lib/x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>Effects11.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;d3dx9.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;dxgi.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -92,7 +92,10 @@
     <ClCompile Include="..\Common\Timer.cpp" />
     <ClCompile Include="..\Common\Waves.cpp" />
     <ClCompile Include="..\Common\WavesSimple.cpp" />
-    <ClCompile Include="BaseWindow.cpp" />
+    <ClCompile Include="BaseWindow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="BillboardDemo.cpp" />
     <ClCompile Include="BoxDemo.cpp" />
     <ClCompile Include="Button.cpp" />
@@ -102,7 +105,10 @@
     <ClCompile Include="EmptyDemo.cpp" />
     <ClCompile Include="FontEngine.cpp" />
     <ClCompile Include="GridDemo.cpp" />
-    <ClCompile Include="GUIRenderer.cpp" />
+    <ClCompile Include="GUIRenderer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GuiTest.cpp" />
     <ClCompile Include="LightingDemo.cpp" />
     <ClCompile Include="LightingDemo2.cpp" />
@@ -112,24 +118,40 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="ObjLoaderDemo.cpp" />
-    <ClCompile Include="OverlayGraphics.cpp" />
-    <ClCompile Include="OverlayMgr.cpp" />
+    <ClCompile Include="OverlayGraphics.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OverlayMgr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="RenderStateMgr.cpp" />
     <ClCompile Include="Root.cpp" />
     <ClCompile Include="SceneDemo.cpp" />
     <ClCompile Include="InputLayoutMgr.cpp" />
+    <ClCompile Include="SerializationTest.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprite2D.cpp" />
     <ClCompile Include="SpriteDemo.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Text.cpp" />
-    <ClCompile Include="TextElement.cpp" />
+    <ClCompile Include="TextElement.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="TextureMgr.cpp" />
     <ClCompile Include="WaveDemo.cpp" />
-    <ClCompile Include="WidgetBase.cpp" />
+    <ClCompile Include="WidgetBase.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="Math2D.cpp" />
-    <ClCompile Include="WidgetMgr_dep.cpp" />
+    <ClCompile Include="WidgetMgr_dep.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="WidgetMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +167,10 @@
     <ClInclude Include="..\Common\WavesSimple.h" />
     <ClInclude Include="..\Common\WindowBase.h" />
     <ClInclude Include="AllWidgets.h" />
-    <ClInclude Include="BaseWindow.h" />
+    <ClInclude Include="BaseWindow.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="BillboardDemo.h" />
     <ClInclude Include="BoxDemo.h" />
     <ClInclude Include="Button.h" />
@@ -157,10 +182,16 @@
     <ClInclude Include="FontEngine.h" />
     <ClInclude Include="GridDemo.h" />
     <ClInclude Include="GUIEvent.h" />
-    <ClInclude Include="GUIRenderer.h" />
+    <ClInclude Include="GUIRenderer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="GuiTest.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="IRenderable2D.h" />
+    <ClInclude Include="IRenderable2D.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="LightingDemo.h" />
     <ClInclude Include="LightingDemo2.h" />
     <ClInclude Include="List.h" />
@@ -170,25 +201,44 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="ObjLoaderDemo.h" />
-    <ClInclude Include="OverlayMgr.h" />
-    <ClInclude Include="OverlayGraphics.h" />
+    <ClInclude Include="OverlayMgr.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="OverlayGraphics.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="RenderStateMgr.h" />
     <ClInclude Include="Root.h" />
     <ClInclude Include="SceneDemo.h" />
     <ClInclude Include="InputLayoutMgr.h" />
+    <ClInclude Include="SerializationTest.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprite2D.h" />
     <ClInclude Include="SpriteDemo.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Text.h" />
-    <ClInclude Include="TextBlock.h" />
-    <ClInclude Include="TextElement.h" />
+    <ClInclude Include="TextBlock.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="TextElement.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="WaveDemo.h" />
-    <ClInclude Include="WidgetBase.h" />
+    <ClInclude Include="WidgetBase.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Widget.h" />
     <ClInclude Include="Math2D.h" />
-    <ClInclude Include="WidgetMgr_dep.h" />
+    <ClInclude Include="WidgetMgr_dep.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="WidgetMgr.h" />
     <ClInclude Include="QuadBuffer.h" />
   </ItemGroup>

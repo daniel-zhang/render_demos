@@ -3,6 +3,11 @@
 
 #include "Util.h"
 
+// Forward declaration for serialization
+namespace boost { namespace serialization {
+    class access; 
+} }
+
 struct FPoint2D;
 struct Area2D;
 
@@ -23,6 +28,14 @@ struct Point2D
 
     int x;
     int y;
+
+    // Serialization
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int version)
+    {
+        ar & x & y;
+    }
 };
 typedef Point2D Vector2D;
 
@@ -92,6 +105,15 @@ struct Box2D
     void getIntersection(Box2D& box1, Box2D& box2);
 
     Point2D point[4];
+
+    // Serialization
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int version)
+    {
+        for(UINT i  = 0; i < 4; ++i)
+            ar & point[i];
+    }
 };
 
 class PixelPadding

@@ -265,7 +265,15 @@ LRESULT RenderCore::handleMsg( UINT uMsg, WPARAM wParam, LPARAM lParam )
         return 0;
 
     case WM_MOUSEWHEEL:
-        onMouseWheel(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        // Cursor position in WM_MOUSEWHEEL is in screen space 
+        // Have to transform it into 'client area space'
+        WINDOWINFO winfo;
+        winfo.cbSize = sizeof(WINDOWINFO);
+        GetWindowInfo(mHwnd, &winfo);
+        onMouseWheel(
+            wParam, 
+            GET_X_LPARAM(lParam) - winfo.rcClient.left, 
+            GET_Y_LPARAM(lParam) - winfo.rcClient.top);
         return 0;
 
     default:
