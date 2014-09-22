@@ -71,7 +71,6 @@ public:
 	void UpdateViewMatrix();
 
 private:
-
 	// Camera coordinate system with coordinates relative to world space.
 	XMFLOAT3 mPosition;
 	XMFLOAT3 mRight;

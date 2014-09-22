@@ -93,7 +93,7 @@ fxgroup
                 dcl_output o2.xyzw
                 dcl_temps 5
                 
-                #line 48 "C:\workspace\render_demos\RenderEngine2\FX\Overlay.fx"
+                #line 48 "D:\workspace\github\render_demos\RenderEngine2\FX\Overlay.fx"
                 mul r0.xyzw, cb0[0].xxxx, cb0[4].xyzw
                 mul r1.xyzw, cb0[0].yyyy, cb0[5].xyzw
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -185,7 +185,7 @@ fxgroup
                 dcl_constantbuffer cb0[9], immediateIndexed
                 dcl_output o0.xyzw
                 
-                #line 76 "C:\workspace\render_demos\RenderEngine2\FX\Overlay.fx"
+                #line 76 "D:\workspace\github\render_demos\RenderEngine2\FX\Overlay.fx"
                 mov o0.xyzw, cb0[8].xyzw  // PS<0,1,2,3>
                 ret 
                 // Approximately 2 instruction slots used
@@ -252,7 +252,7 @@ fxgroup
                 dcl_output o2.xyzw
                 dcl_temps 5
                 
-                #line 48 "C:\workspace\render_demos\RenderEngine2\FX\Overlay.fx"
+                #line 48 "D:\workspace\github\render_demos\RenderEngine2\FX\Overlay.fx"
                 mul r0.xyzw, cb0[0].xxxx, cb0[4].xyzw
                 mul r1.xyzw, cb0[0].yyyy, cb0[5].xyzw
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -350,7 +350,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 59 "C:\workspace\render_demos\RenderEngine2\FX\Overlay.fx"
+                #line 59 "D:\workspace\github\render_demos\RenderEngine2\FX\Overlay.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v1.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 add r1.x, r0.w, l(-0.250000)
                 lt r1.x, r1.x, l(0.000000)
