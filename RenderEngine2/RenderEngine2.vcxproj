@@ -214,6 +214,7 @@
     <ClInclude Include="SceneDemo.h" />
     <ClInclude Include="InputLayoutMgr.h" />
     <ClInclude Include="SerializationTest.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprite2D.h" />
     <ClInclude Include="SpriteDemo.h" />

@@ -23,6 +23,7 @@ public:
     virtual void onMouseWheel(WPARAM btnState, int x, int y);
 
 private:
+    ID3D11ShaderResourceView* mSRV;
     WidgetMgr mWidgetMgr;
 
     FontSheet mFontSheet;

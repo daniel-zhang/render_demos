@@ -354,6 +354,9 @@
     <ClInclude Include="TextElement.h">
       <Filter>Deprecated</Filter>
     </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="FX\color.fx">

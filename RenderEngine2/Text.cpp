@@ -1,8 +1,10 @@
 #include "Text.h"
 #include "FontEngine.h"
+#include "TextureMgr.h"
 
 Text::Text( D3DEnv* env, Attributes& attr )
     :
+    mSRV(NULL),
     Widget(env, attr.position, attr.size, attr.padding, attr.margin, RGBA(), attr.layout_type)
 {
     // Begin: Overridden by derivatives
@@ -15,10 +17,15 @@ Text::Text( D3DEnv* env, Attributes& attr )
     // End: Overridden by derivatives
     mString          = attr.text_string;
     mCenterText      = attr.center_text;
+    mFontName        = attr.font_name;
     mFontSize        = attr.font_size;
     mFontSheet       = attr.font_sheet;
     mFontColor       = attr.font_color;
     mActiveFontColor = attr.active_font_color;
+
+    //Singleton<FontMgr>::getInstance().setActiveFont(attr.font_name, attr.font_size);
+    Singleton<FontMgr>::getInstance().setActiveFont(attr.font_name, 20);
+    mSRV = Singleton<FontMgr>::getInstance().getSRV();
 
     if (mString.size() > 0)
     {
@@ -155,8 +162,9 @@ void Text::layoutText(bool centered)
     getPaddedRect(textArea);
 
     Point2D insertPos(textArea.point[0]);
-    int lineSpace = mFontSize;
-    int charSpace = 1;
+    int lineHeight = mFontSize;
+    int spaceWidth = mFontSize;
+    int charGap = 1;
 
     WordElement word;
     UINT i = 0;
@@ -165,22 +173,24 @@ void Text::layoutText(bool centered)
         if (mString[i] == L'\n')
         {
             insertPos.x = textArea.getLeft();
-            insertPos.y += lineSpace;
+            insertPos.y += lineHeight;
             mSprites[i]->moveTo(insertPos);
             i++; continue;
         }
 
-        // Text soft wrap 
+        // Fore-seek the word
         word.foreSeek(mSprites, mString, i);
+        // Start a newline if soft wrap is needed
         if (insertPos.x + word.width > textArea.getRight())
         {
             insertPos.x = textArea.getLeft();
-            insertPos.y += lineSpace;
+            insertPos.y += lineHeight;
         }
+        // Layout the word
         for (UINT j = word.start; j < word.end; ++j)
         {
             mSprites[j]->moveTo(Point2D(insertPos.x, insertPos.y));
-            insertPos.x += mSprites[j]->getCacheBox()->getWidth() + charSpace;
+            insertPos.x += mSprites[j]->getCacheBox()->getWidth() + charGap;
         }
         i += word.end - word.start;
     }
@@ -189,12 +199,12 @@ void Text::layoutText(bool centered)
     if (insertPos.y == textArea.getTop())
     {
         filledArea.width = insertPos.x - textArea.getLeft();
-        filledArea.height = lineSpace;
+        filledArea.height = lineHeight;
     }
     else
     {
         filledArea.width = textArea.getWidth();
-        filledArea.height = insertPos.y + lineSpace - textArea.getTop();
+        filledArea.height = insertPos.y + lineHeight - textArea.getTop();
     }
 
     // Calculate height if it is not specified by user.
@@ -264,7 +274,7 @@ void Text::layoutText_bak(bool centered)
 
 void Text::beforeDrawSelf()
 {
-    EffectMgr::OverlayFX->setDiffuseMap(mFontSheet->mFontSRV);
+    EffectMgr::OverlayFX->setDiffuseMap(mSRV);
 }
 
 void Text::afterDrawSelf() {}
@@ -273,21 +283,26 @@ void Text::getCharactorRects( wchar_t c, Area2D& dstSize, FBox2D& srcRect )
 {
     float resizeRatio = static_cast<float>(mFontSize) / mFontSheet->mCharHeight;
 
-    Box2D* texRect = (mFontSheet->getSrcRect(c));
+    //Box2D* texRect = (mFontSheet->getSrcRect(c));
+    Box2D* texRect = Singleton<FontMgr>::getInstance().getSrcRect(c);
+    if (texRect)
+    {
+        // Simple rounding
+        dstSize.width = static_cast<int>((texRect->getRight()- texRect->getLeft()) * resizeRatio + 0.5f);
+        dstSize.height = static_cast<int>((texRect->getBottom()- texRect->getTop()) * resizeRatio + 0.5f);
 
-    // Simple rounding
-    dstSize.width = static_cast<int>((texRect->getRight()- texRect->getLeft()) * resizeRatio + 0.5f);
-    dstSize.height = static_cast<int>((texRect->getBottom()- texRect->getTop()) * resizeRatio + 0.5f);
-    /*
-    dstSize.width = static_cast<int>(texRect->right - texRect->left);
-    dstSize.height = static_cast<int>(texRect->bottom - texRect->top);
-    */
-
-    srcRect.build(
-    static_cast<float>(texRect->getLeft())/mFontSheet->mTextureWidth,
-    static_cast<float>(texRect->getTop())/mFontSheet->mTextureHeight,
-    static_cast<float>(texRect->getRight())/mFontSheet->mTextureWidth,
-    static_cast<float>(texRect->getBottom())/mFontSheet->mTextureHeight );
+        srcRect.build(
+        static_cast<float>(texRect->getLeft())/mFontSheet->mTextureWidth,
+        static_cast<float>(texRect->getTop())/mFontSheet->mTextureHeight,
+        static_cast<float>(texRect->getRight())/mFontSheet->mTextureWidth,
+        static_cast<float>(texRect->getBottom())/mFontSheet->mTextureHeight );
+    }
+    // Construct null size/rect data for non-printable chars
+    else
+    {
+        dstSize = Area2D();
+        srcRect = FBox2D();
+    }
 }
 
 UINT Text::getValidSpritesNumber()

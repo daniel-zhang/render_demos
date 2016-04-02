@@ -298,11 +298,10 @@ Box2D* FontSheet::getSrcRect( WCHAR c )
 }
 
 
-
-FontMgr::FontMgr( ID3D11Device* device, ID3D11DeviceContext* context ) 
-    :mTexture(0), mSRV(0), mDevice(device), mCtx(context),
+FontMgr::FontMgr() :
+    mTexture(0), mSRV(0), mInitialized(false),
     mCacheFileName(L"FontCache"), mFontTextureFileName(L"FontAtlas"), mFilePath(L"../Textures/"), 
-    mTextureWidth(1400), mTextureHeight(0)
+    mTextureWidth(1024), mTextureHeight(0), mActiveFontSheet(NULL)
 {
     mFontNames.push_back(L"Consolas");
     mFontNames.push_back(L"Arial");
@@ -310,18 +309,17 @@ FontMgr::FontMgr( ID3D11Device* device, ID3D11DeviceContext* context )
     mFontNames.push_back(L"Times New Roman");
 
     mFontSizes.push_back(20);
-    mFontSizes.push_back(90);
-    mFontSizes.push_back(160);
+    mFontSizes.push_back(30);
 
     // Populate char set: ASCII [32, 126]
-    wchar_t charSetStart = L' '; 
-    wchar_t charSetEnd   = L'~';
-    mCharSetNum          = charSetEnd - charSetStart + 1;
+    mCharSetStart = L' '; 
+    mCharSetEnd   = L'~';
+    mCharSetNum          = mCharSetEnd - mCharSetStart+ 1;
     mCharSet             = new WCHAR[mCharSetNum + 1];
 
     for(UINT i = 0; i < mCharSetNum; ++i)
     {
-        mCharSet[i] = charSetStart + i;
+        mCharSet[i] = mCharSetStart + i;
     }
     // Append the trailing zero
     mCharSet[mCharSetNum] = 0;
@@ -337,18 +335,30 @@ FontMgr::~FontMgr()
     }
 }
 
-void FontMgr::init()
+void FontMgr::init( ID3D11Device* device, ID3D11DeviceContext* context )
 {
-    /*
-    pseudo:
-    if serialization or texture file does not exist:
-        create fonts
-        serialize fonts
-        save SRV to dds file
-    else
-        de_serialize(serilazationFile)
-        d3dx11createSRVFromFile(textureFile)
-    */
+    mDevice = device;
+    mCtx = context;
+    createFromScratch();
+    mInitialized = true;
+}
+
+/*
+pseudo:
+if serialization or texture file does not exist:
+    create fonts
+    serialize fonts
+    save SRV to dds file
+else
+    de_serialize(serilazationFile)
+    d3dx11createSRVFromFile(textureFile)
+*/
+/*
+void FontMgr::init( ID3D11Device* device, ID3D11DeviceContext* context )
+{
+    mDevice = device;
+    mCtx = context;
+    
     if (GetFileAttributes((mFilePath + mCacheFileName).c_str()) != INVALID_FILE_ATTRIBUTES && 
         GetFileAttributes((mFilePath + mFontTextureFileName + L".dds").c_str()) != INVALID_FILE_ATTRIBUTES)
     {
@@ -371,11 +381,46 @@ void FontMgr::init()
     {
         createFromScratch();
     }
+    mInitialized = true;
+}
+*/
+
+FontSheet2* FontMgr::getFont( std::wstring& fontName, UINT fontSize )
+{
+    if (!mInitialized)
+        return NULL;
+    else
+    {
+        for (UINT i = 0; i < mFonts.size(); ++i)
+        {
+            FontSheet2& font = mFonts[i];
+            if (font.mFontName.compare(fontName) == 0 &&
+                font.mFontPixelSize == fontSize )
+                return &font;
+        }
+        return NULL;
+    }
+}
+
+ID3D11ShaderResourceView* FontMgr::getSRV()
+{
+    if (mInitialized)
+        return mSRV;
+    else
+        return NULL;
 }
 
 void FontMgr::createFonts()
 {
     mTextureHeight = calcTextureHeight(mTextureWidth);
+    wchar_t space[2] = {L' ', 0};
+    /*
+    Gdiplus::Color colors[3] = {
+        Gdiplus::Color(255, 0, 255, 0),
+        Gdiplus::Color(255, 255, 0, 0),
+        Gdiplus::Color(255, 0, 0, 255)
+    };
+    */
 
     ULONG_PTR token = NULL;
     Gdiplus::GdiplusStartupInput startupInput(NULL, TRUE, TRUE);
@@ -407,8 +452,11 @@ void FontMgr::createFonts()
                 charGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
 
                 // Measure char height
+                Gdiplus::RectF spaceBox;
+                charGraphics.MeasureString(space, 1, &font, Gdiplus::PointF(0.f, 0.f), &spaceBox);
+
                 Gdiplus::RectF boundingBox;
-                charGraphics.MeasureString(mCharSet, mCharSetNum, &font, Gdiplus::PointF(0.f, 0.f), &boundingBox);
+                charGraphics.MeasureString(mCharSet, mCharSetNum, &font, Gdiplus::PointF(0.f, 0.f), Gdiplus::StringFormat::GenericTypographic(), &boundingBox);
                 fontsheet.mCharHeight = static_cast<int>(boundingBox.Height+.5f); 
 
                 // Draw charset onto fontBmp using specified font
@@ -417,11 +465,21 @@ void FontMgr::createFonts()
                 {
                     str[0] = mCharSet[i];
                     charGraphics.Clear(Gdiplus::Color(0, 0, 0, 0));
+                    //charGraphics.Clear(colors[i%3]);
                     Gdiplus::Status status = 
                     charGraphics.DrawString(str, 1, &font, Gdiplus::PointF(0.f, 0.f), &whiteBrush);
                     int minX = getCharMinX(charBitmap);
                     int maxX = getCharMaxX(charBitmap);
                     int charWidth = maxX - minX;
+
+                    // Special care taken for space, as getCharMinX() and getCharMaxX()
+                    // do not work for space
+                    if (str[0] == L' ')
+                    {
+                        charWidth = static_cast<int>(spaceBox.Width + 0.5f);
+                        minX = fontSize - charWidth/2;
+                        maxX = fontSize + charWidth/2;
+                    }
 
                     // Start a new line if the char to be drawn exceeds the right boundary
                     if (insertPos.x + charWidth > static_cast<int>(mTextureWidth))
@@ -456,7 +514,42 @@ void FontMgr::createFonts()
 
         // Create d3d texture from font bmp
         Gdiplus::Rect fontRect(0, 0, mTextureWidth, mTextureHeight);
-        createTextureFromBitmap(fontBmp, fontRect, &mTexture, &mSRV);
+        //createTextureFromBitmap(fontBmp, fontRect, &mTexture, &mSRV);
+        {
+            Gdiplus::BitmapData bmData;
+            fontBmp.LockBits(&fontRect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bmData);  
+
+            // Copy into a texture.
+            D3D11_TEXTURE2D_DESC texDesc;
+            texDesc.Width  = fontRect.Width;
+            texDesc.Height = fontRect.Height;
+            texDesc.MipLevels = 1;
+            texDesc.ArraySize = 1;
+            texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+            texDesc.SampleDesc.Count = 1;
+            texDesc.SampleDesc.Quality = 0;
+            texDesc.Usage = D3D11_USAGE_IMMUTABLE;
+            texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+            texDesc.CPUAccessFlags = 0;
+            texDesc.MiscFlags = 0;
+
+            D3D11_SUBRESOURCE_DATA data;        
+            data.pSysMem = bmData.Scan0;
+            data.SysMemPitch = fontRect.Width* 4;
+            data.SysMemSlicePitch = 0;
+
+            HR(mDevice->CreateTexture2D(&texDesc, &data, &(mTexture)));
+
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            srvDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+            srvDesc.Texture2D.MipLevels = 1;
+            srvDesc.Texture2D.MostDetailedMip = 0;
+
+            HR(mDevice->CreateShaderResourceView(mTexture, &srvDesc, &(mSRV)));
+
+            fontBmp.UnlockBits(&bmData);  
+        }
 
     }// Scope ends
     Gdiplus::GdiplusShutdown(token);
@@ -486,7 +579,7 @@ void FontMgr::createTextureFromBitmap( Gdiplus::Bitmap& bmp, Gdiplus::Rect& bmpR
     data.SysMemPitch = bmpRect.Width* 4;
     data.SysMemSlicePitch = 0;
 
-    mDevice->CreateTexture2D(&texDesc, &data, &(*ppTexture));
+    HR(mDevice->CreateTexture2D(&texDesc, &data, &(*ppTexture)));
 
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     srvDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -494,7 +587,7 @@ void FontMgr::createTextureFromBitmap( Gdiplus::Bitmap& bmp, Gdiplus::Rect& bmpR
     srvDesc.Texture2D.MipLevels = 1;
     srvDesc.Texture2D.MostDetailedMip = 0;
 
-    mDevice->CreateShaderResourceView(*ppTexture, &srvDesc, &(*ppSRV));
+    HR(mDevice->CreateShaderResourceView(*ppTexture, &srvDesc, &(*ppSRV)));
 
     bmp.UnlockBits(&bmData);  
 }
@@ -502,6 +595,7 @@ void FontMgr::createTextureFromBitmap( Gdiplus::Bitmap& bmp, Gdiplus::Rect& bmpR
 int FontMgr::calcTextureHeight(int width)
 {
     int height = 0;
+    wchar_t space[2] = {L' ', 0};
 
     ULONG_PTR token = NULL;
     Gdiplus::GdiplusStartupInput startupInput(NULL, TRUE, TRUE);
@@ -521,14 +615,20 @@ int FontMgr::calcTextureHeight(int width)
                 std::wstring fontName = mFontNames[j];
                 Gdiplus::Font font(fontName.c_str(), static_cast<float>(fontSize), Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
 
-                // Measure char height
+                // Measure space width using Gdiplus::StringFormat::GenericDefault()
+                Gdiplus::RectF spaceBox;
+                charGraphics.MeasureString(space, 1, &font, Gdiplus::PointF(0.f, 0.f), &spaceBox);
+                int spaceWidth = static_cast<int>(spaceBox.Width + 0.5f);
+
+                // Measure char height using Gdiplus::StringFormat::GenericTypographic()
+                // While it gives out accurate height value, space character is emitted.
                 Gdiplus::RectF boundingBox;
                 charGraphics.MeasureString(mCharSet, mCharSetNum, &font, Gdiplus::PointF(0.f, 0.f), Gdiplus::StringFormat::GenericTypographic(), &boundingBox);
                 int charHeight = static_cast<int>(boundingBox.Height+.5f);
+                int charSetWidth = spaceWidth + static_cast<int>(boundingBox.Width + 0.5f);
 
                 // Calculate texture height
-                int rows = static_cast<int>(boundingBox.Width / width) + 1;
-                //height += rows * charHeight + 1;
+                int rows = static_cast<int>(charSetWidth / width) + 1;
                 height += rows * charHeight;
             }
         }
@@ -610,4 +710,15 @@ void FontMgr::createFromScratch()
         (mFilePath + mFontTextureFileName+  L".dds").c_str() ));
 }
 
+void FontMgr::setActiveFont( std::wstring& fontName, UINT fontSize )
+{
+    mActiveFontSheet = getFont(fontName, fontSize);
+}
 
+Box2D* FontMgr::getSrcRect( wchar_t c )
+{
+    if (mActiveFontSheet)
+        if (c >= mCharSetStart&& c <= mCharSetEnd)
+            return &(mActiveFontSheet->mCharRects[c - mCharSetStart]);
+    return NULL;
+}

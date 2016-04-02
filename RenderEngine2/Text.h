@@ -4,6 +4,8 @@
 #include "TextElement.h"
 #include <string>
 
+class FontSheet2;
+
 class Text : public Widget
 {
 public:
@@ -14,6 +16,7 @@ public:
         PixelPadding padding;
         PixelMargin margin;
         std::wstring text_string;
+        std::wstring font_name;
         int font_size;
         FontSheet* font_sheet;
         bool center_text;
@@ -31,7 +34,8 @@ public:
             padding           = PixelPadding();
             margin            = PixelMargin();
             text_string       = L"Text";
-            font_size         = 30;
+            font_name         = L"Arial";
+            font_size         = 20;
             font_sheet        = NULL;
             center_text       = true;
             font_color        = RGBAColor::White;
@@ -74,10 +78,13 @@ protected:
     void layoutText_bak(bool centered);
     void layoutText(bool centered);
 
+    std::wstring mFontName;
     int mFontSize;
     FontSheet* mFontSheet;
     std::wstring mString;
     bool mCenterText;
+
+    ID3D11ShaderResourceView* mSRV; 
 
     RGBA mFontColor;
     RGBA mActiveFontColor;

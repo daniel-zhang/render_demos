@@ -9,7 +9,6 @@ Notes
 #include "RenderStateMgr.h"
 #include "Color.h"
 
-
 SpriteDemo::SpriteDemo()
 {
 }
@@ -24,8 +23,8 @@ bool SpriteDemo::init()
     {
         return false;
     }
-    FontMgr fontMgr(md3dDevice, md3dImmediateContext);
-    fontMgr.init();
+
+    Singleton<FontMgr>::getInstance().init(md3dDevice, md3dImmediateContext);
 
     FontEngine fontEngine;
     //mFontSheet.mFontName = L"Arial Unicode MS";

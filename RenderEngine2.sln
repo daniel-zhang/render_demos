@@ -3,6 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderEngine2", "RenderEngine2\RenderEngine2.vcxproj", "{4559F428-AD07-45C8-955F-75C19AB7F9C4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FontFactory", "FontFactory\FontFactory.vcxproj", "{FBB6624C-05A7-435A-A85D-582F6D383D41}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FontGen", "FontGen\FontGen.vcxproj", "{3F398BC7-7BE2-4EB2-A13D-93608232E935}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DumbDll", "DumpDll\DumpDll.vcxproj", "{D0E715C1-9231-4EFB-BE65-8B9DA75C8777}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoadTimeDll", "LoadTimeDll\LoadTimeDll.vcxproj", "{C1E3C303-47A8-48CA-B441-5B2E9AE35BCE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rtDll", "rtDll\rtDll.vcxproj", "{A4FF248D-1C56-4DA3-B64D-CABB07D1370B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +23,26 @@ Global
 		{4559F428-AD07-45C8-955F-75C19AB7F9C4}.Debug|Win32.Build.0 = Debug|Win32
 		{4559F428-AD07-45C8-955F-75C19AB7F9C4}.Release|Win32.ActiveCfg = Release|Win32
 		{4559F428-AD07-45C8-955F-75C19AB7F9C4}.Release|Win32.Build.0 = Release|Win32
+		{FBB6624C-05A7-435A-A85D-582F6D383D41}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FBB6624C-05A7-435A-A85D-582F6D383D41}.Debug|Win32.Build.0 = Debug|Win32
+		{FBB6624C-05A7-435A-A85D-582F6D383D41}.Release|Win32.ActiveCfg = Release|Win32
+		{FBB6624C-05A7-435A-A85D-582F6D383D41}.Release|Win32.Build.0 = Release|Win32
+		{3F398BC7-7BE2-4EB2-A13D-93608232E935}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3F398BC7-7BE2-4EB2-A13D-93608232E935}.Debug|Win32.Build.0 = Debug|Win32
+		{3F398BC7-7BE2-4EB2-A13D-93608232E935}.Release|Win32.ActiveCfg = Release|Win32
+		{3F398BC7-7BE2-4EB2-A13D-93608232E935}.Release|Win32.Build.0 = Release|Win32
+		{D0E715C1-9231-4EFB-BE65-8B9DA75C8777}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D0E715C1-9231-4EFB-BE65-8B9DA75C8777}.Debug|Win32.Build.0 = Debug|Win32
+		{D0E715C1-9231-4EFB-BE65-8B9DA75C8777}.Release|Win32.ActiveCfg = Release|Win32
+		{D0E715C1-9231-4EFB-BE65-8B9DA75C8777}.Release|Win32.Build.0 = Release|Win32
+		{C1E3C303-47A8-48CA-B441-5B2E9AE35BCE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C1E3C303-47A8-48CA-B441-5B2E9AE35BCE}.Debug|Win32.Build.0 = Debug|Win32
+		{C1E3C303-47A8-48CA-B441-5B2E9AE35BCE}.Release|Win32.ActiveCfg = Release|Win32
+		{C1E3C303-47A8-48CA-B441-5B2E9AE35BCE}.Release|Win32.Build.0 = Release|Win32
+		{A4FF248D-1C56-4DA3-B64D-CABB07D1370B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A4FF248D-1C56-4DA3-B64D-CABB07D1370B}.Debug|Win32.Build.0 = Debug|Win32
+		{A4FF248D-1C56-4DA3-B64D-CABB07D1370B}.Release|Win32.ActiveCfg = Release|Win32
+		{A4FF248D-1C56-4DA3-B64D-CABB07D1370B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

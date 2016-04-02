@@ -27,11 +27,11 @@ int WINAPI wWinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance,
 #if defined(DEBUG) || defined(_DEBUG)
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
-
-    SpriteDemo demo;
+    //ObjLoaderDemo demo;
+    //SpriteDemo demo;
     //GUITest demo;
     //SerializationTest demo;
-    //LightingDemo2 demo;
+    LightingDemo2 demo;
     if(!demo.init()) return 0;
 
     return demo.run();

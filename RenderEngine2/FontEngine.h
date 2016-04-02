@@ -4,6 +4,7 @@
 #include <map>
 #include <Gdiplus.h>
 #include "Math2D.h"
+#include "Singleton.h"
 
 namespace boost { namespace serialization {
     class access; 
@@ -16,7 +17,6 @@ public:
         :mFontName(L""), mFontPixelSize(0), mCharHeight(0){}
     FontSheet2(std::wstring fontName, int fontPixelSize)
         :mFontName(fontName), mFontPixelSize(fontPixelSize), mCharHeight(0) {}
-    Box2D* getCharRect(wchar_t c);
 
     std::wstring mFontName;
     int mFontPixelSize;
@@ -32,17 +32,29 @@ public:
     }
 };
 
-class FontMgr
+/*
+Usage: 
+Singleton<FontMgr>::getInstance().init(...);
+Singleton<FontMgr>::getInstance().setActiveFont(L"consolas", 24);
+Singleton<FontMgr>::getInstance().getSrcRect(L"f");
+Singleton<FontMgr>::getInstance().getSRV(wchar_t c);
+*/
+class FontMgr : public Singleton<FontMgr>
 {
 public:
-    FontMgr(ID3D11Device* device, ID3D11DeviceContext* context);
+    FontMgr();
     ~FontMgr();
-
-    void init();
-    FontSheet2* getFont(std::wstring& fontName, UINT fontSize);
+    void init(ID3D11Device* device, ID3D11DeviceContext* context);
+    void setActiveFont(std::wstring& fontName, UINT fontSize);
+    // Return NULL if c is not printable
+    Box2D* getSrcRect(wchar_t c);
     ID3D11ShaderResourceView* getSRV();
 
 private:
+    FontSheet2* getFont(std::wstring& fontName, UINT fontSize);
+    FontMgr(const FontMgr& rhs);
+    FontMgr& operator=(const FontMgr& rhs);
+
     void createFonts();
     // [in] Gdiplus::Bitmap&            bitmap 
     // [out]ID3D11Texture2D**           texture 
@@ -59,6 +71,8 @@ private:
     int getCharMinX(Gdiplus::Bitmap& bitmap);
     int getCharMaxX(Gdiplus::Bitmap& bitmap);
 
+    FontSheet2* mActiveFontSheet;
+
     std::vector<FontSheet2> mFonts;
     std::wstring mFilePath;
     std::wstring mCacheFileName;
@@ -71,11 +85,14 @@ private:
     std::vector<std::wstring> mFontNames;
     std::vector<UINT> mFontSizes;
 
+    // Char set
     wchar_t* mCharSet;
     UINT mCharSetNum;
+    wchar_t mCharSetStart, mCharSetEnd;
 
     ID3D11Device* mDevice;
     ID3D11DeviceContext* mCtx;
+    bool mInitialized;
 };
 
 class FontSheet
